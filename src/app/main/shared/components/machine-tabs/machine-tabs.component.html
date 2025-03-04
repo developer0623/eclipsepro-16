@@ -1,0 +1,23 @@
+<mat-tab-group
+  class="machineTabs machines-tabs machine-status-tag"
+  mat-stretch-tabs="false"
+  #tabGroup
+  [selectedIndex]="selectedTabIndex"
+  (selectedTabChange)="selectedTabChange()"
+>
+  <mat-tab *ngFor="let machine of machines; let i = index; trackBy: trackByKey">
+    <ng-template
+      *ngIf="machine.selection.type === 'xl'"
+      mat-tab-label
+    >
+      {{ machine.xl.machine.description }}
+      <app-machine-tab [machine]="machine.xl"></app-machine-tab>
+    </ng-template>
+    <ng-template
+      *ngIf="machine.selection.type === 'device'"
+      mat-tab-label
+      >{{ machine.device.name }}
+      <app-machine-device-tab [device]="machine.device"></app-machine-device-tab>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

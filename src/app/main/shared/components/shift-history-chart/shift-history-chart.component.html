@@ -1,0 +1,20 @@
+<span>
+  Time:
+  <a
+    (click)="toggleScale()"
+    [ngStyle]="scale === 'pct' && { 'text-decoration': 'underline', cursor: 'pointer' }"
+  >
+    Total
+  </a>
+  |
+  <a
+    (click)="toggleScale()"
+    [ngStyle]="scale !== 'pct' && { 'text-decoration': 'underline', cursor: 'pointer' }"
+  >
+    Percent
+  </a>
+</span>
+<app-nvd3
+  [options]="options"
+  [data]="data"
+></app-nvd3>

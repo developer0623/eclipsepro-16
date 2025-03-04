@@ -1,0 +1,23 @@
+<div
+  class="agGrid-button"
+  *ngIf="!complete"
+>
+  <button
+    mat-icon-button
+    (click)="triggerExport()"
+    aria-label="Retry export attempt"
+    matTooltip="Retry export attempt"
+    class="action-btn"
+  >
+    <i class="mdi mdi-upload"></i>
+  </button>
+  <button
+    mat-icon-button
+    (click)="cancelExport()"
+    aria-label="Cancel export attempt"
+    matTooltip="Cancel export attempt"
+    class="action-btn"
+  >
+    <i class="mdi mdi-close-circle-outline"></i>
+  </button>
+</div>

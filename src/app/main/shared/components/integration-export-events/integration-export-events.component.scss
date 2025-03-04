@@ -1,0 +1,25 @@
+.event-table {
+  max-width: none;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+
+  th {
+    background-color: rgb(245, 245, 245);
+  }
+
+  td {
+    &:first-child {
+      padding-left: 24px !important;
+    }
+  }
+
+  th,
+  td {
+    text-align: center;
+    padding: 10px 8px !important;
+  }
+
+  md-checkbox {
+    left: 0 !important;
+    width: 20px;
+  }
+}

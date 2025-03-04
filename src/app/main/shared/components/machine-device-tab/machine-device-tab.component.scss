@@ -1,0 +1,18 @@
+::ng-deep .machine-dashboard-mini-tooltip {
+  .machine-panel-mini {
+    padding: 0 !important;
+    width: 270px;
+  }
+}
+
+::ng-deep .machine-status-btn {
+  width: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
+  margin-left: 5px;
+
+  .mat-mdc-button-touch-target {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}

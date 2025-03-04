@@ -1,0 +1,50 @@
+<div class="sidenav" fxLayout="column">
+  <div class="sidenav-toolbar" fxLayout="row" fxLayoutAlign="start center">
+    <div [routerLink]="['/dashboards/machines']" class="sidenav-toolbar-icon logo-image">
+      <i
+        id="eclipse-icon"
+        class="icon icon-brightness-3"
+      ></i
+    >
+    </div>
+    <div [routerLink]="['/dashboards/machines']" class="sidenav-toolbar-logo logo-text">
+      ECLIPSE PRO
+    </div>
+
+
+    <span fxFlex><!-- fill space --></span>
+
+    <div fxFlexAlign="center" fxHide fxShow.gt-md>
+      <button (click)="toggleCollapsed()" class="sidenav-toolbar-collapse-toggle" mat-icon-button>
+        <mat-icon *ngIf="!collapsed" class="sidenav-toolbar-collapse-icon">radio_button_checked</mat-icon>
+        <mat-icon *ngIf="collapsed" class="sidenav-toolbar-collapse-icon">radio_button_unchecked</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="plant-name">
+    <span>{{systemPreferences.plantName}}</span>
+  </div>
+
+  <fury-scrollbar class="sidenav-items" fxFlex="auto">
+    <!-- <div *ngIf="sidenavUserVisible$ | async" class="sidenav-user">
+      <img class="sidenav-user-image" src="assets/img/avatars/default.jpg">
+      <h4 class="sidenav-user-name">David Smith</h4>
+      <h5 class="sidenav-user-email">david.smith@example.com</h5>
+
+      <div class="sidenav-user-icons" fxLayout="row">
+        <a [routerLink]="['/tables/all-in-one-table']" mat-icon-button>
+          <mat-icon>assignment</mat-icon>
+        </a>
+        <a [routerLink]="['/apps/calendar']" mat-icon-button>
+          <mat-icon>date_range</mat-icon>
+        </a>
+        <a [routerLink]="['/login']" mat-icon-button>
+          <mat-icon>exit_to_app</mat-icon>
+        </a>
+      </div>
+    </div> -->
+
+    <fury-sidenav-item *ngFor="let item of items$ | async" [item]="item" [level]="0"></fury-sidenav-item>
+  </fury-scrollbar>
+
+</div>

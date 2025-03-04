@@ -1,0 +1,69 @@
+<div class="ms-widget machine-panel-mini">
+  <div
+    class="ms-widget-front white-bg"
+    md-ink-ripple
+  >
+    <div
+      class="p-16 h-55"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <div
+        class="h4 text-truncate"
+        [matTooltip]="device.name"
+      >
+        {{ device.name }}
+      </div>
+      <app-run-state-indicator
+        [state]="deviceState?.runState"
+        [lastRunStateChange]="deviceState?.lastRunStateChange"
+        [isOffline]="deviceState?.isOffline"
+        [isNoPower]="deviceState?.isNoPower"
+      ></app-run-state-indicator>
+    </div>
+    <div
+      class="ph-16 pb-16"
+      fxLayout="row"
+      fxFlex
+      fxFill
+    >
+      <app-snapshot-bar
+        height="10"
+        width="100%"
+        [running]="shiftStats?.runMinutes"
+        [exempt]="shiftStats?.exemptMinutes"
+        [changeover]="shiftStats?.changeoverMinutes"
+        [downtime]="shiftStats?.nonExemptMinutes"
+        [breakdown]="shiftStats?.breakdownMinutes"
+      >
+      </app-snapshot-bar>
+    </div>
+    <div
+      class="pb-8"
+      fxLayout="row wrap"
+      fxLayoutAlign="start center"
+    >
+      <div
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        [fxFlex]="33 * (metric.colSpan || 1)"
+        *ngFor="let metric of sortedMetrics"
+        [matTooltip]="metric.name"
+        [matTooltipDisabled]="!metric.tooltip"
+      >
+        <span class="font-size-20 font-weight-500"
+          >{{ metric.value
+          }}<sup
+            class="font-size-12"
+            *ngIf="metric.units"
+            >{{ metric.units }}</sup
+          ></span
+        >
+        <span
+          class="font-size-14 secondary-text text-center"
+          [innerHTML]="metric.name"
+        ></span>
+      </div>
+    </div>
+  </div>
+</div>

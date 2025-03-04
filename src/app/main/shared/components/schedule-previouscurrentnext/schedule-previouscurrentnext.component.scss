@@ -1,0 +1,39 @@
+.main-container {
+  display: flex;
+  padding-left: 6px;
+}
+.left-container {
+  width: 36px;
+
+  .left-item {
+    margin-top: 36px;
+    width: 36px;
+    height: 72px;
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 3px;
+  }
+}
+::ng-deep .schedule-previous-next-table {
+  border-collapse: collapse;
+  border: 1px solid #c8c8c8;
+  flex: 1;
+  tr,
+  td {
+    height: 36px;
+  }
+
+  th {
+    background-color: #e5e5e5;
+  }
+
+  td,
+  th {
+    border: 1px solid #c8c8c8;
+    padding-left: 3px;
+  }
+}

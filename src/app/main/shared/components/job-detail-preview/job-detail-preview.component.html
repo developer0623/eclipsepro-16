@@ -1,0 +1,204 @@
+<span
+  (mouseenter)="onShowTooltip($event)"
+  (mouseleave)="onHideTooltip()"
+  (click)="onHideTooltip()"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+>
+  <ng-content></ng-content>
+</span>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayOffsetX]="offsetX"
+  [cdkConnectedOverlayOffsetY]="offsetY"
+>
+  <div
+    *ngIf="!order"
+    class="job-detail-progressbar-container"
+    [ngStyle]="{ top: loadingPos.top, left: loadingPos.left }"
+  >
+    <mat-spinner
+      class="job-detail-progressbar"
+      diameter="40"
+    ></mat-spinner>
+  </div>
+  <div
+    *ngIf="order"
+    class="jobDetailTooltip tooltip-show"
+    (mouseenter)="onShowTooltip1()"
+    (mouseleave)="onHideTooltip1()"
+  >
+    <div class="main-container">
+      <div class="job-detail-tooltip-header">
+        <div class="job-detail-tooltip-title">Order: {{ order.job.orderCode }}</div>
+        <div class="progress-container">
+          <mat-progress-bar
+            class="job-detail-progressbar"
+            mode="determinate"
+            [value]="order.completePerc"
+          ></mat-progress-bar>
+          <p>{{ order.completePerc | number : '1.0-0' }}% complete</p>
+        </div>
+        <p class="machine-title">{{ order.job.status | orderStatus }}</p>
+      </div>
+
+      <mat-tab-group
+        class="main-color-tab"
+        [dynamicHeight]="true"
+        [selectedIndex]="1"
+        [stretchTabs]="true"
+      >
+        <mat-tab label="Order">
+          <md-content
+            class="md-padding flex-container right-padding-0"
+            [ngStyle]="{ height: tableHeight + 'px' }"
+          >
+            <div class="left-container">
+              <div class="multi-item-container">
+                <div class="item-container">
+                  <div class="item-title">Material:</div>
+                  <div class="item-content">{{ order.job.materialCode }}</div>
+                </div>
+                <div class="item-des">{{ order.job.materialDescription }}</div>
+              </div>
+              <div class="multi-item-container">
+                <div class="item-container">
+                  <div class="item-title">Tooling:</div>
+                  <div class="item-content">{{ order.job.toolingCode }}</div>
+                </div>
+                <div class="item-des">{{ order.job.toolingDescription }}</div>
+              </div>
+
+              <div class="item-container">
+                <div class="item-title">Machine:</div>
+                <div class="item-content">{{ order.job.scheduleState?.machine?.description }}</div>
+              </div>
+              <div class="item-container">
+                <div class="item-title">Sequence:</div>
+                <div class="item-content">{{ order.job.scheduleState.sequence }}</div>
+              </div>
+              <div class="item-container">
+                <div class="item-title">Customer Name:</div>
+                <div class="item-content">{{ order.job.customerName }}</div>
+              </div>
+              <div class="item-container">
+                <div class="item-title"></div>
+                <div class="item-content icon-txt">
+                  <i
+                    *ngIf="!order.job.hold"
+                    class="mdi mdi-pause-circle"
+                  ></i>
+                  <i
+                    *ngIf="order.job.hold"
+                    class="mdi mdi-pause-circle-outline"
+                  ></i>
+                  {{ order.job.hold ? 'Remove hold' : 'Hold' }}
+                </div>
+              </div>
+              <div class="item-container">
+                <div class="item-title">Required:</div>
+                <div class="item-content">{{ order.job.requiredDate | amsDate }}</div>
+              </div>
+              <div class="item-container">
+                <div class="item-title">
+                  <span *ngIf="order.job.scheduleState.state === 'Scheduled'">Estimated:</span>
+                  <span *ngIf="order.job.scheduleState.state === 'Done'">Completed:</span>
+                </div>
+                <div class="item-content">{{ order.job.completionDate | amsDateTime }}</div>
+              </div>
+            </div>
+            <div class="right-container">
+              <div class="item-container">
+                <div class="item-title">Total:</div>
+                <div class="item-content">
+                  {{ order.job.totalFt | unitsFormat : 'ft' : 2 : true
+                  }}<span class="sign">{{ 'ft' | userDisplayUnits }}</span>
+                </div>
+              </div>
+              <div class="item-container remaining-item">
+                <div class="item-title">Remaining:</div>
+                <div class="item-content">
+                  {{ order.job.remainingFt | unitsFormat : 'ft' : 2 : true
+                  }}<span class="sign">{{ 'ft' | userDisplayUnits }}</span>
+                </div>
+              </div>
+            </div>
+          </md-content>
+        </mat-tab>
+        <mat-tab label="Items">
+          <md-content
+            class="md-padding bp-0 job-detail-scroll-container"
+            [ngStyle]="{ height: tableHeight + 'px' }"
+          >
+            <table class="table-container">
+              <tr>
+                <th
+                  class="job-detail-col-item job-detail-col-item-header"
+                  *ngFor="let col of itemHeaders | filterByKey : 'isVisible' : true"
+                >
+                  <span>{{ col.title }}</span>
+                </th>
+              </tr>
+              <tr
+                *ngFor="let item of order.items; trackBy: trackByKey"
+                class="hover order-detail-item"
+              >
+                <td
+                  class="job-detail-col-item"
+                  *ngFor="let col of itemHeaders | filterByKey : 'isVisible' : true"
+                >
+                  <span *ngIf="col.field !== 'bundle' && col.field !== 'patternName'">{{
+                    item[col.field] | unitsFormat : col.units : col.unitDecimal
+                  }}</span>
+                  <span *ngIf="col.field === 'bundle'">{{ item[col.field] }}</span>
+                  <span *ngIf="col.field === 'patternName'">
+                    <app-punch-pattern-preview [patternId]="item.patternId">
+                      <a
+                        class="td-link ml-5"
+                        uiSref="app.punch-patterns_list.detail"
+                        [uiParams]="{ id: item.patternId }"
+                      >
+                        {{ item.patternName || item.patternId }}
+                      </a>
+                    </app-punch-pattern-preview>
+                  </span>
+                </td>
+              </tr>
+            </table>
+          </md-content>
+        </mat-tab>
+        <mat-tab label="Bundles">
+          <md-content
+            class="md-padding bp-0 job-detail-scroll-container"
+            [ngStyle]="{ height: tableHeight + 'px' }"
+          >
+            <table class="table-container">
+              <tr>
+                <th
+                  class="job-detail-col-item job-detail-col-item-header"
+                  *ngFor="let col of bundleItemHeaders"
+                >
+                  <span>{{ col.title }}</span>
+                </th>
+              </tr>
+              <tr
+                *ngFor="let item of order.bundles; trackBy: trackByKey"
+                class="hover order-detail-item"
+              >
+                <td
+                  class="job-detail-col-item"
+                  *ngFor="let col of bundleItemHeaders"
+                >
+                  {{ item[col.field] }}
+                </td>
+              </tr>
+            </table>
+          </md-content>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</ng-template>

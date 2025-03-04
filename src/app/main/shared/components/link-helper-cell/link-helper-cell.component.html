@@ -1,0 +1,7 @@
+<span *ngIf="displayValue">{{ displayValue }}</span>
+<app-link-helper
+  *ngIf="!displayValue"
+  [documentId]="documentId"
+  [labelTxt]="labelTxt"
+  [hideType]="hideType"
+></app-link-helper>

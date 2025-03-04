@@ -1,0 +1,37 @@
+<div
+  *ngIf="!editMode && !isOpen"
+  (click)="onEditMode(value)"
+  class="cell"
+>
+  <ng-content></ng-content>
+</div>
+<select
+  #mySelect
+  *ngIf="(editMode || isOpen) && valKey"
+  [(ngModel)]="value"
+  class="cellInput"
+  (ngModelChange)="onModelChange()"
+  (blur)="onFocusOut()"
+>
+  <option
+    *ngFor="let item of items"
+    [ngValue]="item[valKey]"
+  >
+    {{ item[nameKey] }}
+  </option>
+</select>
+<select
+  #mySelect
+  *ngIf="(editMode || isOpen) && !valKey"
+  [(ngModel)]="value"
+  class="cellInput"
+  (ngModelChange)="onModelChange()"
+  (blur)="onFocusOut()"
+>
+  <option
+    *ngFor="let item of items"
+    [ngValue]="item"
+  >
+    {{ item }}
+  </option>
+</select>

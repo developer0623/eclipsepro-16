@@ -1,0 +1,155 @@
+@use 'sass:math';
+@import "var";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  z-index: $sidenav-z-index;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  width: $sidenav-width;
+}
+
+.sidenav {
+  height: 100%;
+  will-change: width;
+}
+
+#eclipse-icon {
+  color: #ffb300;
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  line-height: 32px;
+  transform: translateZ(0) rotate(180deg);
+}
+
+.logo-image {
+  display: block;
+  background: rgba(255, 255, 255, 0.14);
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  border-radius: 2px;
+}
+
+.logo-text {
+  color: #ffffff;
+  margin-left: 16px;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 3px;
+  transition: opacity 0.2s ease-in-out 0.1s;
+  white-space: nowrap;
+}
+
+.plant-name {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: auto;
+  padding: 0 16px 0 24px;
+  margin-top: 8px;
+  height: 32px;
+  line-height: 32px;
+  font-weight: 500;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  span {
+    transition: opacity 0.2s ease-in-out 0.1s;
+  }
+}
+
+.sidenav-toolbar {
+  padding: 0 math.div($spacing, 1.333) 0 $spacing;
+  height: $sidenav-toolbar-height;
+  min-height: $sidenav-toolbar-height;
+  max-height: $sidenav-toolbar-height;
+  overflow: hidden;
+
+  .sidenav-toolbar-icon {
+    vertical-align: text-top;
+
+    svg {
+      width: 26px;
+    }
+  }
+
+  .sidenav-toolbar-logo {
+    cursor: pointer;
+    outline: none;
+    margin-left: $sidenav-item-padding-left;
+    margin-bottom: -5px;
+
+    svg {
+      height: 30px;
+      width: 60px;
+    }
+  }
+}
+
+.sidenav-toolbar-collapse-toggle {
+  transition: transform .25s;
+
+  .sidenav-toolbar-collapse-icon {
+    width: 12px;
+    height: 12px;
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  &.rotate {
+    transform: rotate(-180deg);
+  }
+}
+
+.sidenav-toolbar-logo, .sidenav-toolbar-collapse-toggle {
+  will-change: opacity;
+}
+
+.sidenav-user {
+  text-align: center;
+  margin-bottom: $padding-sm;
+
+  .sidenav-user-image {
+    display: block;
+    height: 72px;
+    width: 72px;
+    border-radius: 50%;
+  }
+
+  .sidenav-user-email {
+    margin-top: 0;
+  }
+
+  .sidenav-user-icons {
+
+    [mat-icon-button] {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      padding: 0;
+
+      & + [mat-icon-button] {
+        margin-left: $padding-xxs;
+      }
+    }
+
+    mat-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+      line-height: 18px;
+    }
+  }
+}
+
+.sidenav-items {
+  min-height: 0;
+}

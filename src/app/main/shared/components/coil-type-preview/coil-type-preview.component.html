@@ -1,0 +1,99 @@
+<span
+  (mouseenter)="onShowTooltip($event)"
+  (mouseleave)="onHideTooltip()"
+  (click)="onHideTooltip()"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+>
+  <ng-content></ng-content>
+</span>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayOffsetX]="offsetX"
+  [cdkConnectedOverlayOffsetY]="offsetY"
+>
+  <div
+    *ngIf="!coilType"
+    class="job-detail-progressbar-container"
+    [ngStyle]="{ top: loadingPos.top, left: loadingPos.left }"
+  >
+    <mat-spinner
+      class="job-detail-progressbar"
+      diameter="40"
+    ></mat-spinner>
+  </div>
+  <div
+    *ngIf="coilType"
+    class="jobDetailTooltip coilTypeTooltip tooltip-show"
+    (mouseenter)="onShowTooltip1()"
+    (mouseleave)="onHideTooltip1()"
+  >
+    <div class="main-container">
+      <div class="job-detail-tooltip-header coil-type-tooltip-header">
+        <div class="job-detail-tooltip-title coil-type-tooltip-title">
+          Material: {{ coilType.materialCode }}
+          <br />
+          <span class="font-size-16 secondary-text">{{ coilType.description }}</span>
+        </div>
+        <div class="header-right-container">
+          <div class="item-container">
+            <div class="item-title"><span translate="onHand"></span>:</div>
+            <div class="item-content">{{ coilType.onHandFt | unitsFormat : 'ft' : 1 }}</div>
+          </div>
+          <div class="item-container">
+            <div class="item-title"><span translate="demand"></span>:</div>
+            <div class="item-content">{{ coilType.demandFt | unitsFormat : 'ft' : 1 }}</div>
+          </div>
+          <div class="item-container">
+            <div class="item-title"><span translate="balance"></span>:</div>
+            <div class="item-content">{{ coilType.balanceFt | unitsFormat : 'ft' : 1 }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="md-padding flex-container right-padding-0">
+        <div class="left-container">
+          <div class="item-container">
+            <div class="item-title"><span translate="width"></span>:</div>
+            <div class="item-content">{{ coilType.widthIn | unitsFormat : 'in' : 2 }}</div>
+          </div>
+          <div class="item-container">
+            <div class="item-title"><span translate="thickness"></span>:</div>
+            <div class="item-content">{{ coilType.thicknessIn | unitsFormat : 'in' : 2 }}</div>
+          </div>
+          <div class="item-container">
+            <div class="item-title"><span translate="gauge"></span>:</div>
+            <div class="item-content">{{ coilType.gauge | unitsFormat : 'ga' : 0 }}</div>
+          </div>
+        </div>
+        <div class="right-container">
+          <div class="item-container">
+            <div class="item-title">Lbs Per Feet:</div>
+            <div class="item-content">{{ coilType.lbsPerFt | unitsFormat : 'lbs' : 2 }}</div>
+          </div>
+          <div class="item-container">
+            <div class="item-title"><span translate="color"></span>:</div>
+            <div class="item-content">{{ coilType.color }}</div>
+          </div>
+          <div class="item-container">
+            <div class="item-title"><span translate="materialType"></span>:</div>
+            <div class="item-content">{{ coilType.type }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="md-padding bp-0 job-detail-scroll-container">
+        <ag-grid-angular
+          [columnDefs]="columns"
+          class="ag-theme-balham coil-type-grid"
+          [rowData]="coils"
+          [gridOptions]="agCoilGridOptions"
+        >
+        </ag-grid-angular>
+      </div>
+    </div>
+  </div>
+</ng-template>

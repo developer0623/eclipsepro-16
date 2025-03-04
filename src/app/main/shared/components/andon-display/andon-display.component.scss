@@ -1,0 +1,177 @@
+$layout-breakpoint-xs: 599px;
+
+.andon-display-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 1vh 1vw;
+  .machine-status-tag .tag-label {
+    font-weight: normal;
+    color: white !important;
+  }
+  i {
+    height: auto;
+    width: auto;
+    color: white !important;
+  }
+  &.offline {
+    .machine-status-tag .tag-label,
+    i {
+      color: rgba(0, 0, 0, 0.87) !important;
+    }
+  }
+}
+
+.andon-display-content {
+  padding: 0 2vw;
+  width: 100%;
+}
+
+.andon-display-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1vh 1vw;
+  text-align: left;
+  h4 {
+    margin: 0;
+  }
+}
+
+.andon-display {
+  font-family: 'Roboto Mono', 'Monaco', 'Menlo', 'Consolas', 'Ubuntu Mono', monospace !important;
+  position: absolute;
+  height: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  overflow: hidden;
+
+  &.light-theme {
+    background: white;
+    color: rgba(0, 0, 0, 1) !important;
+  }
+
+  &.dark-theme {
+    background: material-color('grey', '900');
+    color: rgba(255, 255, 255, 1) !important;
+    .nv-bulletChart.nvd3 text {
+      fill: rgba(255, 255, 255, 0.54);
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  li {
+    text-transform: initial;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  h1 {
+    &.andon-panel-title {
+      text-transform: uppercase;
+      margin-bottom: 0.1em;
+      white-space: normal;
+    }
+
+    &.andon-panel-value {
+      font-weight: 500;
+    }
+  }
+
+  p,
+  ul,
+  ol {
+    font-weight: 400;
+  }
+
+  ul,
+  ol {
+    text-align: left;
+    list-style-position: inside;
+  }
+
+  .svg-container {
+    display: block;
+    position: relative;
+    margin: 1em 0;
+
+    svg {
+      width: 100%;
+    }
+  }
+  .nvd3.nv-bullet .nv-measure {
+    fill: #000 !important;
+  }
+  .nvd3.nv-sparklineplus .nv-currentValue {
+    stroke: #cbcbcb;
+    fill: #212121;
+  }
+}
+
+// Andon panel font-size calculation for preview and large
+@mixin andon-font-size($font-size) {
+  .andon-display-header {
+    .machine-status-tag .tag-label {
+      font-size: (4 * $font-size) + vw;
+    }
+    i {
+      font-size: (5 * $font-size) + vw;
+    }
+  }
+
+  .andon-display-footer {
+    h4 {
+      font-size: (4 * $font-size) + vw !important;
+    }
+  }
+
+  h1 {
+    font-size: (7 * $font-size) + vw !important;
+  }
+
+  h2 {
+    font-size: (6 * $font-size) + vw !important;
+  }
+
+  h3 {
+    font-size: (5 * $font-size) + vw !important;
+  }
+
+  h4 {
+    font-size: (4 * $font-size) + vw !important;
+  }
+
+  h5 {
+    font-size: (3 * $font-size) + vw !important;
+  }
+
+  h6 {
+    font-size: (2 * $font-size) + vw !important;
+  }
+
+  p,
+  ul,
+  ol {
+    font-size: (3 * $font-size) + vw !important;
+  }
+}
+
+.andon-display {
+  @include andon-font-size(1);
+
+  @media only screen and (min-width: $layout-breakpoint-xs) {
+    @include andon-font-size(0.36);
+  }
+}

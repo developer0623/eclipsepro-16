@@ -1,0 +1,735 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./@fury/styles/core";
+@import "./app/app.theme";
+// @import './styles/global-scss/global.scss';
+
+@import './styles/dashboards/dashboard-elements.scss';
+@import './styles/dashboards/machines.scss';
+@import './assets/icons/style.css';
+
+html, body {
+  font-size: 10px !important;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+h4, .h4 {
+  font-size: 1.4rem !important;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: 400 !important;
+}
+.ph-16 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.pb-16 {
+  padding-bottom: 16px;
+}
+
+.font-size-20 {
+  font-size: 20px;
+}
+
+.font-weight-500 {
+  font-weight: 500;
+}
+
+i {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+}
+
+
+.machine-panel-large {
+    app-snapshot-bar {
+      height: 32px;
+  
+      > div {
+        height: 32px;
+  
+        .snapshot-label {
+          line-height: 32px;
+        }
+      }
+  
+      @media only screen and (min-width: 1280) {
+        height: 36px;
+  
+        > div {
+          height: 36px;
+  
+          .snapshot-label {
+            line-height: 36px;
+          }
+        }
+      }
+  
+      @media only screen and (max-width: 600) {
+        height: 24px;
+  
+        > div {
+          height: 24px;
+          padding: 0;
+  
+          .snapshot-label {
+            line-height: 24px;
+          }
+        }
+      }
+    }
+  }
+  
+  .machine-panel-mini {
+    app-snapshot-bar {
+      height: 12px;
+  
+      > div {
+        height: 12px;
+        border-left: none;
+      }
+    }
+  
+    .snapshot-label {
+      display: none;
+    }
+  }
+  
+  .tooltip-header {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .tooltip-body {
+    font-size: 14px;
+    font-style: italic;
+  }
+  
+  .single-line-tooltip .mdc-tooltip__surface {
+    max-width: unset !important;
+  }
+  
+  .main-menu {
+    display: inline-flex;
+    flex-direction: column;
+    min-width: 180px;
+    max-width: 280px;
+    background-color: rgb(245, 245, 245);
+    padding: 6px 0;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  }
+  
+  .main-menu-item,
+  .main-standalone-trigger {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+  
+    user-select: none;
+    min-width: 200px;
+    line-height: 48px;
+    padding: 0 16px;
+    // height: 48px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    flex: 1;
+  
+    .menu-item-content {
+      margin-right: auto;
+    }
+  
+    i {
+      margin: auto 3px auto 0;
+    }
+  }
+  
+  .main-menu-item:hover {
+    background-color: rgb(208, 208, 208) !important;
+  }
+  
+  .selected-menu-item {
+    background-color: rgb(232, 232, 232) !important;
+  }
+  
+  .main-menu-item:active {
+    background-color: rgb(170, 170, 170);
+  }
+  
+  .main-standalone-item {
+    background-color: rgb(239, 239, 239);
+  }
+  .main-standalone-item:hover {
+    background-color: rgb(208, 208, 208);
+  }
+  .main-standalone-item[aria-expanded='true'] {
+    background-color: rgb(208, 208, 208);
+  }
+  
+  .mat-mdc-fab.mat-success,
+  .mat-mdc-button.mat-success,
+  .mat-stroked-button.mat-success {
+    color: white !important;
+    background-color: #ecb100 !important;
+  }
+  .mat-mdc-button.mat-success:hover,
+  .mat-stroked-button.mat-success:hover {
+    background-color: #d19d30;
+  }
+  
+  .yellow-input {
+    .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused
+      .mdc-floating-label,
+    .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused
+      .mdc-floating-label--float-above {
+      color: #d19d30 !important;
+    }
+  
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+      border-bottom-color: #ecb100 !important;
+    }
+    &.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+      color: #ecb100 !important;
+    }
+  }
+  
+  .yellow-select-panel {
+    &.mat-primary .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after,
+    .mat-primary .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-minimal::after {
+      color: #ecb100;
+    }
+    .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled)
+      .mdc-list-item__primary-text {
+      color: #ecb100;
+    }
+  
+    .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after {
+      color: #ecb100;
+    }
+    &.mat-primary .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full {
+      background: #ecb100;
+    }
+  }
+  
+  .pref-checkbox {
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+      border-color: rgba(71, 71, 71, 0.87) !important;
+      background-color: rgba(71, 71, 71, 0.87) !important;
+    }
+    .mdc-checkbox .mdc-checkbox__native-control:focus:checked ~ .mdc-checkbox__ripple {
+      background-color: rgba(71, 71, 71, 0.87) !important;
+    }
+  
+    .mdc-label {
+      margin-bottom: 0 !important;
+    }
+  }
+  
+  .yellow-checkbox {
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+      border-color: rgba(236, 177, 0, 0.87) !important;
+      background-color: rgba(236, 177, 0, 0.87) !important;
+    }
+    .mdc-checkbox .mdc-checkbox__native-control:focus:checked ~ .mdc-checkbox__ripple {
+      background-color: rgba(236, 177, 0, 0.87) !important;
+    }
+    label {
+      margin-bottom: 0 !important;
+      font-weight: 400 !important;
+    }
+  }
+  
+  .primary-checkbox {
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+      border-color: #6d9999 !important;
+      background-color: #88bdbc !important;
+    }
+    .mdc-checkbox .mdc-checkbox__native-control:focus:checked ~ .mdc-checkbox__ripple {
+      background-color: #88bdbc !important;
+    }
+    label {
+      margin-bottom: 0 !important;
+      font-weight: 400 !important;
+    }
+  }
+  
+  .primary-active-checkbox {
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+      border-color: white !important;
+      background-color: white !important;
+    }
+  
+    .mdc-checkbox .mdc-checkbox__native-control:focus:checked ~ .mdc-checkbox__ripple {
+      background-color: #88bdbc !important;
+    }
+    .mdc-checkbox
+      .mdc-checkbox__native-control:enabled
+      ~ .mdc-checkbox__background
+      .mdc-checkbox__checkmark {
+      color: #88bdbc !important;
+    }
+  }
+  
+  .yellow-radio {
+    &.mat-mdc-radio-button
+      .mdc-radio
+      .mdc-radio__native-control:enabled:checked
+      + .mdc-radio__background {
+      .mdc-radio__outer-circle {
+        border-color: rgba(236, 177, 0, 0.87) !important;
+      }
+      .mdc-radio__inner-circle {
+        border-color: rgba(236, 177, 0, 0.87) !important;
+      }
+    }
+    .mdc-label {
+      margin-bottom: 0px;
+      font-weight: 400;
+    }
+  }
+  
+  .main-color-tab {
+    .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+      color: #ecb100 !important;
+    }
+  
+    .mat-mdc-tab .mdc-tab-indicator__content--underline {
+      border-color: #ecb100 !important;
+    }
+  }
+  
+  .mat-toolbar.mat-success {
+    color: white !important;
+    background-color: #ecb100 !important;
+  }
+  
+  .gray-col {
+    color: rgba(0, 0, 0, 0.54) !important;
+  }
+  
+  .pl-0 {
+    padding-left: 0 !important;
+  }
+
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    min-height: 36px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .andon-display-header {
+    .run-state-time {
+      font-size: 2.5vw !important;
+      app-duration-display {
+        font-size: 2.5vw !important;
+      }
+    }
+  }
+  
+  .jobDetailTooltip {
+    display: none;
+    position: absolute;
+    background-color: transparent;
+    padding: 7px 10px 7px 17px;
+    min-width: 700px;
+    max-width: 1000px;
+    width: 1000px;
+    color: #fff;
+    z-index: 1000;
+    .right-padding-0 {
+      padding-right: 0px !important;
+    }
+    .bp-0 {
+      padding-bottom: 0 !important;
+    }
+    .main-container {
+      background-color: white;
+      box-shadow: 0 0 10px #999;
+      width: 100%;
+      min-height: 300px;
+      max-height: 600px;
+      padding-bottom: 10px;
+      md-tabs md-ink-bar {
+        background: #545454;
+      }
+      md-tab-item.md-active {
+        color: #545454 !important;
+        border-bottom: 2px solid #545454;
+      }
+  
+      md-tab-item {
+        color: #ecb100 !important;
+        padding: 18px 15px 0;
+        border-bottom: 2px solid rgba(236, 177, 0, 0.4);
+      }
+  
+      .job-detail-tooltip-header {
+        height: 55px;
+        width: 100%;
+        background-color: rgb(71, 71, 71);
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+  
+        p {
+          margin: 0;
+        }
+  
+        .job-detail-tooltip-title {
+          font-size: 20px;
+        }
+  
+        .job-detail-progressbar {
+          height: 10px;
+          border-radius: 5px;
+          .md-container {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #eee;
+          }
+          .md-bar {
+            height: 10px;
+            background-color: #aaa;
+          }
+        }
+  
+        .progress-container {
+          width: 100px;
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+        }
+        .machine-title {
+          margin-left: 10px;
+          font-size: 20px;
+        }
+      }
+  
+      .job-detail-col-item {
+        height: 40px;
+      }
+      .job-detail-col-item-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      }
+  
+      .flex-container {
+        display: flex;
+        color: rgb(0, 0, 0);
+        .left-container {
+          width: 65%;
+        }
+  
+        .right-container {
+          flex: 1;
+          .item-title {
+            width: 80px !important;
+          }
+        }
+      }
+  
+      .item-container {
+        display: flex;
+      }
+      .item-title {
+        width: 35%;
+        text-align: right;
+      }
+      .item-content {
+        flex: 1;
+        padding-left: 10px;
+      }
+  
+      .item-des {
+        padding-left: 28%;
+      }
+      .remaining-item {
+        line-height: 40px;
+        background-color: #666;
+        color: #fff;
+      }
+  
+      .table-container {
+        width: 100%;
+        min-width: 900px;
+        th:first-child {
+          padding-left: 5px;
+        }
+        td:first-child {
+          padding-left: 5px;
+        }
+      }
+      .job-detail-scroll-container {
+        max-height: 600px;
+      }
+    }
+  }
+  .job-detail-progressbar-container {
+    width: 500px;
+    position: absolute;
+    box-shadow: 0 0 10px #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    .job-detail-progressbar circle {
+      stroke: #ecb100 !important;
+    }
+  }
+  
+  .primary-loading {
+    circle {
+      stroke: #88bdbc !important;
+    }
+  }
+  
+  .scroll-menu-list {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .s-30-btn {
+    width: 30px !important;
+    height: 30px !important;
+    margin: auto 0 !important;
+    padding: 0 !important;
+    .mat-mdc-button-touch-target {
+      width: 30px !important;
+      height: 30px !important;
+    }
+  
+    i {
+      position: relative;
+      top: 1px;
+    }
+  }
+  
+  .s-40-btn {
+    width: 40px !important;
+    height: 40px !important;
+    margin: auto 0 !important;
+    padding: 0 !important;
+    .mat-mdc-button-touch-target {
+      width: 40px !important;
+      height: 40px !important;
+    }
+  
+    i {
+      position: relative;
+      top: 2px;
+    }
+  }
+  
+  .main-dropdown-btn {
+    width: 30px !important;
+    height: 30px !important;
+    margin: auto 0 !important;
+    padding: 0 !important;
+    .mat-mdc-button-touch-target {
+      width: 30px !important;
+      height: 30px !important;
+    }
+    .icon-chevron-down {
+      position: relative;
+      top: -1px;
+    }
+  }
+  
+  .xl200-tabs {
+    .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+      color: rgb(236, 177, 0);
+      font-size: 14px;
+    }
+    .mat-mdc-tab.mdc-tab--active:focus .mdc-tab__text-label {
+      color: rgb(236, 177, 0);
+    }
+    .mat-mdc-tab .mdc-tab__text-label {
+      color: #545454;
+    }
+  
+    .mat-mdc-tab .mdc-tab-indicator__content--underline {
+      border-color: #545454;
+      opacity: 1;
+    }
+    .mat-mdc-tab:focus .mdc-tab-indicator__content--underline {
+      border-color: rgb(236, 177, 0);
+    }
+    .mdc-tab-indicator--active .mdc-tab-indicator__content {
+      border-color: rgb(236, 177, 0);
+    }
+    .mat-mdc-tab.mdc-tab--active:focus .mdc-tab-indicator__content--underline {
+      border-color: rgb(236, 177, 0);
+    }
+    .mat-mdc-tab.mdc-tab:hover .mdc-tab-indicator__content--underline {
+      border-color: rgb(236, 177, 0);
+    }
+  }
+  
+  .header {
+    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 76px !important;
+    min-height: 0 !important;
+    max-height: auto;
+    padding: 0 24px !important;
+    opacity: 1;
+  }
+  
+  @media print {
+    html,
+    body {
+      height: 100%;
+      overflow: visible !important;
+    }
+  
+    // remove html5 boilerplate link helper
+    a[href]:after {
+      content: '';
+    }
+  
+    // .md-dialog-backdrop,
+    // .md-scroll-mask {
+    //   display: none;
+    // }
+  
+    // .md-autocomplete-suggestions-container {
+    //   display: none;
+    // }
+  
+    .mat-mdc-dialog-container {
+      height: 100% !important;
+      width: 100%;
+      display: none !important;
+    }
+  
+    app-production-summary {
+      display: none !important;
+    }
+  
+    //// Instead of hiding everything, I'm going to try hiding the nav and toolbar
+    // #main {
+    //    display: none;
+    // }
+  
+    #navigation,
+    #toolbar {
+      display: none;
+    }
+  
+    .print-hide {
+      display: none;
+    }
+  
+    .page-break {
+      display: block !important;
+      width: 100%;
+      page-break-before: always !important;
+    }
+  
+    .main-print-body {
+      height: auto !important;
+      overflow-y: auto !important;
+    }
+  
+    .template-layout {
+      display: block;
+    }
+  
+    #content-container {
+      display: block !important;
+      overflow-y: auto !important;
+  
+      #content {
+        top: 0 !important;
+        position: initial !important;
+      }
+    }
+  
+    .layout-column {
+      display: block !important;
+    }
+  
+    #print-content {
+      width: 100%;
+      display: block !important;
+      float: none !important;
+  
+      .page-content {
+        display: block !important;
+        width: 100% !important;
+        // height: 100%;
+        box-shadow: none;
+        page-break-before: always;
+      }
+    }
+  
+    #print-body {
+      height: auto !important;
+      overflow-y: auto !important;
+  
+      .ng-isolate-scope {
+        display: flex;
+      }
+  
+      .ui-grid-cell {
+        flex: 1;
+      }
+    }
+  }
+  #settings {
+    .header {
+      padding: 24px !important;
+    }
+  }
+  .print-scroll {
+    .print-report-header {
+      display: none;
+    }
+  }
+  
+  @media print {
+    .print-page-break {
+      page-break-after: always;
+    }
+  
+    .print-scroll {
+      height: auto !important;
+  
+      .print-report-header {
+        display: block;
+      }
+  
+      .print-content__date {
+        text-align: center;
+      }
+  
+      .ng-scroll-content {
+        display: block;
+      }
+  
+      .ng-scrollbar-wrapper {
+        position: initial !important;
+      }
+  
+      .ng-scroll-viewport-wrapper {
+        position: initial !important;
+      }
+  
+      .ng-scroll-viewport {
+        position: initial !important;
+        contain: inherit !important;
+      }
+    }
+  }

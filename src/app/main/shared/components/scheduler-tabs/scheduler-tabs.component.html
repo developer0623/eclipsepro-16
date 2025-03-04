@@ -1,0 +1,17 @@
+<mat-tab-group
+  class="jobsTabs machines-tabs machine-status-tag"
+  mat-stretch-tabs="false"
+  #tabGroup
+  [selectedIndex]="selectedTabIndex"
+  (selectedTabChange)="selectedTabChange()"
+>
+  <mat-tab *ngFor="let machine of dashboardMachines; let i = index; trackBy: trackByKey">
+    <ng-template mat-tab-label>
+      {{ machine.machine.description }}
+      <app-machine-tab
+        [machine]="machine"
+        [metricDefinitions]="metricDefinitions"
+      ></app-machine-tab>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,20 @@
+<div class="tag-container">
+  <a
+    href="/_api/bundle/{{ value }}/tag"
+    class="icon tag-print-button"
+    target="_blank"
+  >
+    <i
+      class="mdi mdi-file-pdf-box"
+      matTooltip="View the bundle tag"
+    ></i>
+  </a>
+  <button
+    mat-icon-button
+    class="tag-print-button"
+    (click)="printBundle()"
+    matTooltip="Print the bundle tag"
+  >
+    <i class="mdi mdi-printer"></i>
+  </button>
+</div>

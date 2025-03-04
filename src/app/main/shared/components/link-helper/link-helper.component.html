@@ -1,0 +1,53 @@
+<app-job-detail-preview
+  [ordId]="docId"
+  *ngIf="docType === 'JobDetail' && idFound"
+>
+  <a
+    class="td-link ml-5"
+    uiSref="app.orders.detail"
+    [uiParams]="{ id: docId }"
+  >
+    <span *ngIf="!hideType">Order:</span>{{ labelTxt || docId }}
+  </a>
+</app-job-detail-preview>
+<span *ngIf="docType === 'Coil' && idFound">
+  <a
+    class="td-link ml-5"
+    uiSref="app.inventory_coils.detail"
+    [uiParams]="{ id: docId }"
+  >
+    <span *ngIf="!hideType">Coil:</span>{{ labelTxt || docId }}
+  </a>
+</span>
+<app-punch-pattern-preview
+  [patternId]="docId"
+  *ngIf="docType === 'PunchPattern' && idFound"
+>
+  <a
+    class="td-link ml-5"
+    uiSref="app.punch-patterns_list.detail"
+    [uiParams]="{ id: docId }"
+  >
+    <span *ngIf="!hideType">Pattern:</span>{{ labelTxt || docId }}
+  </a>
+</app-punch-pattern-preview>
+<app-coil-type-preview
+  [materialId]="docId"
+  *ngIf="docType === 'Material' && idFound"
+>
+  <a
+    class="td-link ml-5"
+    uiSref="app.inventory_coil-types.detail"
+    [uiParams]="{ id: docId }"
+  >
+    <span *ngIf="!hideType">Material:</span>{{ labelTxt || docId }}
+  </a>
+</app-coil-type-preview>
+<!-- Setups Snapshot : consider uiSref instead of href -->
+<a
+  *ngIf="docType === 'setupsChange'"
+  class="td-link"
+  href="{{ href }}"
+>
+  <span>Setups Change: {{ labelTxt }}</span>
+</a>

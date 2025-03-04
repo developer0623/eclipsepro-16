@@ -1,0 +1,67 @@
+<div
+  class="tag machine-status-tag"
+  fxLayout="row"
+  fxLayoutAlign="start center"
+  *ngIf="!isSchedule"
+>
+  <i
+    *ngIf="isNoPower"
+    class="mdi mdi-power-socket"
+    style="padding-right: 40px"
+    matTooltip="Machine reported no power"
+    matTooltipPosition="above"
+    aria-hidden="false"
+    aria-label="power-socket"
+  >
+  </i>
+  <!-- Run state time placeholder -->
+  <i
+    *ngIf="isOffline"
+    class="mdi mdi-close-network"
+    style="padding-right: 40px"
+    matTooltip="Machine is offline"
+    matTooltipPosition="above"
+  >
+  </i>
+  <!--todo:review space-->
+  <div class="h4 run-state-time text-nowrap">
+    <app-duration-display [date]="lastRunStateChange"></app-duration-display>
+  </div>
+  <i
+    class="mdi"
+    [ngClass]="{
+      'mdi-play': state === 'R',
+      'mdi-close-circle-outline': state === 'O',
+      'mdi-stop': state === 'H'
+    }"
+  ></i>
+</div>
+<div
+  class="tag machine-status-tag schedule-run-state"
+  fxLayout="row"
+  fxLayoutAlign="start center"
+  *ngIf="isSchedule"
+>
+  <!-- Run state time placeholder -->
+  <i
+    class="mdi"
+    [ngClass]="{
+      'mdi-play': state == 'R',
+      'mdi-close-circle-outline': state === 'O',
+      'mdi-stop': state === 'H'
+    }"
+  ></i>
+  <i
+    *ngIf="isOffline"
+    class="mdi mdi-close-network"
+    style="padding-right: 40px"
+    matTooltip="Machine is offline"
+    matTooltipPosition="above"
+  >
+  </i>
+  <!--todo:review space-->
+  <div class="run-state-time tag-label text-nowrap">
+    <span class="for-text">for&nbsp;</span
+    ><app-duration-display [date]="lastRunStateChange"></app-duration-display>
+  </div>
+</div>

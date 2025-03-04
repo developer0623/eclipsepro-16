@@ -1,0 +1,57 @@
+<div class="production-log-menu-container">
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="colMenu"
+    class="main-dropdown-btn s-30-btn"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
+  <mat-menu
+    #colMenu="matMenu"
+    xPosition="before"
+  >
+    <div class="checkbox-menu-header">
+      <span (click)="$event.stopPropagation(); $event.preventDefault()">Add/Remove Column</span>
+      <mat-icon>close</mat-icon>
+    </div>
+    <div class="scroll-menu-list">
+      <button
+        *ngFor="let item of columns"
+        mat-menu-item
+        aria-label="{{ item.headerName }}"
+        (click)="onColumnToggle(item, $event)"
+      >
+        <mat-icon
+          *ngIf="item.hide"
+          class="empty"
+          >check_box_outline_blank</mat-icon
+        >
+        <mat-icon
+          *ngIf="!item.hide"
+          class="checked"
+          >check_box</mat-icon
+        >
+        {{ item.headerName | translate }}
+      </button>
+      <div
+        fxLayout="row"
+        fxLayoutAlign="center center"
+        class="filter-items-div"
+      >
+        <button
+          class="reset-btn"
+          mat-button
+          (click)="onReset()"
+        >
+          Reset Defaults
+        </button>
+      </div>
+    </div>
+  </mat-menu>
+</div>
+<ag-grid-angular
+  class="ag-theme-balham"
+  [domLayout]="domLayout"
+  [gridOptions]="agGridOptions"
+>
+</ag-grid-angular>

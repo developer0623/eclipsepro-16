@@ -1,0 +1,50 @@
+<div class="bullet-chart-preview">
+  <svg
+    [attr.width]="width"
+    width="100%"
+    [attr.height]="height"
+  >
+    <rect
+      class="border"
+      x="0"
+      y="0"
+      width="100%"
+      height="100%"
+    ></rect>
+    <rect
+      class="bad"
+      [attr.x]="lowerIsBetter ? scale(okUpper - minValue) : 0"
+      y="0"
+      [attr.width]="lowerIsBetter ? scale(maxValue - okUpper) : scale(okLower - minValue)"
+      height="100%"
+    ></rect>
+    <rect
+      class="ok"
+      [attr.x]="scale(okLower - minValue)"
+      y="0"
+      [attr.width]="scale(okUpper - okLower)"
+      height="100%"
+    ></rect>
+    <rect
+      class="good"
+      [attr.x]="!lowerIsBetter ? scale(okUpper - minValue) : 0"
+      y="0"
+      [attr.width]="!lowerIsBetter ? scale(maxValue - okUpper) : scale(okLower - minValue)"
+      height="100%"
+    ></rect>
+    <path
+      class="nv-markerTriangle target"
+      [attr.transform]="'translate(' + scale((target - minValue) * 3, true) + ',8.5)'"
+      y="0"
+      d="M0,2.8333333333333335L2.8333333333333335,-2.8333333333333335 -2.8333333333333335,-2.8333333333333335Z"
+    ></path>
+    <!--<rect class="target" [attr.x]="scale(target - minValue) - 0.5" y="0" width="1%" height="100%"></rect>-->
+    <rect
+      class="current"
+      x="0"
+      y="25%"
+      [attr.width]="scale(current - minValue)"
+      height="50%"
+    ></rect>
+  </svg>
+</div>

@@ -1,0 +1,8 @@
+.header {
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 76px !important;
+  min-height: 0 !important;
+  max-height: auto;
+  padding: 0 24px !important;
+  opacity: 1;
+}

@@ -1,0 +1,15 @@
+<i
+  *ngIf="data.patternNotDefined"
+  class="mdi mdi-18px grid-icon mdi-stamper"
+  matTooltip="Punch pattern not defined"
+></i>
+<i
+  *ngIf="data.materialShortageAlert && showMaterialShortageAlerts"
+  class="mdi mdi-18px grid-icon mdi-clipboard-check-outline"
+  matTooltip="Material Shortage"
+></i>
+<i
+  *ngIf="data.hold"
+  class="mdi mdi-18px grid-icon mdi-pause-circle-outline"
+  matTooltip="On Hold"
+></i>

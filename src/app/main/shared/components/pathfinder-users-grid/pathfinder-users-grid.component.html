@@ -1,0 +1,53 @@
+<div *ngIf="pathfinders.length === 0">There are no connected Pathfinders.</div>
+<div *ngIf="pathfinders.length > 0">
+  <table class="simple hover dataTable users-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Pin</th>
+        <th *ngFor="let machine of pathfinders">{{ machine.name }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.userName }}</td>
+        <td>
+          <app-edit-input
+            [(ngModel)]="anyvariablejustnotthepin"
+            (onaftersave)="saveUserPin(user, $event)"
+            *ifRole="'administrator'"
+          >
+            <span
+              *ngIf="!user.folderPin"
+              style="font-style: italic"
+              matTooltip="Users without a valid pin will not appear on the machine."
+              matTooltipPosition="above"
+              >not set
+            </span>
+            <span *ngIf="user.folderPin">****</span>
+          </app-edit-input>
+
+          <span *ifNotRole="'administrator'">****</span>
+        </td>
+        <td *ngFor="let folder of pathfinders">
+          <mat-select
+            [(ngModel)]="user.folderRolesModel[folder.id]"
+            panelClass="yellow-select-panel"
+            class="action-select"
+            *ifRole="'administrator'"
+          >
+            <mat-option
+              *ngFor="let role of pathfinderUserRolesMasterList"
+              [value]="role"
+              (click)="clickedUserRole(folder, user, role)"
+            >
+              {{ role }}
+            </mat-option>
+          </mat-select>
+          <span *ifNotRole="'administrator'">{{ user.folderRolesModel[folder.id] }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="small">Users must have the <code>pfpc</code> role to appear in this list.</p>
+</div>

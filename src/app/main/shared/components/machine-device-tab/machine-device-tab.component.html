@@ -1,0 +1,28 @@
+<button
+  mat-icon-button
+  (mouseenter)="onShowTooltip()"
+  (mouseleave)="onHideTooltip()"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  class="machine-status-btn"
+>
+  <i
+    class="mdi"
+    [ngClass]="ongGetStatus()"
+  ></i>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayPositions]="positions"
+>
+  <app-device-dashboard-mini
+    [device]="device"
+    [deviceState]="device.state"
+    [shiftStats]="device.shiftStats"
+    [metrics]="device.metricModels"
+  >
+  </app-device-dashboard-mini>
+</ng-template>

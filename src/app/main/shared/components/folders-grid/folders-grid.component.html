@@ -1,0 +1,37 @@
+<div *ngIf="pathfinders.length === 0">There are no connected Pathfinders.</div>
+
+<table
+  *ngIf="pathfinders.length > 0"
+  class="simple hover dataTable folder-table"
+>
+  <thead>
+    <tr>
+      <th>Folding Machines</th>
+      <th>Serial Number</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let folder of pathfinders; let i = index">
+      <td>
+        <app-edit-input
+          [(ngModel)]="folder.name"
+          (onaftersave)="saveFolderNameChange(folder, $event, i)"
+        >
+          {{ folder.name }}
+        </app-edit-input>
+      </td>
+      <td>{{ folder.serialNumber }}</td>
+      <td>
+        <button
+          mat-button
+          class="m-0"
+          *ngIf="!folder.accepted"
+          (click)="acceptFolder(folder)"
+        >
+          Accept
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,29 @@
+<div class="toolbar-user" (furyClickOutside)="onClickOutside()" fxFlex="grow">
+    <button class="button" mat-button (click)="toggleDropdown()" [class.open]="isOpen" fxFlex="grow">
+    <span fxLayout="row" fxLayoutAlign="start center">
+      <img class="avatar" src="assets/images/avatars/alice.jpg">
+      <span class="name" fxHide fxShow.gt-sm>{{user.userName}}</span>
+      <mat-icon class="icon" fxHide fxShow.gt-sm>keyboard_arrow_down</mat-icon>
+    </span>
+  </button>
+
+  <div class="dropdown" [class.open]="isOpen">
+    <div class="content">
+      <div class="list">
+        <div class="list-item" matRipple
+        [routerLink]="['/settings/users']"
+        [routerLinkActive]="['active']"
+        [queryParams]="{ userName: user.userName }"
+        
+        >
+          <mat-icon class="list-item-icon">account_circle</mat-icon>
+          <span>Profile</span>
+        </div>
+        <div class="list-item" matRipple (click)="logout()">
+          <mat-icon class="list-item-icon">exit_to_app</mat-icon>
+          <span>Logout</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

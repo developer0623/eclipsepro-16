@@ -1,0 +1,642 @@
+<div
+  class="andon-display"
+  fxLayout="column"
+  fxFlex="100"
+  fxLayoutAlign="center center"
+  [ngClass]="{ 'light-theme': theme === 'light', 'dark-theme': theme === 'dark' }"
+>
+  <div
+    class="andon-display-header"
+    fxLayout="row"
+    fxFlex="100"
+    fxLayoutAlign="end"
+    [ngClass]="{
+      offline: machine.state.runState == 'O',
+      halted: machine.state.runState == 'H',
+      running: machine.state.runState == 'R'
+    }"
+  >
+    <app-run-state-indicator
+      [state]="machine.state.runState"
+      [lastRunStateChange]="machine.state.lastRunStateChange"
+      [isOffline]="machine.state.connectionStatus !== 'Online'"
+    >
+    </app-run-state-indicator>
+  </div>
+  <div
+    class="andon-display-content"
+    [ngSwitch]="viewKey"
+  >
+    <div
+      *ngSwitchDefault
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="initializing"
+      ></h1>
+    </div>
+    <div
+      *ngSwitchCase="'operatorName'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="operatorLabel"
+      ></h1>
+      <h1 class="andon-panel-value">{{ machine.state.employeeName }}</h1>
+    </div>
+    <div
+      *ngSwitchCase="'currentOrder'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="currentOrder"
+      ></h1>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.currentCustomerName }}</h2>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.currentOrderCode }}</h2>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.currentMaterialCode }}</h2>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.currentToolingCode }}</h2>
+    </div>
+    <div
+      *ngSwitchCase="'nextOrder'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="nextOrder"
+      ></h1>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.nextOrderCustomerName }}</h2>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.nextOrderCode }}</h2>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.nextMaterialCode }}</h2>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.nextToolingCode }}</h2>
+    </div>
+    <div
+      *ngSwitchCase="'currentBundle'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="currentBundle"
+      ></h1>
+      <h2 class="andon-panel-value">{{ machine.scheduleSummary?.currentBundleNumber }}</h2>
+      <h1
+        class="andon-panel-title"
+        translate="completedParts"
+      ></h1>
+      <h2 class="andon-panel-value">
+        {{ machine.scheduleSummary?.currentBundleQuantityDone }} /
+        {{ machine.scheduleSummary?.currentBundleQuantity }}
+      </h2>
+    </div>
+    <div
+      *ngSwitchCase="'upcomingBundles'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="upcomingBundles"
+      ></h1>
+      <h2 style="font-style: italic">&lsaquo;&lsaquo;Preview not available&rsaquo;&rsaquo;</h2>
+    </div>
+    <div
+      *ngSwitchCase="'upcomingBundles'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="upcomingBundles"
+      ></h1>
+      <h2 style="font-style: italic">&lsaquo;&lsaquo;Preview not available&rsaquo;&rsaquo;</h2>
+    </div>
+    <div
+      *ngSwitchCase="'nextMaterial'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="nextMaterial"
+      ></h1>
+      <h1 class="andon-panel-value">
+        {{ machine.scheduleSummary?.nextMaterialCode || 'n/a' }} ({{
+          (machine.scheduleSummary?.nextMaterialFeet | unitsFormat : 'ft' : 0) || 'n/a'
+        }})
+      </h1>
+      <h1 class="andon-panel-value">
+        <span translate="changeIn"></span>:
+        {{ machine.scheduleSummary?.currentMaterialRemainingFeet | unitsFormat : 'ft' : 0 || '0' }}
+      </h1>
+    </div>
+    <div
+      *ngSwitchCase="'orderProgress'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="orderProgress"
+      ></h1>
+      <h1 class="andon-panel-value">Quantity: {{ machine.scheduleSummary?.currentItemQty }}</h1>
+      <h1 class="andon-panel-value">
+        Completed: {{ machine.scheduleSummary?.currentItemQtyDone }}
+      </h1>
+    </div>
+    <div
+      *ngSwitchCase="'scheduledFootage'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="currentWarehouseTask"
+      ></h1>
+      <!-- <task-item task="currTask" state="currTask.magicState"></task-item> -->
+      <h2 style="font-style: italic">&lsaquo;&lsaquo;Preview not available&rsaquo;&rsaquo;</h2>
+    </div>
+    <div
+      *ngSwitchCase="'currentWarehouseTask'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="scheduledFootage"
+      >
+        Scheduled Footage
+      </h1>
+      <h1 class="andon-panel-value">
+        {{ machine.scheduleSummary?.scheduledFeetTotal | unitsFormat : 'ft' : 0 }}
+      </h1>
+    </div>
+    <div
+      *ngSwitchCase="'orderUser1'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="userUser1"
+      ></h1>
+      <h1 class="andon-panel-value">{{ currentJob.user1 }}</h1>
+    </div>
+    <div
+      *ngSwitchCase="'orderUser2'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="userUser2"
+      ></h1>
+      <h1 class="andon-panel-value">{{ currentJob.user2 }}</h1>
+    </div>
+    <div
+      *ngSwitchCase="'orderUser3'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="orderUser3"
+      ></h1>
+      <h1 class="andon-panel-value">{{ currentJob.user3 }}</h1>
+    </div>
+    <div
+      *ngSwitchCase="'orderUser4'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="orderUser4"
+      ></h1>
+      <h1 class="andon-panel-value">{{ currentJob.user4 }}</h1>
+    </div>
+    <div
+      *ngSwitchCase="'orderUser5'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="orderUser5"
+      ></h1>
+      <h1 class="andon-panel-value">{{ currentJob.user5 }}</h1>
+    </div>
+    <div
+      *ngSwitchCase="'itemUserAll'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h4>
+        <span translate="itemUser1"></span>: <span>{{ currentItem.user1 }}</span>
+      </h4>
+      <h4>
+        <span translate="itemUser2"></span>: <span>{{ currentItem.user2 }}</span>
+      </h4>
+      <h4>
+        <span translate="itemUser3"></span>: <span>{{ currentItem.user3 }}</span>
+      </h4>
+      <h4>
+        <span translate="itemUser4"></span>: <span>{{ currentItem.user4 }}</span>
+      </h4>
+      <h4>
+        <span translate="itemUser5"></span>: <span>{{ currentItem.user5 }}</span>
+      </h4>
+    </div>
+    <div
+      *ngSwitchCase="'longestPart'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="longestPart"
+      ></h1>
+      <h1 class="andon-panel-value">{{ currentJob.longestLengthIn | unitsFormat : 'in' : 0 }}</h1>
+    </div>
+    <div
+      *ngSwitchCase="'shortestPart'"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100"
+    >
+      <h1
+        class="andon-panel-title"
+        translate="shortestPart"
+      ></h1>
+      <h1 class="andon-panel-value">{{ currentJob.shortestLengthIn | unitsFormat : 'in' : 0 }}</h1>
+    </div>
+    <ng-template *ngSwitchCase="'message'">
+      <div
+        *ngFor="let panel of sequence.panels | andonDisplayFilter : 'message' : playKey"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex="100"
+      >
+        <div *btfMarkdown="panel.message"></div>
+      </div>
+    </ng-template>
+    <ng-template *ngSwitchCase="'shiftOEE'">
+      <div
+        *ngIf="!panel.chart"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex="100"
+      >
+        <h1
+          class="andon-panel-title"
+          translate="oEE"
+        ></h1>
+        <h1 class="andon-panel-value">{{ machine.stats.oEE | unitsFormat : '%' : 1 }}</h1>
+      </div>
+      <div
+        class="text-left"
+        *ngIf="panel.chart"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxFlex="100"
+      >
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          fxFlexOffset="5"
+          fxLayoutAlign="center start"
+        >
+          <h1
+            class="andon-panel-title"
+            translate="oEE"
+          ></h1>
+          <h1 class="andon-panel-value">{{ machine.stats.oEE | unitsFormat : '%' : 1 }}</h1>
+        </div>
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          *ngFor="let metric of machine.metricSettings | filterByKey : 'metricId' : 'oEE'"
+        >
+          <div class="svg-container">
+            <app-sparkline
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [stats]="machine.statsHistory[metricDefinitions[metric.metricId].historyKey]"
+            ></app-sparkline>
+          </div>
+          <div class="svg-container">
+            <app-bullet-chart
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [minValue]="metric.minValue"
+              [okLower]="metric.okRangeStart"
+              [okUpper]="metric.okRangeEnd"
+              [target]="metric.targetValue"
+              [maxValue]="metric.maxValue"
+              [lowerIsBetter]="metricDefinitions[metric.metricId].lowerIsBetter"
+            ></app-bullet-chart>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template *ngSwitchCase="'shiftTarget'">
+      <div
+        *ngIf="!panel.chart"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex="100"
+      >
+        <h1
+          class="andon-panel-title"
+          translate="target"
+        ></h1>
+        <h1 class="andon-panel-value">{{ machine.stats.targetPct | unitsFormat : '%' : 1 }}</h1>
+      </div>
+      <div
+        class="text-left"
+        *ngIf="panel.chart"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxFlex="100"
+      >
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          fxFlexOffset="5"
+          fxLayoutAlign="center start"
+        >
+          <h1
+            class="andon-panel-title"
+            translate="target"
+          ></h1>
+          <h1 class="andon-panel-value">{{ machine.stats.targetPct | unitsFormat : '%' : 1 }}</h1>
+        </div>
+        <!-- <div fxLayout="column" fxFlex="45" *ngFor="let metric of machine.metricSettings | filterByKey: 'metricId' : 'target'">
+                    <div class="svg-container">
+                        <app-sparkline
+                            [display]="display"
+                            [current]="machine.stats[metricDefinitions[metric.metricId].primaryDataKey] | unitsValue :metricDefinitions[metric.metricId].primaryUnits:1"
+                            [stats]="machine.statsHistory[metricDefinitions[metric.metricId].historyKey]"
+                        ></app-sparkline>
+                    </div>
+                    <div class="svg-container">
+                        <app-bullet-chart
+                            [display]="display"
+                            [current]="machine.stats[metricDefinitions[metric.metricId].primaryDataKey] | unitsValue :metricDefinitions[metric.metricId].primaryUnits:1"
+                            [minValue]="metric.minValue"
+                            [okLower]="metric.okRangeStart"
+                            [okUpper]="metric.okRangeEnd"
+                            [target]="metric.targetValue"
+                            [maxValue]="metric.maxValue"
+                            [lowerIsBetter]="metricDefinitions[metric.metricId].lowerIsBetter"
+                        ></app-bullet-chart>
+                    </div>
+                </div> -->
+      </div>
+    </ng-template>
+    <ng-template *ngSwitchCase="'shiftFootage'">
+      <div
+        *ngIf="!panel.chart"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex="100"
+      >
+        <h1
+          class="andon-panel-title"
+          translate="goodFootage"
+        ></h1>
+        <h1 class="andon-panel-value">{{ machine.stats.goodFeet | unitsFormat : 'ft' : 0 }}</h1>
+      </div>
+      <div
+        class="text-left"
+        *ngIf="panel.chart"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxFlex="100"
+      >
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          fxFlexOffset="5"
+          fxLayoutAlign="center start"
+        >
+          <h1
+            class="andon-panel-title"
+            translate="goodFootage"
+          ></h1>
+          <h2 class="andon-panel-value">{{ machine.stats.goodFeet | unitsFormat : 'ft' : 0 }}</h2>
+        </div>
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          *ngFor="metric; in: machine.metricSettings | filterByKey : 'metricId' : 'good'"
+        >
+          <div class="svg-container">
+            <app-sparkline
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [stats]="machine.statsHistory[metricDefinitions[metric.metricId].historyKey]"
+            ></app-sparkline>
+          </div>
+          <div class="svg-container">
+            <app-bullet-chart
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [minValue]="metric.minValue"
+              [okLower]="metric.okRangeStart"
+              [okUpper]="metric.okRangeEnd"
+              [target]="metric.targetValue"
+              [maxValue]="metric.maxValue"
+              [lowerIsBetter]="metricDefinitions[metric.metricId].lowerIsBetter"
+            ></app-bullet-chart>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template *ngSwitchCase="'shiftRun'">
+      <div
+        *ngIf="!panel.chart"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex="100"
+      >
+        <h1
+          class="andon-panel-title"
+          translate="run"
+        ></h1>
+        <h1 class="andon-panel-value">{{ machine.stats.runPct | unitsFormat : '%' : 1 }}</h1>
+        <h1 class="andon-panel-value">{{ machine.stats.avgFPM | unitsFormat : 'fpm' : 0 }}</h1>
+      </div>
+      <div
+        class="text-left"
+        *ngIf="panel.chart"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxFlex="100"
+      >
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          fxFlexOffset="5"
+          fxLayoutAlign="center start"
+        >
+          <h1
+            class="andon-panel-title"
+            translate="run"
+          ></h1>
+          <h1 class="andon-panel-value">{{ machine.stats.runPct | unitsFormat : '%' : 1 }}</h1>
+          <h1 class="andon-panel-value">{{ machine.stats.avgFPM | unitsFormat : 'fpm' : 0 }}</h1>
+        </div>
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          *ngFor="metric; in: machine.metricSettings | filterByKey : 'metricId' : 'good'"
+        >
+          <div class="svg-container">
+            <app-sparkline
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [stats]="machine.statsHistory[metricDefinitions[metric.metricId].historyKey]"
+            ></app-sparkline>
+          </div>
+          <div class="svg-container">
+            <app-bullet-chart
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [minValue]="metric.minValue"
+              [okLower]="metric.okRangeStart"
+              [okUpper]="metric.okRangeEnd"
+              [target]="metric.targetValue"
+              [maxValue]="metric.maxValue"
+              [lowerIsBetter]="metricDefinitions[metric.metricId].lowerIsBetter"
+            ></app-bullet-chart>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template *ngSwitchCase="'shiftScrap'">
+      <div
+        *ngIf="!panel.chart"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex="100"
+      >
+        <h1
+          class="andon-panel-title"
+          translate="scrap"
+        ></h1>
+        <h1 class="andon-panel-value">
+          {{ (machine.stats.scrapFeet | unitsFormat : 'ft' : 0) || '0' }} ({{
+            machine.stats.scrapPct | unitsFormat : '%' : 1
+          }})
+        </h1>
+      </div>
+      <div
+        class="text-left"
+        *ngIf="panel.chart"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxFlex="100"
+      >
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          fxFlexOffset="5"
+          fxLayoutAlign="center start"
+        >
+          <h1
+            class="andon-panel-title"
+            translate="scrap"
+          ></h1>
+          <h1 class="andon-panel-value">
+            {{ (machine.stats.scrapFeet | unitsFormat : 'ft' : 0) || '0' }}
+          </h1>
+          <h1 class="andon-panel-value">({{ machine.stats.scrapPct | unitsFormat : '%' : 0 }})</h1>
+        </div>
+        <div
+          fxLayout="column"
+          fxFlex="45"
+          *ngFor="metric; in: machine.metricSettings | filterByKey : 'metricId' : 'good'"
+        >
+          <div class="svg-container">
+            <app-sparkline
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [stats]="machine.statsHistory[metricDefinitions[metric.metricId].historyKey]"
+            ></app-sparkline>
+          </div>
+          <div class="svg-container">
+            <app-bullet-chart
+              [display]="display"
+              [current]="
+                machine.stats[metricDefinitions[metric.metricId].primaryDataKey]
+                  | unitsValue : metricDefinitions[metric.metricId].primaryUnits : 1
+              "
+              [minValue]="metric.minValue"
+              [okLower]="metric.okRangeStart"
+              [okUpper]="metric.okRangeEnd"
+              [target]="metric.targetValue"
+              [maxValue]="metric.maxValue"
+              [lowerIsBetter]="metricDefinitions[metric.metricId].lowerIsBetter"
+            ></app-bullet-chart>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <div
+    class="andon-display-footer"
+    fxLayout="row"
+    fxFlex="100"
+    fxLayoutAlign="space-between center"
+  >
+    <h4>{{ machine.machine.description }}</h4>
+    <app-current-time></app-current-time>
+  </div>
+</div>

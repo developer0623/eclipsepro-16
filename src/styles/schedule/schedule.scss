@@ -1,0 +1,61 @@
+@import './jobs/jobs.scss';
+
+#schedule {
+  &.page-layout.simple.fullwidth {
+    > .content {
+      padding: 0 !important;
+    }
+    .main-header {
+      padding-left: 24px;
+      margin: 16px 0;
+      line-height: 1.4 !important;
+    }
+    .add-button {
+      position: fixed;
+      bottom: 0px;
+      right: 0px;
+      font-size: 35px;
+      font-weight: 300;
+      margin: 0 30px 30px 0;
+      background-color: #d19d30;
+    }
+    .schedule-content {
+      .search-div {
+        position: relative;
+        //height: 50px;
+        // margin-bottom: 16px;
+        .search-input {
+          margin-bottom: 0;
+          margin-top: 0;
+          input {
+            font-size: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            height: 34px;
+            padding: 4px 8px;
+            // min-width: 200px;
+          }
+          .md-errors-spacer {
+            display: none;
+          }
+          .icon {
+            font-size: 24px;
+            line-height: 14px;
+            padding-top: 4px;
+          }
+        }
+        .helpIconDiv {
+          padding-top: 2px;
+          margin: auto;
+          span {
+            cursor: pointer;
+            margin: 0px;
+            img {
+              width: 30px;
+              height: 30px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

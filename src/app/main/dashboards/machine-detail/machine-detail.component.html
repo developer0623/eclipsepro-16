@@ -1,0 +1,35 @@
+<div
+  id="dashboard-machines"
+  fxLayout="column"
+  class="page-layout datatable-layout simple fullwidth scroll-tab-dashboards"
+>
+  <div
+    fxFlex="nogrow"
+    fxLayout="row"
+    class="print-hide"
+  >
+    <button
+      mat-icon-button
+      class="back-btn"
+      uiSref="app.dashboards.machines"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <app-machine-tabs
+      [dashboardMachines]="dashboardMachines"
+      [dashboardDevices]="dashboardDevices"
+      [selectedMachine]="machineSelection"
+      (onChangeMachine)="onChangeMachine($event)"
+    ></app-machine-tabs>
+  </div>
+  <ng-container *ngIf="machineSelection">
+    <app-machine-detail-xl
+      [machineSelection]="machineSelection"
+      *ngIf="machineSelection.type === 'xl'"
+    ></app-machine-detail-xl>
+    <app-machine-detail-device
+      [machineSelection]="machineSelection"
+      *ngIf="machineSelection.type === 'device'"
+    ></app-machine-detail-device>
+  </ng-container>
+</div>

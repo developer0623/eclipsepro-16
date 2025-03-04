@@ -1,0 +1,60 @@
+<ng-container
+  *ngIf="parent"
+  [ngSwitch]="metric.def.primaryUnits"
+>
+  <span
+    class="font-size-20 font-weight-500 text-center"
+    *ngSwitchCase="'string'"
+  >
+    {{ parent[metric.def.primaryDataKey] }}
+  </span>
+  <span
+    class="font-size-20 font-weight-500 text-center"
+    *ngSwitchCase="'durationShort'"
+  >
+    <app-duration-display
+      [date]="parent[metric.def.primaryDataKey]"
+      [short]="true"
+    ></app-duration-display>
+  </span>
+  <span
+    class="font-size-20 font-weight-500 text-center"
+    *ngSwitchCase="'coilChangeTime'"
+  >
+    <app-duration-display
+      [date]="parent.nextCoilChange.startDateTime"
+      [short]="true"
+      *ngIf="parent.nextCoilChange"
+    ></app-duration-display>
+    <span *ngIf="!parent.nextCoilChange"></span>
+  </span>
+  <span
+    class="font-size-20 font-weight-500"
+    *ngSwitchDefault
+  >
+    {{
+      parent[metric.def.primaryDataKey]
+        | unitsFormat : metric.def.primaryUnits : 3 : true : true
+        | obscureNumberString : renderUnlicensed
+    }}
+    <sup class="font-size-12">{{ metric.def.primaryUnits | userDisplayUnits }}</sup>
+  </span>
+</ng-container>
+<!--todo:unit display filter-->
+<span
+  class="font-size-20 font-weight-500"
+  *ngIf="!parent"
+>
+  0
+  <sup
+    class="font-size-12"
+    *ngIf="!!metric.def"
+    >{{ metric.def.primaryUnits | userDisplayUnits }}</sup
+  >
+</span>
+<!--todo:unit display filter-->
+<span
+  class="h4 secondary-text text-center"
+  *ngIf="!!metric.def"
+  [translate]="metric.def.displayTitle"
+></span>

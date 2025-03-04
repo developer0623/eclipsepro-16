@@ -1,0 +1,48 @@
+<span
+  *ngIf="!editMode || showEditButtons"
+  (click)="onEditMode(value)"
+  class="cell"
+>
+  <ng-content></ng-content>
+</span>
+<div
+  *ngIf="!editMode && !this.value"
+  (click)="onEditMode(value)"
+  class="no-value-clicker"
+></div>
+<input
+  *ngIf="editMode && !showEditButtons"
+  (focusout)="onSaveClose()"
+  (keydown.enter)="$event.target.blur()"
+  [(ngModel)]="value"
+  [type]="type"
+  #inputEditorControl
+  class="cellInput"
+  appAutoSelect
+/>
+<div
+  class="inline-input-container"
+  *ngIf="editMode && showEditButtons"
+>
+  <input
+    (keydown.enter)="onSaveClose()"
+    (focusout)="onFocusOut1()"
+    [(ngModel)]="value"
+    [type]="type"
+    #inputEditorControl
+    class="cellInput"
+    appAutoSelect
+  />
+  <button
+    class="save-btn btn"
+    (click)="onSaveClose()"
+  >
+    <span class="mdi mdi-check-bold"></span>
+  </button>
+  <button
+    class="cancel-btn btn"
+    (click)="onFocusOut()"
+  >
+    <span class="mdi mdi-close-thick"></span>
+  </button>
+</div>

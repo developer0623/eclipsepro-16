@@ -1,0 +1,29 @@
+<div
+  *ngIf="!editMode"
+  (click)="onEditMode()"
+  class="cell"
+>
+  <ng-content></ng-content>
+</div>
+<div
+  class="example-form"
+  *ngIf="editMode"
+>
+  <input
+    #input
+    type="text"
+    [(ngModel)]="data"
+    (focusout)="onSaveClose()"
+    (keydown.enter)="$event.target.blur()"
+    [matAutocomplete]="auto"
+    class="cellInput"
+  />
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option
+      *ngFor="let item of items"
+      [ngValue]="item[valKey]"
+      (click)="onSelectOption(item[valKey])"
+      >{{ item[valKey] }}</mat-option
+    >
+  </mat-autocomplete>
+</div>

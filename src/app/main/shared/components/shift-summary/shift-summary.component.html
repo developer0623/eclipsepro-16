@@ -1,0 +1,145 @@
+<table class="line-height-2 table-aligned text-nowrap shift-summary-table">
+  <!--
+     For ng-if="$mdMedia('xs') || $mdMedia('sm')" => font-size-15
+   -->
+  <colgroup>
+    <col style="width: 55%" />
+    <col style="width: 45%" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="leadOperator"
+        title="{{ 'leadOperatorHelp' | translate }}"
+      ></td>
+      <td class="text-caps">{{ machineState?.employeeName || 'n/a' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="averageSpeed"
+        title="{{ 'avgFPMHelp' | translate }}"
+      ></td>
+      <td>{{ (shiftStats?.avgFPM | unitsFormat : 'fpm' : 0) || 'n/a' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="goodProduction"
+        title="{{ 'goodFeetHelp' | translate }}"
+      ></td>
+      <td>{{ (shiftStats?.goodFeet | unitsFormat : 'ft' : 0) || '0' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="scrap"
+        title="{{ 'scrapFeetHelp' | translate }}"
+      ></td>
+      <td>{{ (shiftStats?.scrapFeet | unitsFormat : 'ft' : 0) || '0' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="reclaimedScrap"
+        title="{{ 'reclaimedScrapFeetHelp' | translate }}"
+      ></td>
+      <td>{{ (shiftStats?.reclaimedScrapFeet | unitsFormat : 'ft' : 0) || '0' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="totalPieces"
+        title="{{ 'totalPieceCountHelp' | translate }}"
+      ></td>
+      <td>{{ shiftStats?.goodPieceCount || '0' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="toolingChanges"
+        title="{{ 'toolingChangeCountHelp' | translate }}"
+      ></td>
+      <td>{{ shiftStats?.toolingChangeCount || '0' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="coilChanges"
+        title="{{ 'coilChangeCountHelp' | translate }}"
+      ></td>
+      <td>{{ shiftStats?.coilChangeCount || '0' }}</td>
+    </tr>
+    <!-- Split here. Stats above, state below. Move lead operator to below? -->
+    <tr>
+      <td
+        class="secondary-text"
+        translate="coilId"
+        title="{{ 'coilIdHelp' | translate }}"
+      ></td>
+      <td>
+        <a
+          class="td-link"
+          (click)="$event.stopPropagation()"
+          [routerLink]="['/inventory/coils']"
+              [queryParams]="{ id: machineState?.currentCoilId }"
+          >{{ machineState?.currentCoilId || 'n/a' }}</a
+        >
+      </td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="coilsMaterial"
+        title="{{ 'coilsMaterialHelp' | translate }}"
+      ></td>
+      <td>
+        <a
+          class="td-link"
+          (click)="$event.stopPropagation()"
+          [routerLink]="['/inventory/coil-types']"
+              [queryParams]="{ id: machineState?.currentCoilMaterialCode }"
+          >{{ machineState?.currentCoilMaterialCode || 'n/a' }}</a
+        >
+      </td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="bundle"
+        title="{{ 'bundleHelp' | translate }}"
+      ></td>
+      <td>{{ machineState?.bundleNumber || 'n/a' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="itemId"
+        title="{{ 'itemIdHelp' | translate }}"
+      ></td>
+      <td>{{ machineState?.currentItemExternalId || 'n/a' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="partLength"
+        title="{{ 'partLengthHelp' | translate }}"
+      ></td>
+      <td>{{ (machineState?.currentItemLengthIn | unitsFormat : 'in' : 3) || '0' }}</td>
+    </tr>
+    <tr>
+      <td
+        class="secondary-text"
+        translate="timeRange"
+        title="{{ 'timeRangeHelp' | translate }}"
+      ></td>
+      <td>{{ shiftStats?.start | amsTime }} - {{ shiftStats?.end | amsTime }}</td>
+    </tr>
+    <!--Completed is not yet available from the data-->
+    <!--<tr>
+        <td>Completed</td>
+        <td><strong>{{current.machineState?.currentItemQtyDone}} / {{current.machineState?.currentItemQty}}</strong></td>
+     </tr>-->
+  </tbody>
+</table>

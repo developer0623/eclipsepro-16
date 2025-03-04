@@ -1,0 +1,108 @@
+<div class="dashboard-device-grid">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="space-between"
+    class="title-container"
+  >
+    <div class="h3 margin0">{{ selectedDevice?.name }}</div>
+
+    <app-run-state-indicator
+      [state]="selectedDevice?.state?.runState"
+      [lastRunStateChange]="selectedDevice?.state?.lastRunStateChange"
+      [isOffline]="selectedDevice?.state?.isOffline"
+      [isNoPower]="selectedDevice?.state?.isNoPower"
+    ></app-run-state-indicator>
+  </div>
+  <!-- end machine status -->
+  <div class="snapshot-bar-container">
+    <app-snapshot-bar
+      *ngIf="selectedShift"
+      height="10"
+      width="100%"
+      [running]="selectedShift.runMinutes"
+      [exempt]="selectedShift.exemptMinutes"
+      [changeover]="selectedShift.changeoverMinutes"
+      [downtime]="selectedShift.nonExemptMinutes"
+      [breakdown]="selectedShift.breakdownMinutes"
+      class="snapshot-bar"
+    >
+    </app-snapshot-bar>
+  </div>
+  <div
+    class="metrics-container metric-large-container"
+    *ngIf="selectedShift && selectedDevice"
+  >
+    <app-metric-large
+      *ngFor="let metric of selectedDevice.metricConfigs"
+      [metric]="metric"
+      [metricDefinition]="metric.def"
+      [currentPrimary]="selectedShift[metric.def.primaryDataKey]"
+      [currentSecondary]="selectedShift[metric.def.secondaryDataKey]"
+      class="metric-large-item"
+    ></app-metric-large>
+  </div>
+  <div class="shift-select-container ph-24 pb-16">
+    <app-shift-select
+      [availableShifts]="availableShifts"
+      [isDevice]="true"
+      [shiftIndex]="shiftIndex"
+      (updateShift)="updateShift($event)"
+    ></app-shift-select>
+    <app-help-icon
+      [header]="'Technical Preview'"
+      [help]="
+        'This is currently in technical preview. The data has not been fully validated. <br/><br/>This machine type will be subject to additional licensing. <br/><br/>Please provide feedback to help us improve.'
+      "
+      [icon]="'mdi-test-tube'"
+      [iconSize]="'2em'"
+    ></app-help-icon>
+  </div>
+  <div class="side-summary-container ph-24">
+    <table class="line-height-2 table-aligned text-nowrap shift-summary-table">
+      <colgroup>
+        <col style="width: 55%" />
+        <col style="width: 45%" />
+      </colgroup>
+      <tbody>
+        <tr>
+          <td
+            class="secondary-text"
+            translate="leadOperator"
+            title="{{ 'leadOperatorHelp' | translate }}"
+          ></td>
+          <td class="text-caps">{{ selectedDevice?.state?.operator || 'n/a' }}</td>
+        </tr>
+        <tr>
+          <td
+            class="secondary-text"
+            translate="currentPart"
+            title="{{ 'currentPartHelp' | translate }}"
+          ></td>
+          <td class="text-caps">{{ selectedDevice?.state?.currentPartId || 'n/a' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="produced-goods-container ph-24">
+    <div class="h3">PRODUCED GOODS 🧪</div>
+    <ag-grid-angular
+      class="ag-theme-balham produced-goods-grid"
+      [gridOptions]="producedGoodsAgGridOptions"
+    >
+    </ag-grid-angular>
+  </div>
+  <app-runblocks-chart
+    [data]="runBlocks"
+    [metric]="'cyclesPerHour'"
+    [machineType]="'device'"
+    class="runblocks-container"
+  ></app-runblocks-chart>
+  <div class="hour-chart-container">
+    <div class="h3">OPERATIONS BY HOUR</div>
+    <app-device-hourly-chart
+      *ngIf="selectedShift"
+      [deviceStats]="selectedShift"
+    ></app-device-hourly-chart>
+  </div>
+</div>

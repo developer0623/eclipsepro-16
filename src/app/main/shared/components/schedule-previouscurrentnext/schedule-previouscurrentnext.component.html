@@ -1,0 +1,38 @@
+<div class="h3 schedule-title ph-24">ORDERS</div>
+<div class="main-container">
+  <div class="left-container">
+    <div class="left-item">Done</div>
+    <div class="left-item">Next</div>
+  </div>
+  <table class="schedule-previous-next-table">
+    <tr>
+      <th>Order</th>
+      <th>Material</th>
+      <th>Tooling</th>
+      <th>Total</th>
+      <th>Remaining</th>
+      <th>Required</th>
+      <th>Completion</th>
+      <th>Customer</th>
+      <th>Alerts</th>
+    </tr>
+
+    <tr
+      app-pcn-row
+      [job]="job"
+      *ngFor="let job of realSchedule.past.slice().reverse()"
+    ></tr>
+
+    <tr
+      app-pcn-row
+      [job]="realSchedule.current"
+    ></tr>
+
+    <tr
+      app-pcn-row
+      [job]="job"
+      *ngFor="let job of realSchedule.future"
+      [italicize]="true"
+    ></tr>
+  </table>
+</div>

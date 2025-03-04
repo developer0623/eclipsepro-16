@@ -1,0 +1,61 @@
+<span
+  *ngIf="!editing || showEditButtons"
+  class="cell"
+  (click)="onEditMode(value)"
+>
+  <ng-content></ng-content>
+</span>
+<div
+  *ngIf="!editing && !this.value"
+  (click)="onEditMode(value)"
+  class="no-value-clicker"
+></div>
+
+<div
+  class="no-btn-container"
+  *ngIf="editing && !showEditButtons"
+>
+  <input
+    placeholder="mm/dd/yyyy"
+    [matDatepicker]="picker1"
+    (focusout)="onSaveClose()"
+    [(ngModel)]="value"
+    #dateEditorControl
+  />
+  <mat-datepicker-toggle
+    class="datepicker-toggle"
+    matIconSuffix
+    [for]="picker1"
+  ></mat-datepicker-toggle>
+  <mat-datepicker #picker1></mat-datepicker>
+</div>
+
+<div
+  class="inline-input-container"
+  *ngIf="editing && showEditButtons"
+>
+  <input
+    placeholder="mm/dd/yyyy"
+    [matDatepicker]="picker1"
+    [(ngModel)]="value"
+    #dateEditorControl
+  />
+  <mat-datepicker-toggle
+    class="datepicker-toggle"
+    matIconSuffix
+    [for]="picker1"
+  ></mat-datepicker-toggle>
+  <mat-datepicker #picker1></mat-datepicker>
+  <button
+    class="save-btn btn"
+    (click)="onSaveClose()"
+  >
+    <span class="mdi mdi-check-bold"></span>
+  </button>
+  <button
+    class="cancel-btn btn"
+    (click)="onFocusOut()"
+  >
+    <span class="mdi mdi-close-thick"></span>
+  </button>
+</div>

@@ -1,0 +1,64 @@
+<div class="ms-widget machine-panel-mini">
+  <div
+    class="ms-widget-front white-bg"
+    [ngStyle]="renderUnlicensed && { filter: 'grayscale(100%)' }"
+    matTooltip="This machine is not licensed"
+    [matTooltipDisabled]="!renderUnlicensed"
+    matTooltipPosition="below"
+  >
+    <div
+      class="p-16 h-55"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <div
+        class="h4 text-truncate"
+        [matTooltip]="machine.machine?.description"
+      >
+        {{ machine.machine?.description }}
+      </div>
+      <!-- todo: add this back once we verify isHoleCount is being sent -->
+      <!-- <app-hole-count-mode-icon *ngIf="machine.isHoleCount"></app-hole-count-mode-icon> -->
+      <app-lockout-indicator [lockout]="machine?.state?.lockout"></app-lockout-indicator>
+      <app-run-state-indicator
+        [state]="machine?.state?.runState"
+        [lastRunStateChange]="machine?.state?.lastRunStateChange"
+        [isOffline]="machine?.state?.connectionStatus !== 'Online'"
+      ></app-run-state-indicator>
+    </div>
+    <div
+      class="ph-16 pb-16"
+      fxLayout="row"
+      fxFlex
+      fxFill
+    >
+      <app-snapshot-bar
+        height="10"
+        width="100%"
+        [running]="machine.stats?.runMinutes"
+        [exempt]="machine.stats?.exemptMinutes"
+        [changeover]="machine.stats?.changeoverMinutes"
+        [downtime]="machine.stats?.nonExemptMinutes"
+        [breakdown]="machine.stats?.breakdownMinutes"
+        [offline]="machine.stats?.offlineMinutes"
+      >
+      </app-snapshot-bar>
+    </div>
+    <div
+      class="pb-8"
+      fxLayout="row wrap"
+      fxLayoutAlign="start center"
+    >
+      <ng-container *ngFor="let metric of machine.metrics?.settings | showInMini : true">
+        <app-machine-dashboard-mini-metric
+          [machine]="machine"
+          [metric]="metric"
+          [renderUnlicensed]="renderUnlicensed"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          fxFlex="33"
+        ></app-machine-dashboard-mini-metric>
+      </ng-container>
+    </div>
+  </div>
+</div>
