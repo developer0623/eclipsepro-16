@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { AlertDataService } from 'src/app/main/shared/services/alert-data.service';
+import { IAlert } from 'src/app/core/dto';
 
 @Component({
   selector: 'fury-toolbar-quickpanel-toggle',
@@ -8,7 +10,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class ToolbarQuickpanelToggleComponent {
 
   @Output() openQuickPanel = new EventEmitter();
+  alerts: IAlert[] = [];
 
-  constructor() {
+  constructor(
+    public alertService: AlertDataService
+  ) {
+
   }
 }

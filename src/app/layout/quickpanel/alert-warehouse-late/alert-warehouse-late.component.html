@@ -1,0 +1,16 @@
+<div fxLayout="column" fxLayoutAlign="space-between">
+   
+    <div fxLayout="row" fxLayoutAlign="space-between" [matTooltip]="alert.description">
+          <h3><i class="mdi mdi-tile-four s24 mr-5 {{alert.iconColor}}" ></i><span> {{alert.title}}</span></h3>
+
+    </div>
+
+    <div class="ph-24 pt-10">
+
+    <!--<div>{{alert.machine.description || "Machine " + alert.machineNumber}}</div>-->      
+    <div>SCHEDULED FOR: {{alert.effectiveDate | date:'MM/dd/yy'}} at {{alert.effectiveDate | date:'shortTime'}}</div>
+    <div>LATE BY: {{alert.effectiveDate | timeAgo}}</div>
+          
+    </div>
+
+ </div>

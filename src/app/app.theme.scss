@@ -17,14 +17,14 @@ $theme: mat.define-light-theme((
   color: (
     primary: $theme-primary,
     accent: $theme-accent,
-    warn: $theme-warn
+    warn: $theme-warn,
   )
 ));
 $dark-theme: mat.define-dark-theme((
   color: (
     primary: $theme-primary,
     accent: $theme-accent,
-    warn: $theme-warn
+    warn: $theme-warn,
   )
 ));
 @include mat.all-component-themes($theme);

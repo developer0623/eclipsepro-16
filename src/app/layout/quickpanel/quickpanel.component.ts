@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
+import { AlertDataService } from 'src/app/main/shared/services/alert-data.service';
+import { IAlert } from 'src/app/core/dto';
 
 @Component({
   selector: 'fury-quickpanel',
@@ -7,21 +8,16 @@ import * as moment from 'moment';
   styleUrls: ['./quickpanel.component.scss']
 })
 export class QuickpanelComponent implements OnInit {
+  alerts: IAlert[] = [];
 
-  todayDay: string;
-  todayDate: string;
-  todayDateSuffix: string;
-  todayMonth: string;
-
-  constructor() { }
+  constructor(private alertService: AlertDataService) {
+    this.alertService.alerts$.subscribe((alerts) => {
+      this.alerts = alerts;
+    })
+  }
 
   ngOnInit() {
-    this.todayDay = moment().format('dddd');
-    this.todayDate = moment().format('Do');
-    this.todayDate = this.todayDate.replace(/\D/g, '');
-    this.todayDateSuffix = moment().format('Do');
-    this.todayDateSuffix = this.todayDateSuffix.replace(/[0-9]/g, '');
-    this.todayMonth = moment().format('MMMM');
+    
   }
 
 }

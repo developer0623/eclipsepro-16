@@ -1,0 +1,35 @@
+<div fxLayout="column" fxLayoutAlign="space-between">
+    <div fxLayout="row" fxLayoutAlign="space-between" matTooltip="{{ alert.description }}" [matTooltipDisabled]="!alert?.description">
+      <h3>
+        <i
+          class="mdi s24 mr-5"
+          [ngClass]="getClass(alert)"
+        ></i>
+        {{ alert?.title }}
+      </h3>
+      <div *ngIf="alert?.actions?.length" fxLayout="row" matTooltip="{{ action?.title }}">
+        <ng-container *ngFor="let action of alert.actions; let i = index">
+          <a *ngIf="action.target !== 'post'" [href]="action.link" [target]="action.target">
+            <i class="mdi s24 secondary-text" [ngClass]="'mdi-' + action.icon"></i>
+          </a>
+          <span *ngIf="action.target === 'post'" (click)="postAction(action.link)">
+            <i class="mdi s24 secondary-text" [ngClass]="'mdi-' + action.icon"></i>
+          </span>
+        </ng-container>
+      </div>
+    </div>
+    <div class="ph-24 pt-10">
+      <div>
+        {{ alert?.subTitle }}
+        <a *ngIf="alert?.kbLink" [href]="alert.kbLink" target="_blank" matTooltip="Link to knowledge base article">
+          <i class="mdi s20 secondary-text mdi-help-circle"></i>
+        </a>
+      </div>
+      <mat-progress-bar
+        class="alerts-tab-progress"
+        *ngIf="alert?.percentComplete > 0"
+        mode="determinate"
+        [value]="alert.percentComplete * 100"
+      ></mat-progress-bar>
+    </div>
+  </div>

@@ -1263,6 +1263,20 @@ export interface IAlert {
   id: string;
   isCritical: boolean;
   alertType: string;
+  description?: string;
+  icon?: string;
+  subTitle?: string;
+  title?: string;
+  iconColor?: string;
+  actions?: any[];
+  percentComplete?: number;
+  kbLink?: string;
+  created?: string;
+  machine?: IMachine;
+  expectedDate?: string;
+  effectiveDate?: string;
+  machineNumber?: number;
+
 }
 
 export interface IAndonSequencePanel {

@@ -5,12 +5,41 @@
   padding: 0;
   min-width: $toolbar-button-width;
   height: 100%;
+}
 
-  .mat-icon {
-    font-size: 24px;
-    height: 24px;
-    width: 24px;
-    line-height: 24px;
-    margin-right: 0;
+.icon-bell {
+  position: relative;
+  top: 2px;
+}
+
+.alerts-count {
+  position: absolute;
+  bottom: 22px;
+  height: 12px;
+  width: 100%;
+
+  i {
+    position: absolute;
+    left: 16px;
+    font-size: 12px !important;
+    width: 12px !important;
+    height: 12px !important;
+    line-height: 12px !important;
+    text-shadow: 1px -1px 0 #fff, 1px 1px 0 #fff, -1px 1px 0 #fff, -1px -1px 0 #fff;
+    min-width: 12px !important;
+    max-height: 12px !important;
   }
+
+  &.alerts-multiple {
+    .critical {
+      top: 0px;
+      left: 20px;
+    }
+  }
+}
+.amber-600-fg {
+  color: #ffb300;
+}
+.red-700-fg {
+  color: #d32f2f;
 }

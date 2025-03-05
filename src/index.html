@@ -20,7 +20,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #13293d;
     z-index: 99999;
     pointer-events: none;
   }
@@ -99,11 +98,23 @@
 </style>
 
 <div id="fury-splash-screen">
-  <div class="wrapper">
-    <div class="ball-scale-multiple">
-      <div></div>
-      <div></div>
-      <div></div>
+  <div class="center">
+    <div class="logo">
+      <span><i class="icon icon-brightness-3 s50 amber-500-fg"></i></span>
+    </div>
+
+    <div class="spinner-wrapper">
+      <div class="spinner">
+        <div class="inner">
+          <div class="gap"></div>
+          <div class="left">
+            <div class="half-circle"></div>
+          </div>
+          <div class="right">
+            <div class="half-circle"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

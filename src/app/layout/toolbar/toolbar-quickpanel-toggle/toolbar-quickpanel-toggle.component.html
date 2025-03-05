@@ -1,3 +1,22 @@
-<button (click)="openQuickPanel.emit()" class="button" fxFlex="grow" mat-button>
-  <mat-icon>format_align_right</mat-icon>
+<button
+  (click)="openQuickPanel.emit()" class="button" fxFlex="grow" mat-button
+  [matTooltip]="alertService.alerts.length + ' Alerts (' + alertService.criticalAlertsLength + ' critical, ' + (alertService.alerts.length - alertService.criticalAlertsLength) + ' non-critical)'"
+>
+  <i class="icon icon-bell gray-icon"></i>
+  <!-- alert badges -->
+  <div
+    class="alerts-count"
+    [ngClass]="{'alerts-multiple': alertService.criticalAlertsLength && (alertService.alerts.length - alertService.criticalAlertsLength) > 0}"
+  >
+    <!-- non-critical badge -->
+    <i
+      *ngIf="(alertService.alerts.length - alertService.criticalAlertsLength) > 0"
+      class="icon-checkbox-blank-circle amber-600-fg non-critical"
+    ></i>
+    <!-- critical badge -->
+    <i
+    *ngIf="alertService.criticalAlertsLength"
+      class="icon-checkbox-blank-circle red-700-fg critical"
+    ></i>
+  </div>
 </button>

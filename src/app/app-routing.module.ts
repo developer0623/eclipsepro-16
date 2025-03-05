@@ -23,10 +23,11 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
+      { path: '', redirectTo: 'dashboards/machines', pathMatch: 'full' },
+      { path: '**', redirectTo: 'dashboards/machines' },
       {
         path: 'dashboards/machines',
         loadChildren: () => import('./main/dashboards/dashboards.module').then(m => m.DashboardsModule),
-        // pathMatch: 'full'
       },
       // {
       //   path: 'apps/inbox',

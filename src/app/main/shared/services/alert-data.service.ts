@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClientDataStore } from './clientData.store';
 import { IAlert, IMachine } from 'src/app/core/dto';
 
@@ -9,12 +10,14 @@ import { IAlert, IMachine } from 'src/app/core/dto';
 })
 export class AlertDataService {
   alerts: IAlert[] = [];
-  criticalAlertsLength: 0;
+  private alertsSubject = new BehaviorSubject<IAlert[]>([]);
+  alerts$ = this.alertsSubject.asObservable();
+  criticalAlertsLength = 0;
   firstLoad = true;
   machines: IMachine[] = [];
   machineSub_: Subscription;
 
-  constructor(private clientDataStore: ClientDataStore) {
+  constructor(private clientDataStore: ClientDataStore, private _snackBar: MatSnackBar) {
     this.machineSub_ = clientDataStore
       .SelectMachines()
       .pipe(
@@ -30,50 +33,29 @@ export class AlertDataService {
   }
 
   applyAlertUpdates(newAlerts) {
-    //first, look for new alerts
-    //I'm sure there is a way better way to do this. Ugly for now...
     if (!this.firstLoad) {
-      for (let newI = 0; newI < newAlerts.length; newI++) {
-        let found = false;
-        for (let oldI = 0; oldI < this.alerts.length; oldI++) {
-          if (newAlerts[newI].id === this.alerts[oldI].id) {
-            found = true;
-            break;
-          }
-        }
-        if (!found && newAlerts[newI].isCritical) {
-          //new critical alert, toast it
-          // we need to fix
-          let message = 'New alert: ' + newAlerts[newI].title;
-          // this.$mdToast.show(
-          //   this.$mdToast
-          //     .simple()
-          //     .textContent(message)
-          //     .position('top right')
-          //     .hideDelay(2000)
-          //     .parent('#content')
-          // );
-        }
-      }
+      const newCriticalAlerts = newAlerts.filter(
+        (newAlert) =>
+          newAlert.isCritical && !this.alerts.some((oldAlert) => oldAlert.id === newAlert.id)
+      );
+
+      newCriticalAlerts.forEach((alert) => {
+        this._snackBar.open(alert.title, '', {
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          duration: 2000,
+        });
+      });
     }
 
-    this.alerts.length = 0;
-    this.criticalAlertsLength = 0;
-    newAlerts.forEach((alert) => {
-      let clonedAlert = { ...alert }; // Clone to make it mutable
+    this.alerts = newAlerts.map((alert) => ({
+      ...alert,
+      machine:
+        this.machines.find((machine) => machine.machineNumber === alert.machineNumber) || null,
+    }));
 
-      if (clonedAlert.machineNumber > 0) {
-        clonedAlert.machine = this.machines.find(
-          (machine) => machine.machineNumber === clonedAlert.machineNumber
-        );
-      }
-
-      this.alerts.push(clonedAlert);
-
-      if (clonedAlert.isCritical) {
-        this.criticalAlertsLength++;
-      }
-    });
+    this.alertsSubject.next([...this.alerts]);
+    this.criticalAlertsLength = this.alerts.filter((alert) => alert.isCritical).length;
     this.firstLoad = false;
   }
   addOfflineAlert() {
