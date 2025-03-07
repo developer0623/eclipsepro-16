@@ -1,0 +1,262 @@
+<div
+  class="bundle-item"
+  *ngIf="!isdetail"
+>
+  <div class="bundle-item__complete">
+    <div
+      class="bundle-done"
+      [ngStyle]="{ width: donePerc }"
+      [matTooltip]="
+        'Complete: ' +
+        (item.doneLengthIn | unitsFormat : 'in' : 0) +
+        ' of ' +
+        (item.totalLengthIn | unitsFormat : 'in' : 0)
+      "
+    ></div>
+  </div>
+  <div class="bundle-item__value">
+    <div class="real-value">
+      {{ item.weightLbs | unitsFormat : 'lbs' : 0 : true
+      }}<span>{{ 'lbs' | userDisplayUnits }}</span>
+    </div>
+    <div
+      class="remain-value1 x--weight"
+      *ngIf="maxWeightExceeded"
+      matTooltip="Max Weight Exceeded"
+      matTooltipPosition="above"
+    >
+    <img src="assets/icons/png-icon/alert.png" class="remain-icon" alt="Alert Icon" />
+      <!-- <img
+        [src]="loadImage('alert')"
+        class="remain-icon"
+      /> -->
+      <div class="remain-flex"></div>
+      <i class="icon icon-plus remain-plus"></i>
+      <div class="remain-number">
+        {{ maxWeightOverage | unitsFormat : 'lbs' : 0 : true
+        }}<span>{{ 'lbs' | userDisplayUnits }}</span>
+      </div>
+    </div>
+
+    <div
+      class="remain-value2"
+      *ngIf="!maxWeightOverage"
+    >
+      <div class="remain-number">
+        {{ weightRemaining | unitsFormat : 'lbs' : 0 : true
+        }}<span>{{ 'lbs' | userDisplayUnits }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="bundle-item__weightbar"
+    [ngClass]="{ 'max-exceed': maxWeightExceeded }"
+  >
+    <div
+      class="real-bar"
+      [ngStyle]="{ width: weightRemainingPerc }"
+      [matTooltip]="
+        (item.weightLbs | unitsFormat : 'lbs' : 0 : true) +
+        ' of ' +
+        (item?.maxWeightLbs | unitsFormat : 'lbs' : 0 : true) +
+        ('lbs' | userDisplayUnits)
+      "
+    ></div>
+    <i class="icon icon-plus exceed-icon"></i>
+  </div>
+  <div
+    class="bundle-item__piecebar"
+    [ngClass]="{ 'max-exceed': maxPiecesExceeded }"
+  >
+    <div
+      class="real-bar"
+      [ngStyle]="{ width: piecesRemainingPerc }"
+      [matTooltip]="item.pieces + ' of ' + item.maxPieces"
+    ></div>
+    <i class="icon icon-plus exceed-icon"></i>
+  </div>
+
+  <div class="bundle-item__value">
+    <div class="real-value">{{ item.pieces }}<span>pcs</span></div>
+    <div
+      class="remain-value1 x--piece"
+      *ngIf="maxPiecesExceeded"
+      matTooltip="Max Pieces Exceeded"
+    >
+    <img src="assets/icons/png-icon/alert.png" class="remain-icon" alt="Alert Icon" />
+      <!-- <img
+        [src]="loadImage('alert')"
+        class="remain-icon"
+      /> -->
+      <div class="remain-flex"></div>
+      <i class="icon icon-plus remain-plus"></i>
+      <div class="remain-number">{{ maxPiecesOverage }}<span>pcs</span></div>
+    </div>
+
+    <!-- I don't think we need to show the remaining pieces before it maxes out -->
+    <!-- <div class="remain-value2" *ngIf="maxPiecesExceeded">
+        <div class="remain-number">{{piecesRemaining}}<span>pcs</span></div>
+      </div> -->
+  </div>
+  <div class="bundle-item__length">
+    <!-- <md-tooltip md-direction="bottom">Order Maximum Length ({{item.orderMaxLengthIn}})</md-tooltip> -->
+    <div
+      class="bundle-max"
+      [ngStyle]="{ width: relativeMaxLengthPerc }"
+      [matTooltip]="
+        'Bundle Maximum Length (' + (item.bundleMaxLengthIn | unitsFormat : 'in' : 2) + ')'
+      "
+    ></div>
+    <div
+      class="bundle-min"
+      [ngStyle]="{ width: relativeMinLengthPerc }"
+      [matTooltip]="
+        'Bundle Minimum Length (' + (item.bundleMinLengthIn | unitsFormat : 'in' : 2) + ')'
+      "
+    ></div>
+  </div>
+  <img src="assets/icons/png-icon/location.png" class="bundle-location"
+  *ngIf="minLengthExceeded"
+  matTooltip="Max Length Exceeded" alt="Location Icon" />
+  <!-- <img
+    [src]="loadImage('location')"
+    class="bundle-location"
+    *ngIf="minLengthExceeded"
+    matTooltip="Max Length Exceeded"
+  /> -->
+</div>
+
+<div
+  class="bundle-item-inline"
+  *ngIf="isdetail"
+>
+  <div class="bundle-item-inline__left">
+    <div class="bundle-item-inline__content">
+      <div class="bundle-item-inline__checked">
+        <mat-checkbox
+          aria-label="Select Tool"
+          class="yellow-checkbox"
+          [checked]="item.checked"
+          (change)="onChecked()"
+        >
+        </mat-checkbox>
+      </div>
+      <div class="bundle-item-inline__weight">
+        <div class="bundle-item-inline__value">
+          <div class="real-value">
+            {{ item.weightLbs | unitsFormat : 'lbs' : 0 : true
+            }}<span>{{ 'lbs' | userDisplayUnits }}</span>
+          </div>
+          <div
+            class="remain-value1 x--weight"
+            *ngIf="maxWeightExceeded"
+          >
+          <img src="assets/icons/png-icon/alert.png" class="remain-icon" alt="Alert Icon" />
+            <!-- <img
+              [src]="loadImage('alert')"
+              class="remain-icon"
+            /> -->
+            <div class="remain-flex"></div>
+            <i class="icon icon-plus remain-plus"></i>
+            <div class="remain-number">
+              {{ maxWeightOverage | unitsFormat : 'lbs' : 0 : true
+              }}<span>{{ 'lbs' | userDisplayUnits }}</span>
+            </div>
+          </div>
+
+          <div
+            class="remain-value2"
+            *ngIf="!maxWeightOverage"
+          >
+            <div class="remain-number">
+              {{ weightRemaining | unitsFormat : 'lbs' : 0 : true
+              }}<span>{{ 'lbs' | userDisplayUnits }}</span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bundle-item-inline__weightbar"
+          [ngClass]="{ 'max-exceed': maxWeightExceeded }"
+        >
+          <div
+            class="real-bar"
+            [ngStyle]="{ width: weightRemainingPerc }"
+            [matTooltip]="
+              (item.weightLbs | unitsFormat : 'lbs' : 0 : true) +
+              ' of ' +
+              (item?.maxWeightLbs | unitsFormat : 'lbs' : 0 : true) +
+              ('lbs' | userDisplayUnits)
+            "
+          ></div>
+          <i class="icon icon-plus exceed-icon"></i>
+        </div>
+      </div>
+      <div class="bundle-item-inline__piece">
+        <div class="bundle-item-inline__value">
+          <div class="real-value">{{ item.pieces }}<span>pcs</span></div>
+          <div
+            class="remain-value1 x--piece"
+            *ngIf="maxPiecesExceeded"
+            matTooltip="Max Pieces Exceeded"
+          >
+          <img src="assets/icons/png-icon/alert.png" class="remain-icon" alt="Alert Icon" />
+            <!-- <img
+              [src]="loadImage('alert')"
+              class="remain-icon"
+            /> -->
+            <div class="remain-flex"></div>
+            <i class="icon icon-plus remain-plus"></i>
+            <div class="remain-number">{{ maxPiecesOverage }}<span>pcs</span></div>
+          </div>
+          <div
+            class="remain-value2"
+            *ngIf="!maxPiecesExceeded"
+          >
+            <div class="remain-number">{{ piecesRemaining }}<span>pcs</span></div>
+          </div>
+        </div>
+
+        <div
+          class="bundle-item__piecebar"
+          [ngClass]="{ 'max-exceed': maxPiecesExceeded }"
+        >
+          <div
+            class="real-bar"
+            [ngStyle]="{ width: piecesRemainingPerc }"
+            [matTooltip]="item.pieces + ' of ' + item.maxPieces + ' pieces'"
+          ></div>
+          <i class="icon icon-plus exceed-icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="bundle-item-inline__length">
+      <div
+        class="bundle-max"
+        [ngStyle]="{ width: relativeMaxLengthPerc }"
+        [matTooltip]="
+          'Bundle Maximum Length (' + (item.bundleMaxLengthIn | unitsFormat : 'in' : 2) + ')'
+        "
+      ></div>
+      <div
+        class="bundle-min"
+        [ngStyle]="{ width: relativeMinLengthPerc }"
+        [matTooltip]="
+          'Bundle Minimum Length (' + (item.bundleMinLengthIn | unitsFormat : 'in' : 2) + ')'
+        "
+      ></div>
+    </div>
+    <img src="assets/icons/png-icon/location.png" class="bundle-location"
+      *ngIf="minLengthExceeded"
+      height="26"
+      alt="Location Icon" />
+    <!-- <img
+      [src]="loadImage('location')"
+      class="bundle-location"
+      height="26"
+      *ngIf="minLengthExceeded"
+    /> -->
+  </div>
+
+  <div class="bundle-item-inline__right"></div>
+</div>

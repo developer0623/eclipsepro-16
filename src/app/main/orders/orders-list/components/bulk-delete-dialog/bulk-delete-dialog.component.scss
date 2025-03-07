@@ -1,0 +1,13 @@
+.content-txt {
+  padding-left: 8px;
+}
+
+.error-item {
+  color: red;
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    color: red !important;
+  }
+}

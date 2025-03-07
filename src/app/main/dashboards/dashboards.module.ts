@@ -16,33 +16,6 @@ import { MachineDetailComponentXl } from './machine-detail-xl/machine-detail-xl.
 import { MachineDetailComponentDevice } from './machine-detail-device/machine-detail-device.component';
 import { DashboardsRoutingModule } from './dashboards-routing.module';
 
-// const dashboardsState = {
-//   name: 'app.dashboards.machines',
-//   url: '/machines',
-//   views: {
-//     'content@app': { component: Dashboards2Component },
-//   },
-//   // component: DashboardsComponent,
-//   // Mark this state as requiring authentication.  See ../global/requiresAuth.hook.js.
-//   // data: { requiresAuth: true }
-// };
-
-// const machineState = {
-//   name: 'app.dashboards.machines.machine',
-//   url: '/:id?shift',
-//   views: {
-//     'content@app': { component: MachineDetailComponent },
-//   },
-//   params: {
-//     id: {
-//       dynamic: true,
-//     },
-//     shift: {
-//       dynamic: true,
-//     },
-//   },
-// };
-
 @NgModule({
   declarations: [
     Dashboards2Component,

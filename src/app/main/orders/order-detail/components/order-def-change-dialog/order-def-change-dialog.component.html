@@ -1,0 +1,96 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Change Order Definition
+  </h2>
+</mat-toolbar>
+<form mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>Order Number</mat-label>
+    <input
+      matInput
+      [formControl]="orderControl"
+    />
+  </mat-form-field>
+  <mat-form-field
+    class="yellow-input"
+    [floatLabel]="'always'"
+  >
+    <mat-label>Material Code</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="materialCodeAutocomplete"
+      [formControl]="materialControl"
+    />
+    <mat-autocomplete #materialCodeAutocomplete="matAutocomplete">
+      <mat-option
+        *ngFor="let material of filteredMaterials$ | async"
+        [value]="material.materialCode"
+        (click)="onMaterialSelectionChange(material)"
+      >
+        <span class="search-title">{{ material.materialCode }}</span>
+        <span class="search-detail"
+          >{{ material.description }} | On Hand:{{
+            material.onHandFt | unitsFormat : 'ft' : 0
+          }}</span
+        >
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field
+    class="yellow-input"
+    [floatLabel]="'always'"
+  >
+    <mat-label>Tooling Code</mat-label>
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="toolAutocomplete"
+      [formControl]="toolControl"
+    />
+    <mat-autocomplete #toolAutocomplete="matAutocomplete">
+      <mat-option
+        *ngFor="let tool of filteredTools$ | async"
+        [value]="tool.toolingCode"
+        (click)="onToolingSelectionChange(tool)"
+      >
+        <span class="search-title">{{ tool.toolingCode }}</span>
+        <span class="search-detail">{{ tool.description }}</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <div class="error-list">
+    <div
+      class="error-item"
+      *ngFor="let err of errors"
+    >
+      <div class="icon-content">
+        <mat-icon>close</mat-icon>
+      </div>
+
+      <div class="error-content">{{ err }}</div>
+    </div>
+  </div>
+</form>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+</div>

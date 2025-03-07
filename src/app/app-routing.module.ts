@@ -23,11 +23,15 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', redirectTo: 'dashboards/machines', pathMatch: 'full' },
-      { path: '**', redirectTo: 'dashboards/machines' },
+      // { path: '', redirectTo: 'dashboards/machines', pathMatch: 'full' },
+      // { path: '**', redirectTo: 'dashboards/machines' },
       {
         path: 'dashboards/machines',
         loadChildren: () => import('./main/dashboards/dashboards.module').then(m => m.DashboardsModule),
+      },
+      {
+        path: 'orders',
+        loadChildren: () => import('./main/orders/orders.module').then(m => m.OrdersModule),
       },
       // {
       //   path: 'apps/inbox',

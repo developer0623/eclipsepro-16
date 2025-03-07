@@ -921,3 +921,37 @@ i {
       }
     }
   }
+
+  #print-body {
+    height: 0px;
+    overflow: hidden;
+  
+    .ng-isolate-scope {
+      display: flex;
+    }
+  
+    .ui-grid-cell {
+      flex: 1;
+    }
+  }
+
+  @media print {
+    html,
+    body {
+      height: 100%;
+      overflow: visible !important;
+    }
+
+    #print-body {
+      height: auto !important;
+      overflow-y: auto !important;
+  
+      .ng-isolate-scope {
+        display: flex;
+      }
+  
+      .ui-grid-cell {
+        flex: 1;
+      }
+    }
+  }

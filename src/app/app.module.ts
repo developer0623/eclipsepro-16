@@ -27,6 +27,7 @@ import { AuthInterceptor } from './main/shared/services/auth-interceptor.service
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    AgGridAngular,
 
     // Fury Core Modules
     AppRoutingModule,

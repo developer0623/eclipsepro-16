@@ -1,0 +1,58 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Combine To New Bundles
+  </h2>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>SPLIT BY</mat-label>
+    <mat-select
+      [(ngModel)]="bundleGroupField"
+      panelClass="yellow-select-panel"
+      placeholder="Choose bundle group field"
+      required
+      aria-label="Choose bundle group field"
+    >
+      <mat-option
+        *ngFor="let option of bundleGroupOptions"
+        [value]="option.field"
+      >
+        {{ option.field | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="error-list">
+    <div
+      class="error-item"
+      *ngFor="let err of errors"
+    >
+      <div class="icon-content">
+        <mat-icon>close</mat-icon>
+      </div>
+
+      <div class="error-content">{{ err }}</div>
+    </div>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+</div>

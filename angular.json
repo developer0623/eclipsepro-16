@@ -43,7 +43,9 @@
             
             "styles": [
               "src/styles.scss",
-              "node_modules/@mdi/font/css/materialdesignicons.min.css"
+              "node_modules/@mdi/font/css/materialdesignicons.min.css",
+              "node_modules/ag-grid-community/styles/ag-grid.css",
+              "node_modules/ag-grid-community/styles/ag-theme-balham.css"
             ],
             "scripts": [],
             "customWebpackConfig": {
@@ -63,6 +65,8 @@
               "lodash.debounce",
               "lodash.memoize",
               "lodash.throttle",
+              "raygun4js",
+              "ag-grid-community",
               "moment",
               "@fortawesome/free-brands-svg-icons"
             ],

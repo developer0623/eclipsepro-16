@@ -1,0 +1,109 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Split Selected Items
+  </h2>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>SPLIT BY</mat-label>
+    <mat-select
+      [(ngModel)]="selectedSplitModel"
+      panelClass="yellow-select-panel"
+      placeholder="SPLIT BY"
+      required
+      aria-label="SPLIT BY"
+      (selectionChange)="onChange($event)"
+    >
+      <mat-option
+        *ngFor="let item of splitItems"
+        [value]="item"
+      >
+        {{ item }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-checkbox
+    class="yellow-checkbox"
+    aria-label="Split directly into new bundles"
+    [(ngModel)]="splitToNewBundles"
+  >
+    Split directly into new bundles
+  </mat-checkbox>
+  <div *ngIf="selectedSplitModel === 'Max Pieces'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Pieces per Item</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="targetQty"
+        required
+      />
+    </mat-form-field>
+  </div>
+  <div *ngIf="selectedSplitModel === 'Max Weight'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Max Weight Per Item</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="targetWeight"
+        required
+      />
+    </mat-form-field>
+  </div>
+  <div *ngIf="selectedSplitModel === 'Line Item Count'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Total Number of Items to Split Each Item Into</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="moveQty"
+        required
+      />
+    </mat-form-field>
+  </div>
+  <div *ngIf="selectedSplitModel === 'Move To New Item'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Quantity to Move to the New Item</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="targetQty"
+        required
+      />
+    </mat-form-field>
+  </div>
+  <div class="error-list">
+    <div
+      class="error-item"
+      *ngFor="let err of errors"
+    >
+      <div class="icon-content">
+        <mat-icon>close</mat-icon>
+      </div>
+
+      <div class="error-content">{{ err }}</div>
+    </div>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+</div>

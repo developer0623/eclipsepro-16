@@ -1,0 +1,87 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Bulk Edit Value
+  </h2>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>Choose edit field</mat-label>
+    <mat-select
+      [(ngModel)]="bulkEditField"
+      panelClass="yellow-select-panel"
+      class="yellow-select"
+      placeholder="Choose edit field"
+      (selectionChange)="onChangeEditField()"
+      required
+    >
+      <mat-option
+        *ngFor="let option of fieldOptions"
+        [value]="option"
+      >
+        {{ option.title || option.field | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    class="yellow-input"
+    *ngIf="bulkEditField.type === 'string'"
+  >
+    <input
+      matInput
+      [(ngModel)]="value"
+      required
+    />
+  </mat-form-field>
+  <mat-form-field
+    class="yellow-input"
+    *ngIf="bulkEditField.type === 'Date'"
+  >
+    <mat-label>Enter Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [(ngModel)]="value"
+    />
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="picker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <span *ngIf="bulkEditField.type !== 'Date' && bulkEditField.type !== 'string'"
+    >Field type not defined</span
+  >
+  <div class="error-list">
+    <div
+      class="error-item"
+      *ngFor="let err of errors"
+    >
+      <div class="icon-content">
+        <mat-icon>close</mat-icon>
+      </div>
+
+      <div class="error-content">{{ err }}</div>
+    </div>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+</div>

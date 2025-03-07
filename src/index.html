@@ -118,8 +118,51 @@
     </div>
   </div>
 </div>
+<div id="print-body"></div>
 
 <fury-root></fury-root>
-<noscript>Please enable JavaScript to continue using this application.</noscript>
+<script type="text/javascript">
+  let BUILD_NUMBER = '<!-- inject:BUILD_NUMBER -->';
+</script>
+
+<script
+  id="NO_IEMESSAGE"
+  type="text/html"
+>
+  <div style="color:white">
+    Eclipse Pro does not support Internet Explorer. Please switch browsers.
+  </div>
+</script>
+<script type="text/javascript">
+  function isIE() {
+    return (
+      navigator.appName === 'Microsoft Internet Explorer' ||
+      (navigator.appName === 'Netscape' &&
+        new RegExp('Trident/.*rv:([0-9]{1,}[\.0-9]{0,})').exec(navigator.userAgent) != null)
+    );
+  }
+
+  if (isIE()) {
+    // Replace the spinner with the message.
+    let splash = document.getElementById('splash-screen');
+    splash.getElementsByClassName('spinner-wrapper')[0].innerHTML =
+      document.getElementById('NO_IEMESSAGE').innerHTML;
+  }
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-BDC1YCMCXH"
+></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'G-BDC1YCMCXH', { send_page_view: false });
+</script>
 </body>
 </html>

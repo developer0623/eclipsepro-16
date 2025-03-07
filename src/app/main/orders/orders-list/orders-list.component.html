@@ -1,0 +1,193 @@
+<div
+  id="orders"
+  class="page-layout datatable-layout simple fullwidth white-bg order-list"
+  fxLayout="column"
+>
+  <!-- CONTENT -->
+  <div
+    class="content white-bg"
+    fxLayout="column"
+    fxFlex
+  >
+    <!-- CONTENT -->
+    <div
+      class="content fullpage-datatable"
+      fxLayout="column"
+      fxFlex
+    >
+      <div
+        class="order-toolbar"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+      >
+        <div
+          class="order-header__normal"
+          *ngIf="!selectedOrdIds.length"
+        >
+          Orders
+          <!-- remove the + until it does something-->
+          <!-- <div class="order-plus-icon">
+            <md-icon class="icon-plus icon" md-font-icon></md-icon>
+          </div> -->
+        </div>
+        <div
+          class="order-header__selected"
+          *ngIf="selectedOrdIds.length"
+        >
+          <span>Orders</span>
+          <i class="icon-chevron-right icon"></i>
+          <span class="selected_title">Selected</span>
+          <span class="selected_count">{{ selectedOrdIds.length }}</span>
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="actionMenu"
+            #menuTrigger="matMenuTrigger"
+            (mouseenter)="mouseEnter(menuTrigger)"
+            (mouseleave)="mouseLeave(menuTrigger)"
+            class="main-dropdown-btn"
+          >
+            <i class="icon icon-dots-horizontal menu-icon"></i>
+          </button>
+          <mat-menu
+            #actionMenu="matMenu"
+            class="main-menu"
+            [hasBackdrop]="false"
+            xPosition="after"
+          >
+            <div
+              (mouseenter)="mouseEnter(menuTrigger)"
+              (mouseleave)="mouseLeave(menuTrigger)"
+            >
+              <button
+                mat-menu-item
+                class="main-menu-item"
+                *ngFor="let action of ordersActions"
+                [disabled]="!action.allowed()"
+                (click)="action.doItemsAction(action)"
+              >
+                <span class="menu-item-content">{{ action.key }}</span>
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+
+        <div class="grid-filter">
+          <i class="icon icon-filter-outline filter-icon"></i>
+          <div class="search-input">
+            <input
+              class="report-search"
+              placeholder="Filter..."
+              [(ngModel)]="searchTxt"
+              (onEvent)="onFilter()"
+              debounceKeyUp
+              [debounceTime]="200"
+            />
+          </div>
+        </div>
+
+        <div class="grid-filter">
+          <div class="menu-title">
+            Completion Age:
+            <span>
+              {{ selectedDays.title }}
+            </span>
+          </div>
+
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="ageMenu"
+            class="main-dropdown-btn"
+          >
+            <i class="icon icon-chevron-down menu-icon"></i>
+          </button>
+          <mat-menu
+            #ageMenu="matMenu"
+            class="main-menu"
+            xPosition="before"
+          >
+            <button
+              mat-menu-item
+              class="main-menu-item"
+              [ngClass]="{ 'selected-menu-item': item.value == selectedDays.value }"
+              *ngFor="let item of daysAgoList"
+              (click)="onChangeDaysAgo(item)"
+            >
+              <span class="menu-item-content">{{ item.title }}</span>
+            </button>
+          </mat-menu>
+        </div>
+
+        <div class="print-icon-column float-right">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="colMenu"
+            class="main-dropdown-btn"
+          >
+            <i class="icon icon-cog menu-icon"></i>
+          </button>
+          <mat-menu
+            #colMenu="matMenu"
+            xPosition="before"
+          >
+            <div class="checkbox-menu-header">
+              <span (click)="$event.stopPropagation(); $event.preventDefault()"
+                >Add/Remove Column</span
+              >
+              <mat-icon>close</mat-icon>
+            </div>
+            <div class="scroll-menu-list">
+              <button
+                *ngFor="let item of columns"
+                mat-menu-item
+                aria-label="{{ item.headerName }}"
+                (click)="onOrdersGridOptionsToggle(item, $event)"
+              >
+                <mat-icon
+                  *ngIf="item.hide"
+                  class="empty"
+                  >check_box_outline_blank</mat-icon
+                >
+                <mat-icon
+                  *ngIf="!item.hide"
+                  class="checked"
+                  >check_box</mat-icon
+                >
+                {{ item.headerName | translate }}
+              </button>
+              <div
+                fxLayout="row"
+                fxLayoutAlign="center center"
+                class="filter-items-div"
+              >
+                <button
+                  class="reset-btn"
+                  mat-button
+                  (click)="onReset()"
+                >
+                  Reset Defaults
+                </button>
+              </div>
+            </div>
+          </mat-menu>
+
+          <button
+            aria-label="Select Shift 1"
+            mat-icon-button
+            class="print-btn"
+            (click)="openPrintPreview()"
+          >
+            <i class="icon icon-printer header-icon"></i>
+          </button>
+        </div>
+      </div>
+      <ag-grid-angular
+        style="width: 100%; height: 100%"
+        class="ag-theme-balham"
+        [gridOptions]="agGridOptions"
+      >
+      </ag-grid-angular>
+    </div>
+    <!-- / CONTENT -->
+  </div>
+  <!-- / CONTENT -->
+</div>

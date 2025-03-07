@@ -1,0 +1,42 @@
+<div
+  class="pattern-cell"
+  [ngClass]="{ 'error-cell': item.patternNotDefined }"
+>
+  <app-edit-input
+    [(ngModel)]="item.patternName"
+    (onaftersave)="onUpdate($event, item)"
+  >
+    <app-link-helper
+      *ngIf="!item.patternNotDefined"
+      [documentId]="'PunchPattern/' + item.patternId"
+      [labelTxt]="item.patternName"
+      [hideType]="true"
+    >
+    </app-link-helper>
+    <span *ngIf="item.patternNotDefined">
+      {{ item.patternName }}
+    </span>
+  </app-edit-input>
+
+  <button
+    *ngIf="!item.patternNotDefined && item.patternName && !pendingSave"
+    class="pattern-btn"
+    mat-icon-button
+    [matTooltip]="'Open Pattern: ' + item.patternName"
+    matTooltipPosition="right"
+    uiSref="app.punch-patterns.detail"
+    [uiParams]="{ id: item.patternId }"
+  >
+    <i class="mdi mdi-launch icon s24"></i>
+  </button>
+  <button
+    *ngIf="item.patternNotDefined && item.patternName && !pendingSave"
+    class="pattern-btn"
+    mat-icon-button
+    [matTooltip]="'Create a new Pattern: ' + item.patternName"
+    matTooltipPosition="right"
+    (click)="onCreate(item.patternName)"
+  >
+    <i class="mdi mdi-plus s24"></i>
+  </button>
+</div>

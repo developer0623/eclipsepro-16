@@ -1,0 +1,29 @@
+.error-cell {
+  color: black;
+  border: 1px solid;
+  border-color: #d32f2f;
+  background: rgba(211, 47, 47, 0.205);
+}
+
+.pattern-cell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0;
+    min-width: 0;
+  }
+}
+
+::ng-deep .pattern-btn {
+  width: 36px !important;
+  height: 36px !important;
+  margin: auto 0 auto -16px !important;
+  padding: 0 !important;
+  .mat-mdc-button-touch-target {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}

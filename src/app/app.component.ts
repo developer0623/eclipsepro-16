@@ -80,20 +80,18 @@ export class AppComponent {
           },
         ]
       },
-    //   {
-    //     name: 'schedule',
-    //     routeOrFunction: '/tables/all-in-one-table',
-    //     icon: 'assignment',
-    //     badge: '22',
-    //     badgeColor: '#2196F3',
-    //     position: 15,
-    //   },
-    //   {
-    //     name: 'Calendar',
-    //     routeOrFunction: '/apps/calendar',
-    //     icon: 'date_range',
-    //     position: 20
-    //   },
+      {
+        name: 'orders',
+        routeOrFunction: '/orders',
+        icon: 'mdi-receipt',
+        position: 30,
+      },
+      {
+        name: 'Calendar',
+        routeOrFunction: '/apps/calendar',
+        icon: 'date_range',
+        position: 40
+      },
     //   {
     //     name: 'Inbox',
     //     routeOrFunction: '/apps/inbox',

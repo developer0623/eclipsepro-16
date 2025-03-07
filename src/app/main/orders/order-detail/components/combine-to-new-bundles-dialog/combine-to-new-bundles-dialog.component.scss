@@ -1,0 +1,17 @@
+.white-color {
+  color: white;
+}
+
+.yellow-input {
+  width: 100%;
+}
+
+.error-item {
+  color: red;
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    color: red !important;
+  }
+}

@@ -1,0 +1,975 @@
+<div
+  id="orders"
+  class="page-layout simple fullwidth order-detail"
+>
+  <div
+    class="order-header"
+    *ngIf="order"
+  >
+    <div class="order-header__title"><span>ORDER</span>: {{ order.job.orderCode }}</div>
+    <div>
+      <button
+        *ngIf="isPatchPending()"
+        aria-label="Save Order Changes"
+        class="order-save-btn"
+        (click)="saveOrderDetailChanges()"
+        matTooltip="Save order changes"
+      >
+        <i class="mdi mdi-content-save-all save-icon"></i>
+        Save Order Changes
+      </button>
+      <button
+        *ngIf="order.hasUnsavedBundleChanges"
+        aria-label="Save bundle changes"
+        class="order-save-btn"
+        (click)="saveBundleChanges()"
+        matTooltip="Save bundle changes"
+      >
+        <i class="mdi mdi-content-save-all save-icon"></i>
+        Save bundle changes
+      </button>
+      <button
+        *ngIf="order.hasUnsavedBundleChanges || isPatchPending()"
+        aria-label="Cancel Changes"
+        class="order-cancel-btn"
+        (click)="cancelUnsavedChanges()"
+        matTooltip="Cancel Changes"
+      >
+        Cancel Changes
+      </button>
+    </div>
+    <div class="order-header__progress">
+      <mat-progress-bar
+        class="order-progress-bar"
+        mode="determinate"
+        [value]="order.completePerc"
+      ></mat-progress-bar>
+      <div class="order-progress__value">
+        {{ order.completePerc | number : '1.0-0' }}% <span>Complete</span>
+      </div>
+    </div>
+    <div class="order-header__state">
+      {{ order.job.status | orderStatus }}
+    </div>
+  </div>
+  <ng-scrollbar
+    visibility="hover"
+    class="main-scroll-container"
+    *ngIf="order"
+  >
+    <div class="order-content">
+      <div class="order-content__items">
+        <div class="order-content__item">
+          <div class="order-content__title">Material:</div>
+          <app-link-helper
+            [documentId]="'Material/' + order.job.materialCode"
+            [labelTxt]="order.job.materialCode"
+            [hideType]="true"
+          ></app-link-helper>
+        </div>
+        <div class="order-content__tagline">
+          {{ order.job.material.description }}
+        </div>
+        <div class="order-content__item">
+          <div class="order-content__title">Tooling:</div>
+          {{ order.job.toolingCode }}
+        </div>
+        <div class="order-content__tagline">
+          {{ order.job.toolingDescription }}
+        </div>
+      </div>
+      <div class="order-content__items">
+        <div
+          class="order-content__item"
+          *ngIf="order.job.scheduleState.state === 'Scheduled'"
+        >
+          <div class="order-content__title">Machine:</div>
+          {{ order?.job?.scheduleState?.machine?.description }}
+        </div>
+        <div
+          class="order-content__item"
+          *ngIf="order.job.scheduleState.state === 'Scheduled'"
+        >
+          <div class="order-content__title">Sequence:</div>
+          {{ order?.job?.scheduleState?.sequence }}
+        </div>
+
+        <div class="order-content__item">
+          <button
+            (click)="onToggleHold()"
+            class="hold-btn"
+            matTooltipPosition="left"
+            matTooltip="Hold prevents a job from going to the machine."
+          >
+            <i
+              *ngIf="order.job.hold"
+              class="mdi mdi-pause-circle-outline"
+            ></i>
+            <i
+              *ngIf="!order.job.hold"
+              class="mdi mdi-pause-circle"
+            ></i>
+            {{ order.job.hold ? 'Remove hold' : 'Hold' }}
+          </button>
+        </div>
+      </div>
+      <div class="order-content__date">
+        <div class="order-content__item">
+          <div class="order-content__title">Required:</div>
+          <app-edit-date
+            class="order-detail__content"
+            [showEditButtons]="true"
+            [(ngModel)]="order.job.requiredDate"
+            (onSave)="onChangeOrderDetail($event, '/job/requiredDate')"
+            (onOpenClose)="onInputEditorOpenClose($event)"
+          >
+            {{ order.job.requiredDate | amsDate }}
+          </app-edit-date>
+        </div>
+        <div class="order-content__item">
+          <div class="order-content__title">Ship:</div>
+          <app-edit-date
+            class="order-detail__content"
+            [showEditButtons]="true"
+            [(ngModel)]="order.job.shipDate"
+            (onSave)="onChangeOrderDetail($event, '/job/shipDate')"
+            (onOpenClose)="onInputEditorOpenClose($event)"
+          >
+            {{ order.job.shipDate | amsDate }}
+          </app-edit-date>
+        </div>
+        <div class="order-content__item">
+          <div class="order-content__title">
+            <span *ngIf="order.job.scheduleState.state === 'Scheduled'">Estimated:</span>
+            <span *ngIf="order.job.scheduleState.state === 'Done'">Completed:</span>
+          </div>
+          {{ order.job.completionDate | amsDateTime }}
+        </div>
+      </div>
+      <div class="order-content__length">
+        <div class="order-content__item">
+          <div class="order-content__title">Total:</div>
+          {{ order.job.totalFt | unitsFormat : 'ft' : 2 : true
+          }}<span class="sign">{{ 'ft' | userDisplayUnits }}</span>
+        </div>
+        <div class="order-content__item-remaining">
+          <div class="order-content__title">Remaining:</div>
+          {{ order.job.remainingFt | unitsFormat : 'ft' : 2 : true
+          }}<span class="sign">{{ 'ft' | userDisplayUnits }}</span>
+        </div>
+        <div
+          class="order-content__item-alert"
+          *ngIf="alerts.length > 0"
+        >
+          <div class="order-content__title">Alerts:</div>
+          <div class="order-content__alerts">
+            <div *ngFor="let alert of alerts; trackBy: trackByIndex">
+              {{ alert }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <mat-accordion
+      multi
+      class="order-detail-accordion"
+    >
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> DETAILS </mat-panel-title>
+          <mat-panel-description> </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="order-detail">
+          <div class="order-detail__section">
+            <div class="order-detail__item">
+              <div class="order-detail__title">Customer:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.customerName"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/customerName')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.customerName }}
+              </app-edit-input>
+            </div>
+
+            <div class="order-detail__address">
+              <div class="order-detail__title"></div>
+              <div class="order-detail__content">
+                <app-edit-input
+                  [(ngModel)]="order.job.customerAddress1"
+                  [showEditButtons]="true"
+                  (onaftersave)="onChangeOrderDetail($event, '/job/customerAddress1')"
+                  (onOpenClose)="onInputEditorOpenClose($event)"
+                >
+                  {{ order.job.customerAddress1 }}
+                </app-edit-input>
+                <app-edit-input
+                  [(ngModel)]="order.job.customerAddress2"
+                  [showEditButtons]="true"
+                  (onaftersave)="onChangeOrderDetail($event, '/job/customerAddress2')"
+                  (onOpenClose)="onInputEditorOpenClose($event)"
+                >
+                  {{ order.job.customerAddress2 }}
+                </app-edit-input>
+                <div>
+                  {{ order.job.customerCity }}
+                  {{ order.job.customerState }}
+                  {{ order.job.customerZip }}
+                </div>
+                <div>
+                  {{ order.job.customerCountry }}
+                </div>
+              </div>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">Phone:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.customerPhone"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/customerPhone')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.customerPhone }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">Cust #:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.customerNumber"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/customerNumber')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.customerNumber }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">PO #:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.customerPO"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/customerPO')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.customerPO }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">Sales Order:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.salesOrder"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/salesOrder')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.salesOrder }}
+              </app-edit-input>
+            </div>
+          </div>
+          <div class="order-detail__section">
+            <div class="order-detail__item">
+              <div class="order-detail__title">Instructions:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.customerInstructions"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/customerInstructions')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.customerInstructions }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">Truck #:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.truckNumber"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/truckNumber')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.truckNumber }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">Staging Bay:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.stagingBay"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/stagingBay')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.stagingBay }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">Loading Dock:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.loadingDock"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/loadingDock')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.loadingDock }}
+              </app-edit-input>
+            </div>
+          </div>
+          <div class="order-detail__section">
+            <div class="order-detail__item">
+              <div class="order-detail__title"><span translate="orderUser1"></span>:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.user1"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/user1')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.user1 }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title"><span translate="orderUser2"></span>:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.user2"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/user2')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.user2 }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title"><span translate="orderUser3"></span>:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.user3"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/user3')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.user3 }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title"><span translate="orderUser4"></span>:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.user4"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/user4')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.user4 }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title"><span translate="orderUser5"></span>:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.user5"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/user5')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.user5 }}
+              </app-edit-input>
+            </div>
+          </div>
+
+          <div class="order-detail__section">
+            <div class="order-detail__item">
+              <div class="order-detail__title">Date Imported:</div>
+              <div class="order-detail__content">
+                {{ order.job.dateImported | amsDateTime }}
+              </div>
+            </div>
+            <div class="order-detail__bundle">
+              <div class="order-detail__title">Bundle Maximums:</div>
+            </div>
+            <div class="order-detail__item1">
+              <div class="order-detail__title">Weight:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="bundleRules.maxWeightLbs"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, 'bundleRules.maxWeightLbs')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ bundleRules?.maxWeightLbs | unitsFormat : 'lbs' : 2 : true
+                }}<span>{{ 'lbs' | userDisplayUnits }}</span>
+              </app-edit-input>
+            </div>
+            <div class="order-detail__item1">
+              <div class="order-detail__title">Piece Count:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="bundleRules.maxPieceCount"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, 'bundleRules.maxPieceCount')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ bundleRules?.maxPieceCount }}
+              </app-edit-input>
+            </div>
+            <div class="order-detail__length">
+              <div class="order-detail__title">
+                <div>Min/Max</div>
+                <div>Length Diff:</div>
+              </div>
+              <div class="order-detail__content">
+                {{ bundleRules?.minPctOfMaxLength }}<span>%</span>
+              </div>
+            </div>
+            <div class="order-detail__item">
+              <div class="order-detail__title">Message:</div>
+              <app-edit-input
+                class="order-detail__content"
+                [(ngModel)]="order.job.operatorMessage"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeOrderDetail($event, '/job/operatorMessage')"
+                (onOpenClose)="onInputEditorOpenClose($event)"
+              >
+                {{ order.job.operatorMessage }}
+              </app-edit-input>
+            </div>
+          </div>
+          <div class="order-detail__menu">
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="detailMenu"
+              #menuTrigger="matMenuTrigger"
+              class="main-dropdown-btn"
+            >
+              <i class="icon icon-dots-vertical menu-icon"></i>
+            </button>
+            <mat-menu
+              #detailMenu="matMenu"
+              class="main-menu"
+              xPosition="after"
+            >
+              <button
+                mat-menu-item
+                matTooltip="Change Order/Material/Tooling"
+                matTooltipPosition="left"
+                (click)="changeOrderDef()"
+              >
+                <mat-icon>edit</mat-icon>
+                <span>Change Definition</span>
+              </button>
+              <button
+                mat-menu-item
+                matTooltip="Delete this job."
+                matTooltipPosition="left"
+                (click)="onDeleteJob()"
+              >
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+              <button
+                *ngIf="printTemplates.length"
+                mat-menu-item
+                [matMenuTriggerFor]="printMenu"
+              >
+                <mat-icon>printer</mat-icon>
+                <span>Print</span>
+              </button>
+            </mat-menu>
+            <mat-menu #printMenu="matMenu">
+              <a
+                mat-menu-item
+                *ngFor="let template of printTemplates"
+                href="/api/job/{{ order.ordId }}/render?template={{ template.name }}"
+              >
+                <i class="mdi mdi-file-pdf-box"></i>
+                <span>{{ template.name }}</span>
+              </a>
+            </mat-menu>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title> ITEMS </mat-panel-title>
+          <mat-panel-description> </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="order-items">
+          <div
+            class="order-items__header"
+            *featureFlag="'development'"
+          >
+            <div class="bundles-header">
+              <div
+                class="bundles-header__normal"
+                *ngIf="!selectedBundleCount()"
+              >
+                Bundles
+                <!-- remove the + until it does something-->
+                <!-- <div class="bundle-plus-icon">
+                      <md-icon class="icon-plus icon" md-font-icon></md-icon>
+                    </div> -->
+              </div>
+              <div
+                class="bundles-header__selected"
+                *ngIf="selectedBundleCount()"
+              >
+                <span>Bundles</span>
+                <i class="mdi mdi-chevron-right"></i>
+                <span class="selected_title">Selected</span>
+                <span class="selected_count">{{ selectedBundleCount() }}</span>
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="actionMenu"
+                  #menuTrigger="matMenuTrigger"
+                  (mouseenter)="mouseEnter(menuTrigger)"
+                  (mouseleave)="mouseLeave(menuTrigger)"
+                  class="main-dropdown-btn"
+                >
+                  <i class="icon icon-dots-horizontal menu-icon"></i>
+                </button>
+                <mat-menu
+                  #actionMenu="matMenu"
+                  class="main-menu w-400"
+                  [hasBackdrop]="false"
+                  xPosition="after"
+                >
+                  <div
+                    (mouseenter)="mouseEnter(menuTrigger)"
+                    (mouseleave)="mouseLeave(menuTrigger)"
+                  >
+                    <button
+                      mat-menu-item
+                      class="main-menu-item"
+                      *ngFor="let action of bundlesActions"
+                      (click)="action.doBundlesAction(action)"
+                    >
+                      <span class="menu-item-content">{{ action.key }}</span>
+                    </button>
+                  </div>
+                </mat-menu>
+              </div>
+            </div>
+
+            <div class="bundles-view">
+              View:
+              <span>{{ selectedBundleView.title }}</span>
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="viewMenu"
+                class="main-dropdown-btn"
+                aria-label="Select View"
+              >
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+              <mat-menu
+                #viewMenu="matMenu"
+                class="main-menu"
+                xPosition="after"
+              >
+                <div>
+                  <button
+                    mat-menu-item
+                    class="main-menu-item"
+                    *ngFor="let view of bundlesViews"
+                    (click)="changeBundleView(view)"
+                  >
+                    <span class="menu-item-content">{{ view.title }}</span>
+                  </button>
+                </div>
+              </mat-menu>
+            </div>
+          </div>
+
+          <div class="bundles-content">
+            <div
+              class="bundles-content__collapsed"
+              *ngIf="selectedBundleView.id === 0"
+            >
+              <div
+                class="bundles-content__item"
+                *ngFor="let bundle of order.bundlesModel"
+              >
+                <div class="bundles-content__side">
+                  <div class="bundles-content__number">{{ bundle.bundleNo }}</div>
+                  <div class="bundles-content__checkbox">
+                    <mat-checkbox
+                      class="yellow-checkbox"
+                      aria-label="Select Tool"
+                      [checked]="bundleCheckState[bundle.bundleNo]"
+                      [indeterminate]="isBundleItemIndeterminate(bundle.bundleNo)"
+                      (change)="onBundleChecked(bundle.bundleNo)"
+                    >
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <app-bundle-item
+                  [item]="bundle"
+                  [isdetail]="false"
+                ></app-bundle-item>
+              </div>
+            </div>
+
+            <div
+              class="bundles-content__carousel"
+              *ngIf="selectedBundleView.id === 1"
+            >
+              <slick
+                class="slider"
+                settings="slickConfig4"
+              >
+                <div
+                  class="bundles-content__item"
+                  *ngFor="let bundle of order.bundlesModel"
+                >
+                  <div class="bundles-content__side">
+                    <div class="bundles-content__number">
+                      {{ bundle.bundleNo }}
+                    </div>
+                    <div class="bundles-content__checkbox">
+                      <!-- Hide bundle checkboxes until we do something with them -->
+                      <mat-checkbox
+                        class="yellow-checkbox"
+                        aria-label="Select Tool"
+                        [checked]="bundleCheckState[bundle.bundleNo]"
+                        [indeterminate]="isBundleItemIndeterminate(bundle.bundleNo)"
+                        (change)="onBundleChecked(bundle.bundleNo)"
+                      >
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <app-bundle-item
+                    [item]="bundle"
+                    [isdetail]="false"
+                  ></app-bundle-item>
+                </div>
+              </slick>
+            </div>
+
+            <div
+              class="bundles-content-inline"
+              *ngIf="selectedBundleView.id === 2"
+            >
+              <div
+                class="bundles-content-inline__item"
+                *ngFor="let bundle of order.bundlesModel"
+              >
+                <div class="bundles-content__number">{{ bundle.bundleNo }}</div>
+                <app-bundle-item
+                  [item]="bundle"
+                  [isdetail]="true"
+                  [isChecked]="bundleCheckState[bundle.bundleNo]"
+                  [isIntermidated]="isBundleItemIndeterminate(bundle.bundleNo)"
+                  (onChecked)="onBundleChecked(bundle.bundleNo)"
+                ></app-bundle-item>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-items__header">
+            <div class="bundles-header">
+              <div
+                class="bundles-header__normal"
+                *ngIf="!itemsCheckedCount()"
+              >
+                Items
+                <!-- remove the + until it does something-->
+                <!-- <div class="bundle-plus-icon">
+                      <md-icon class="icon-plus icon" md-font-icon></md-icon>
+                    </div> -->
+              </div>
+              <div
+                class="bundles-header__selected"
+                *ngIf="itemsCheckedCount()"
+              >
+                <span>Items</span>
+                <mat-icon>chevron_right</mat-icon>
+                <span class="selected_title">Selected</span>
+                <span class="selected_count">{{ itemsCheckedCount() }}</span>
+
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="itemActionMenu"
+                  #itemMenuTrigger="matMenuTrigger"
+                  (mouseenter)="mouseEnter(itemMenuTrigger)"
+                  (mouseleave)="mouseLeave(itemMenuTrigger)"
+                  class="main-dropdown-btn"
+                >
+                  <i class="icon icon-dots-horizontal menu-icon"></i>
+                </button>
+                <mat-menu
+                  #itemActionMenu="matMenu"
+                  class="main-menu w-400"
+                  [hasBackdrop]="false"
+                  xPosition="after"
+                >
+                  <div
+                    (mouseenter)="mouseEnter(itemMenuTrigger)"
+                    (mouseleave)="mouseLeave(itemMenuTrigger)"
+                  >
+                    <button
+                      mat-menu-item
+                      class="main-menu-item"
+                      *ngFor="let action of itemsActions"
+                      [disabled]="!action.allowed()"
+                      (click)="action.doItemsAction(action)"
+                    >
+                      <span class="menu-item-content">{{ action.key }}</span>
+                    </button>
+                  </div>
+                </mat-menu>
+              </div>
+            </div>
+            <div *ngIf="order.allowRebundling">
+              <button
+                mat-icon-button
+                aria-label="Move Up"
+                class="s-30-btn"
+                *ngIf="canMoveSequenceUp()"
+                (click)="moveSequenceUp()"
+              >
+                <i class="mdi mdi-arrow-up-bold"></i>
+              </button>
+              <button
+                mat-icon-button
+                aria-label="Move Down"
+                class="s-30-btn"
+                *ngIf="canMoveSequenceDown()"
+                (click)="moveSequenceDown()"
+              >
+                <i class="mdi mdi-arrow-down-bold"></i>
+              </button>
+            </div>
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="colMenu"
+              class="main-dropdown-btn"
+            >
+              <i class="icon icon-cog menu-icon"></i>
+            </button>
+            <mat-menu
+              #colMenu="matMenu"
+              xPosition="before"
+            >
+              <div class="checkbox-menu-header">
+                <span (click)="$event.stopPropagation(); $event.preventDefault()"
+                  >Add/Remove Column</span
+                >
+                <mat-icon>close</mat-icon>
+              </div>
+              <div class="scroll-menu-list">
+                <button
+                  *ngFor="let item of itemHeaders"
+                  mat-menu-item
+                  aria-label="{{ item.headerName }}"
+                  (click)="onItemGridOptionsToggle(item, $event)"
+                >
+                  <mat-icon
+                    *ngIf="!item.isVisible"
+                    class="empty"
+                  >
+                    check_box_outline_blank
+                  </mat-icon>
+                  <mat-icon
+                    *ngIf="item.isVisible"
+                    class="checked"
+                  >
+                    check_box
+                  </mat-icon>
+                  {{ item.title | translate }}
+                </button>
+              </div>
+            </mat-menu>
+          </div>
+          <div class="order-items__content">
+            <table>
+              <tr>
+                <th class="">
+                  <mat-checkbox
+                    class="yellow-checkbox"
+                    aria-label="Select Item"
+                    [checked]="isAllJobItemChecked()"
+                    [indeterminate]="isJobItemIndeterminate()"
+                    (change)="onJobItemToggleAll()"
+                  >
+                  </mat-checkbox>
+                </th>
+                <th
+                  class=""
+                  *ngFor="let col of itemHeaders; let i = index"
+                  [hidden]="!col.isVisible"
+                >
+                  <span>{{ col.title | translate }}</span>
+                  <i
+                    class="mdi mdi-unfold-more-horizontal"
+                    *ngIf="col.order === 'none'"
+                    (click)="onClickItemHeader(i)"
+                  ></i>
+                  <i
+                    class="mdi mdi-chevron-down"
+                    *ngIf="col.order != 'none'"
+                    [ngClass]="{ 'mdi-flip-v': col.order === 'desc' }"
+                    (click)="onClickItemHeader(i)"
+                  >
+                  </i>
+                </th>
+              </tr>
+              <tr
+                *ngFor="let item of order.items; trackBy: trackByIndex"
+                class="hover order-detail-item"
+              >
+                <td>
+                  <mat-checkbox
+                    class="yellow-checkbox"
+                    aria-label="Tool Selection Checkbox"
+                    [(ngModel)]="itemsCheckState[item.itemId]"
+                    (change)="onItemChanged(item)"
+                    (click)="onItemClicked(item, $event)"
+                  >
+                  </mat-checkbox>
+                </td>
+                <td
+                  *ngFor="let col of itemHeaders"
+                  [hidden]="!col.isVisible"
+                >
+                  <!-- Standard non-editable column -->
+                  <span
+                    *ngIf="
+                      !col.isEditable &&
+                      col.field !== 'bundle' &&
+                      col.field !== 'patternName' &&
+                      col.field !== 'quantity' &&
+                      col.field !== 'lengthIn'
+                    "
+                  >
+                    {{ item[col.field] | unitsFormat : col.units : col.unitDecimals }}
+                  </span>
+
+                  <!-- Standard editable column -->
+                  <app-edit-input
+                    *ngIf="
+                      col.isEditable &&
+                      col.field !== 'bundle' &&
+                      col.field !== 'patternName' &&
+                      col.field !== 'quantity' &&
+                      col.field !== 'lengthIn'
+                    "
+                    [(ngModel)]="item[col.field]"
+                    [showEditButtons]="true"
+                    (onaftersave)="onChangeItem($event, col.field, item)"
+                    (onOpenClose)="onInputEditorOpenClose($event)"
+                  >
+                    {{ item[col.field] | unitsFormat : col.units : col.unitDecimals }}
+                  </app-edit-input>
+
+                  <!-- Custom columns-->
+                  <app-edit-input
+                    *ngIf="col.field === 'lengthIn'"
+                    [(ngModel)]="item[col.field]"
+                    type="number"
+                    [showEditButtons]="true"
+                    (onaftersave)="onChangeItem($event, col.field, item)"
+                    (onOpenClose)="onInputEditorOpenClose($event)"
+                  >
+                    {{ item[col.field] | unitsFormat : col.units : col.unitDecimals }}
+                  </app-edit-input>
+                  <app-edit-input
+                    *ngIf="col.field === 'quantity'"
+                    [(ngModel)]="item[col.field]"
+                    type="number"
+                    [showEditButtons]="true"
+                    (onaftersave)="onChangeItem($event, col.field, item)"
+                    (onOpenClose)="onInputEditorOpenClose($event)"
+                  >
+                    {{ item[col.field] | unitsFormat : col.units : col.unitDecimals }}
+                  </app-edit-input>
+                  <app-edit-select
+                    *ngIf="col.field === 'bundle'"
+                    [(ngModel)]="item[col.field]"
+                    [valKey]="'id'"
+                    [nameKey]="'text'"
+                    [items]="bundleChoices"
+                    (onEditing)="loadBundleChoices(item)"
+                    (onaftersave)="onChangeItemBundle($event, item)"
+                    (onOpenClose)="onInputEditorOpenClose($event)"
+                  >
+                    {{ item[col.field] }}
+                  </app-edit-select>
+                  <app-item-pattern
+                    *ngIf="col.field === 'patternName'"
+                    [item]="item"
+                    [pendingSave]="savePacket.length > 0"
+                    (createPattern)="createPatternForName($event)"
+                    (updatePattern)="onChangePattern($event)"
+                  ></app-item-pattern>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> PRODUCTION SUMMARY </mat-panel-title>
+          <mat-panel-description> </mat-panel-description>
+        </mat-expansion-panel-header>
+        <ag-grid-angular
+          style="width: 100%"
+          [ngStyle]="onGetSummaryHeight()"
+          class="ag-theme-balham order-detail-grid-container"
+          [gridOptions]="productionSummaryAgGridOptions"
+        >
+        </ag-grid-angular>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> COMPLETED BUNDLES </mat-panel-title>
+          <mat-panel-description> </mat-panel-description>
+        </mat-expansion-panel-header>
+        <ag-grid-angular
+          style="width: 100%"
+          [domLayout]="'autoHeight'"
+          class="ag-theme-balham order-detail-grid-container"
+          [gridOptions]="bundleAgGridOptions"
+        >
+        </ag-grid-angular>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> PRODUCTION LOG </mat-panel-title>
+          <mat-panel-description> </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-production-log
+          [ordId]="order.job.ordId"
+          class="full-page-grid"
+        ></app-production-log>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> INTEGRATION </mat-panel-title>
+          <mat-panel-description> </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-integration-export-events
+          [ordId]="order.job.ordId"
+          style="height: 100px"
+        ></app-integration-export-events>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-scrollbar>
+</div>
+
+<ng-template #snackBarTemplate>
+  <span fxFlex
+    >This Order is in read-only mode as the current user is not a member of the
+    <em>job-editor</em> role.</span
+  >
+</ng-template>
