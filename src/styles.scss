@@ -922,6 +922,12 @@ i {
     }
   }
 
+  .page-layout {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+
   #print-body {
     height: 0px;
     overflow: hidden;

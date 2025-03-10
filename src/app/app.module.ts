@@ -1,4 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { DecimalPipe, DatePipe } from '@angular/common';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Needed for Touch functionality of Material Components
@@ -46,6 +47,8 @@ import { AuthInterceptor } from './main/shared/services/auth-interceptor.service
   bootstrap: [AppComponent],
   providers: [
     CookieService,
+    DecimalPipe,
+    DatePipe,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

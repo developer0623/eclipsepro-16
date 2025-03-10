@@ -4,8 +4,7 @@
 >
   <a
     class="td-link ml-5"
-    uiSref="app.orders.detail"
-    [uiParams]="{ id: docId }"
+    [routerLink]="['/orders', docId]"
   >
     <span *ngIf="!hideType">Order:</span>{{ labelTxt || docId }}
   </a>

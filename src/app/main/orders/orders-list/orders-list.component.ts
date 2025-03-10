@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { GridOptions, GridApi, GridReadyEvent, GetRowIdParams } from 'ag-grid-community';
 import * as _ from 'lodash';
-import { Store } from '@ngrx/store';
+import { createSelector, Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, map, filter, tap, switchMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,6 +19,7 @@ import { BulkEditDialogComponent } from './components/bulk-edit-dialog/bulk-edit
 import { BulkDeleteDialogComponent } from './components/bulk-delete-dialog/bulk-delete-dialog.component';
 import { ClientDataStore } from '../../shared/services/clientData.store';
 import { selectSystemPreferences } from '../../shared/services/store/misc/selectors';
+import { IAppState } from '../../shared/services/store/store.dto';
 
 declare let gtag;
 
@@ -31,8 +32,7 @@ export class OrdersListComponent implements OnDestroy {
   searchTxt = '';
   selectedOrdIds = [];
   searchParams = {};
-  ordersSub_;
-  systemPrefsSub_;
+  subscriptions_: Subscription[] = [];
   agGridOptions: GridOptions;
   knownJobIds: string[] = [];
   showMaterialShortageAlerts: boolean = false;
@@ -41,22 +41,22 @@ export class OrdersListComponent implements OnDestroy {
     {
       key: 'Bulk Edit Field',
       doItemsAction: () => this.bulkEditField(),
-      allowed: () => true,
+      allowed: () => this.userCanEdit,
     },
     {
       key: 'Delete Order(s)',
       doItemsAction: () => this.bulkDelete(),
-      allowed: () => true,
+      allowed: () => this.userCanEdit,
     },
     {
       key: 'Set Hold',
       doItemsAction: () => this.setHold(true),
-      allowed: () => true,
+      allowed: () => this.userCanHold,
     },
     {
       key: 'Release Hold',
       doItemsAction: () => this.setHold(false),
-      allowed: () => true,
+      allowed: () => this.userCanHold,
     },
   ];
   masterListOfColumns = [
@@ -305,6 +305,8 @@ export class OrdersListComponent implements OnDestroy {
   selectedDays = this.daysAgoList[1];
   daysAgoObs = new BehaviorSubject({ daysAgo: this.selectedDays.value });
   timedOutCloser;
+  userCanHold: boolean = false;
+  userCanEdit: boolean = false;
 
   constructor(
     private clientDataStore: ClientDataStore,
@@ -340,26 +342,6 @@ export class OrdersListComponent implements OnDestroy {
     } else {
       this.columns = [...this.masterListOfColumns];
     }
-
-    this.systemPrefsSub_ = this.store.select(selectSystemPreferences).subscribe((prefs) => {
-      this.systemPreferences = prefs;
-      this.showMaterialShortageAlerts = this.systemPreferences.showMaterialShortageAlerts;
-      this.columns = this.columns.map((item) => {
-        if (item.field === 'hasAlerts') {
-          return {
-            ...item,
-            cellRendererParams: {
-              showMaterialShortageAlerts: this.showMaterialShortageAlerts,
-            },
-          };
-        }
-
-        return item;
-      });
-      if (this.gridApi) {
-        this.gridApi.setGridOption('columnDefs', this.sanitizeColumnDefs(this.columns));
-      }
-    });
 
     this.agGridOptions = {
       headerHeight: 25,
@@ -412,53 +394,91 @@ export class OrdersListComponent implements OnDestroy {
       });
 
     // Data Subscriptions
-    this.ordersSub_ = this.daysAgoObs
-      .pipe(
-        tap((e) => localStorage.setItem('orders-list.daysAgo', e.daysAgo.toString())), // Side effect
-        debounceTime(500), // Correct `debounceTime`
-        switchMap((e) => clientDataStore.SelectJobSummariesAllRecent(e.daysAgo)), // Switch to new observable
-        map((jobs) => jobs as IJobSummaryDto[]) // Type assertion
-      )
-      .subscribe((jobs) => {
-        this.mainJobs = jobs //.filter(j => !j.isDeleted)
-          .map((j) => ({
-            ...j,
-            hasAlerts:
-              (j.patternNotDefined ? 2 : 0) +
-              (j.materialShortageAlert && this.systemPreferences.showMaterialShortageAlerts
-                ? 2
-                : 0) +
-              (j.hold ? 1 : 0),
-          }));
-        this.onEditPrintContent();
+    this.subscriptions_ = [
+      this.daysAgoObs
+        .pipe(
+          tap((e) => localStorage.setItem('orders-list.daysAgo', e.daysAgo.toString())), // Side effect
+          switchMap((e) => clientDataStore.SelectJobSummariesAllRecent(e.daysAgo)), // Switch to new observable
+          debounceTime(500), // Correct `debounceTime`
+          map((jobs) => jobs as IJobSummaryDto[]) // Type assertion
+        )
+        .subscribe((jobs) => {
+          this.mainJobs = jobs //.filter(j => !j.isDeleted)
+            .map((j) => ({
+              ...j,
+              hasAlerts:
+                (j.patternNotDefined ? 2 : 0) +
+                (j.materialShortageAlert && this.systemPreferences.showMaterialShortageAlerts
+                  ? 2
+                  : 0) +
+                (j.hold ? 1 : 0),
+            }));
+          this.onEditPrintContent();
 
-        if (this.gridApi) {
-          let n = [];
-          let u = [];
-          let d = [];
-          let newKnown: string[] = [];
-          this.mainJobs.forEach((job) => {
-            if (job.isDeleted) {
-              d.push(job);
-            } else {
-              newKnown.push(job.id);
-              if (this.knownJobIds.indexOf(job.id) >= 0) {
-                u.push(job);
+          if (this.gridApi) {
+            let n = [];
+            let u = [];
+            let d = [];
+            let newKnown: string[] = [];
+            this.mainJobs.forEach((job) => {
+              if (job.isDeleted) {
+                d.push(job);
               } else {
-                n.push(job);
+                newKnown.push(job.id);
+                if (this.knownJobIds.indexOf(job.id) >= 0) {
+                  u.push(job);
+                } else {
+                  n.push(job);
+                }
               }
-            }
-          });
-          this.knownJobIds = newKnown;
-          this.gridApi.applyTransaction({
-            add: n,
-            update: u,
-            remove: d,
-          });
+            });
+            this.knownJobIds = newKnown;
+            this.gridApi.applyTransaction({
+              add: n,
+              update: u,
+              remove: d,
+            });
 
-          // this.gridApi.sizeColumnsToFit();
+            // this.gridApi.sizeColumnsToFit();
+          }
+        }),
+      this.store.select(selectSystemPreferences).subscribe((prefs) => {
+        this.systemPreferences = prefs;
+        this.showMaterialShortageAlerts = this.systemPreferences.showMaterialShortageAlerts;
+        this.columns = this.columns.map((item) => {
+          if (item.field === 'hasAlerts') {
+            return {
+              ...item,
+              cellRendererParams: {
+                showMaterialShortageAlerts: this.showMaterialShortageAlerts,
+              },
+            };
+          }
+
+          return item;
+        });
+        if (this.gridApi) {
+          this.gridApi.setGridOption('columnDefs', this.sanitizeColumnDefs(this.columns));
         }
-      });
+      }),
+
+      // doing this with explicit filters instead of `UserHasRoles` to save a duplicate subscription. Might be overkill.
+      this.store
+        .select((state: IAppState) => state.data.UserSession)
+        .pipe(filter((session) => !!session))
+        .subscribe((session) => {
+          this.userCanHold =
+            session.roles.filter((r) =>
+              ['job-editor', 'job-editor-quantity', 'scheduler'].some(
+                (x) => x.toLowerCase() === r.toLowerCase()
+              )
+            ).length > 0;
+          this.userCanEdit =
+            session.roles.filter((r) =>
+              ['job-editor', 'job-editor-quantity'].some((x) => x.toLowerCase() === r.toLowerCase())
+            ).length > 0;
+        }),
+    ];
   }
 
   mouseEnter(trigger) {
@@ -930,8 +950,7 @@ export class OrdersListComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.systemPrefsSub_.unsubscribe();
-    this.ordersSub_.unsubscribe();
+    this.subscriptions_.forEach((sub) => sub.unsubscribe());
     let mainComp = document.getElementById('print-body');
     mainComp.innerHTML = '';
   }
