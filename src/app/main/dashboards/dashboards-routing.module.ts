@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: Dashboards2Component
+  },
+  {
+    path: ':id',
+    component: MachineDetailComponent
   }
 ];
 

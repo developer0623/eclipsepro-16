@@ -17,6 +17,14 @@ html, body {
   white-space: nowrap;
 }
 
+.text-uppercase, .text-upper {
+  text-transform: uppercase;
+}
+
+h2, .h2 {
+  font-size: 2rem !important;
+}
+
 h4, .h4 {
   font-size: 1.4rem !important;
 }
@@ -332,6 +340,7 @@ i {
     justify-content: space-between;
     flex-direction: row;
     flex: 1;
+    font-size: 1.4rem;
   
     .menu-item-content {
       margin-right: auto;
@@ -773,6 +782,12 @@ i {
     max-height: auto;
     padding: 0 24px !important;
     opacity: 1;
+    background-size: cover;
+    background-image:url('./assets/images/backgrounds/header-bg.png');
+    .text-upper {
+      margin: 0;
+      line-height: 1.4 !important;
+  }
   }
   
   @media print {

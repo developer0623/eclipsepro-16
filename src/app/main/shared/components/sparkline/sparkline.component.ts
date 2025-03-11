@@ -1,5 +1,7 @@
 import { Component, Input, Inject, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import * as _ from 'lodash';
+import { UnitsService } from '../../services/units.service';
+import { ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-sparkline',
@@ -19,7 +21,7 @@ export class SparklineComponent implements OnInit, OnChanges {
 
   data;
 
-  constructor(@Inject('unitsService') public unitsService) {}
+  constructor(private unitsService: UnitsService) {}
 
   calculateSparklineVm() {
     let data = [];

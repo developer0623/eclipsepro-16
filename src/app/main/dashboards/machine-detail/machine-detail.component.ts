@@ -58,21 +58,23 @@ export class MachineDetailComponent implements OnDestroy {
     if (machineSelection.type === 'xl') {
       this.machineNumber = machineSelection.xlId;
       this.deviceId = '';
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { id: machineSelection.xlId },
-        queryParamsHandling: 'merge',
-        replaceUrl: true,
-      });
+      this.router.navigate(['/dashboards/machines', machineSelection.xlId], {replaceUrl: true});
+      // this.router.navigate([], {
+      //   relativeTo: this.route,
+      //   queryParams: { id: machineSelection.xlId },
+      //   queryParamsHandling: 'merge',
+      //   replaceUrl: true,
+      // });
     } else {
       this.machineNumber = 0;
       this.deviceId = machineSelection.deviceId;
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { id: machineSelection.deviceId },
-        queryParamsHandling: 'merge',
-        replaceUrl: true,
-      });
+      this.router.navigate(['/dashboards/machines', machineSelection.deviceId], {replaceUrl: true});
+      // this.router.navigate([], {
+      //   relativeTo: this.route,
+      //   queryParams: { id: machineSelection.deviceId },
+      //   queryParamsHandling: 'merge',
+      //   replaceUrl: true,
+      // });
     }
   }
 
@@ -81,7 +83,7 @@ export class MachineDetailComponent implements OnDestroy {
   };
   updateMachineFromRoute() {
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) {
+    if (!!id) {
       this.machineNumber = Number(id);
       this.deviceId = '';
       this.machineSelection = { type: 'xl', xlId: this.machineNumber, deviceId: '' };

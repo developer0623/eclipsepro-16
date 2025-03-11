@@ -19,7 +19,7 @@
           [cdkMenuTriggerFor]="dashboardmenu"
           aria-label="machine sort"
         >
-          <mat-icon>settings</mat-icon>
+          <i class="icon icon-cog menu-icon"></i>
         </button>
         <ng-template #dashboardmenu>
           <div
@@ -32,18 +32,18 @@
               (click)="swapSort()"
             >
               <span class="menu-item-content">Sort</span>
-              <i class="mdi mdi-numeric"></i>
+              <i class="mdi mdi-numeric gray-icon"></i>
               <span>|</span>
-              <i class="mdi mdi-alphabetical"></i>
+              <i class="mdi mdi-alphabetical gray-icon"></i>
             </button>
             <button
               class="main-menu-item"
-              uiSref="app.metric-config"
+              [routerLink]="['/settings/metric-config']"
               cdkMenuItem
               aria-label="Metric Config"
             >
               <span class="menu-item-content">Metric Config</span>
-              <i class="mdi mdi-gauge"></i>
+              <i class="mdi mdi-gauge gray-icon"></i>
             </button>
           </div>
         </ng-template>
@@ -65,9 +65,7 @@
         <!-- todo: orderBy with async is not working:  | orderBy:'description'-->
         <div
           *ngFor="let machine of dashboardMachines | orderBy : machineSort; trackBy: trackByKey"
-          [routerLink]="['/dashboards/machines']"
-          [routerLinkActive]="['active']"
-          [queryParams]="{ id: machine.machineNumber }"
+          [routerLink]="['/dashboards', 'machines', machine.machineNumber]"
           fxLayout="column"
           fxFlex="100"
           fxFlex.sm="50"
@@ -107,9 +105,7 @@
       >
         <div
           *ngFor="let device of devices"
-          [routerLink]="['/dashboards/machines']"
-          [routerLinkActive]="['active']"
-          [queryParams]="{ id: device.deviceId }"
+          [routerLink]="['/dashboards', 'machines', device.deviceId]"
           fxLayout="column"
           fxFlex="100"
           fxFlex.sm="50"
