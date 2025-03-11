@@ -33,6 +33,10 @@ const routes: Routes = [
         path: 'orders',
         loadChildren: () => import('./main/orders/orders.module').then(m => m.OrdersModule),
       },
+      {
+        path: 'punch-patterns',
+        loadChildren: () => import('./main/punch-pattern/punch-pattern.module').then(m => m.PunchPatternModule),
+      },
       // {
       //   path: 'apps/inbox',
       //   loadChildren: () => import('./pages/apps/inbox/inbox.module').then(m => m.InboxModule),

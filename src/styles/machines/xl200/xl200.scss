@@ -225,7 +225,7 @@
     }
   }
 
-  @media only screen and (max-width: $layout-breakpoint-sm) {
+  @media only screen and (max-width: 599px) {
     width: 100%;
 
     &:nth-child(2) {

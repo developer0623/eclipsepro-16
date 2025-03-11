@@ -87,11 +87,17 @@ export class AppComponent {
         position: 30,
       },
       {
-        name: 'Calendar',
-        routeOrFunction: '/apps/calendar',
-        icon: 'date_range',
-        position: 40
+        name: 'punchPatterns',
+        routeOrFunction: '/punch-patterns',
+        icon: 'mdi-stamper',
+        position: 40,
       },
+      // {
+      //   name: 'Calendar',
+      //   routeOrFunction: '/apps/calendar',
+      //   icon: 'date_range',
+      //   position: 40
+      // },
     //   {
     //     name: 'Inbox',
     //     routeOrFunction: '/apps/inbox',

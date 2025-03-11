@@ -1,0 +1,21 @@
+<div mat-dialog-content>
+  <p class="content-txt">There are unsaved changes.</p>
+</div>
+
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="onBack()"
+  >
+    Go Back
+  </button>
+  <button
+    mat-button
+    (click)="onDiscard()"
+  >
+    Discard Changes
+  </button>
+</div>

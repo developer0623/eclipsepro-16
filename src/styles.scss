@@ -5,6 +5,8 @@
 
 @import './styles/dashboards/dashboard-elements.scss';
 @import './styles/dashboards/machines.scss';
+@import './styles/machines/xl200/xl200.scss';
+@import './styles/report/report.scss';
 @import './assets/icons/style.css';
 
 html, body {
@@ -45,6 +47,11 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 .pt-10 {
   padding-top: 10px;
+}
+
+.p-24 {
+  padding: 24px;
+
 }
 
 .font-size-20 {
@@ -788,6 +795,21 @@ i {
       margin: 0;
       line-height: 1.4 !important;
   }
+  }
+
+  .back-header {
+    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 60px !important;
+    min-height: 0 !important;
+    max-height: auto;
+    padding: 18px 24px 18px 8px !important;
+    opacity: 1;
+    background-size: cover;
+    background-image:url('./assets/images/backgrounds/header-bg.png');
+    .text-upper {
+        margin: 0;
+        line-height: 1.4 !important;
+    }
   }
   
   @media print {

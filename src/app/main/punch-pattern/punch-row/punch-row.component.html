@@ -1,0 +1,210 @@
+<div
+  class="material-usage-item punch-row"
+  [ngClass]="{
+    'deleted-cell': punch.isDeleted,
+    'error-cell': punch.errors.length > 0,
+    'color-green': punch.resultingPunches.length > 1
+  }"
+  (click)="onEdit($event)"
+  #punchRow
+>
+  <app-edit-select
+    class="main-con punch-pattern-detail-edit"
+    [(ngModel)]="punch.idType"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [items]="typeList"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ punch.idType }}
+  </app-edit-select>
+  <app-edit-input
+    *ngIf="punch.idType !== 'Macro'"
+    class="main-con punch-pattern-detail-edit"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [(ngModel)]="toolId"
+    [showEditButtons]="false"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ toolId }}
+  </app-edit-input>
+  <app-edit-select
+    *ngIf="punch.idType === 'Macro'"
+    class="main-con punch-pattern-detail-edit"
+    [(ngModel)]="punch.macroPatternName"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [valKey]="'macroName'"
+    [nameKey]="'macroName'"
+    [items]="availableMacros"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ punch.macroPatternName }}
+  </app-edit-select>
+  <app-edit-input
+    class="main-con punch-pattern-detail-edit"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [(ngModel)]="xOffset"
+    [showEditButtons]="false"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ xOffset }}
+  </app-edit-input>
+  <app-edit-select
+    *ngIf="!isMacro"
+    class="main-con punch-pattern-detail-edit"
+    [(ngModel)]="xReference"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [valKey]="'value'"
+    [nameKey]="'text'"
+    [items]="referenceColumns"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ onGetReferenceValue('x', xReference) }}
+  </app-edit-select>
+  <app-edit-select
+    *ngIf="isMacro"
+    class="main-con punch-pattern-detail-edit"
+    [ngStyle]="onGetXreferenceError(xReference)"
+    [(ngModel)]="xReference"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [valKey]="'value'"
+    [nameKey]="'text'"
+    [items]="macroReferenceColumns"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ onGetReferenceValue('x', xReference) }}
+  </app-edit-select>
+  <app-edit-input
+    class="main-con punch-pattern-detail-edit"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [(ngModel)]="yOffset"
+    [showEditButtons]="false"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ yOffset }}
+  </app-edit-input>
+  <app-edit-select
+    class="main-con punch-pattern-detail-edit"
+    [(ngModel)]="yReference"
+    [isOpen]="isEdit"
+    [isForce]="true"
+    [valKey]="'value'"
+    [nameKey]="'text'"
+    [items]="yReferenceColumns"
+    (onaftersave)="updatePunchDetail()"
+  >
+    {{ onGetReferenceValue('y', yReference) }}
+  </app-edit-select>
+  <div
+    class="punch-pattern-detail-edit action-col"
+    *ngIf="!isNew"
+  >
+    <!-- Moving a punch up is the same operation as moving the one above it down. -->
+
+    <button
+      mat-icon-button
+      class="arrow-btn s-40-btn"
+      *ngIf="!isFirst"
+      (click)="movePunchDown(index - 1); $event.stopPropagation()"
+    >
+      <i class="mdi mdi-arrow-up"></i>
+    </button>
+    <div
+      class="arrow-btn s-40-btn"
+      *ngIf="isFirst"
+    ></div>
+    <button
+      mat-icon-button
+      class="arrow-btn s-40-btn"
+      *ngIf="!isLast"
+      (click)="movePunchDown(index); $event.stopPropagation()"
+    >
+      <i class="mdi mdi-arrow-down"></i>
+    </button>
+    <div
+      class="arrow-btn s-40-btn"
+      *ngIf="isLast"
+    ></div>
+  </div>
+
+  <div
+    class="punch-pattern-detail-edit action-col"
+    *ngIf="!isNew && !isEdit"
+  >
+    <!-- Edit icon -->
+    <button
+      mat-icon-button
+      class="arrow-btn s-40-btn"
+      (click)="onEdit($event)"
+    >
+      <i class="mdi mdi-pencil"></i>
+    </button>
+
+    <button
+      mat-icon-button
+      class="punch-deletebtn s-40-btn"
+      (click)="deletePunchRow(punch.sequence); $event.stopPropagation()"
+    >
+      <i
+        *ngIf="!punch.isDeleted"
+        class="mdi mdi-delete"
+      ></i>
+      <i
+        *ngIf="punch.isDeleted"
+        class="mdi mdi-delete-restore"
+      ></i>
+    </button>
+  </div>
+
+  <div
+    class="punch-pattern-detail-edit action-col"
+    *ngIf="!isNew && isEdit"
+  >
+    <!-- Save or Cancel -->
+    <button
+      mat-icon-button
+      class="punch-deletebtn s-40-btn"
+      type="submit"
+      (click)="savePunch($event)"
+    >
+      <i class="mdi mdi-content-save"></i>
+    </button>
+    <button
+      mat-icon-button
+      class="arrow-btn s-40-btn"
+      (click)="onCancel($event)"
+    >
+      <i class="mdi mdi-cancel"></i>
+    </button>
+  </div>
+  <div
+    class="action-col"
+    *ngIf="isNew"
+  ></div>
+  <div
+    class="punch-pattern-detail-edit action-col"
+    *ngIf="isNew"
+  >
+    <button
+      mat-icon-button
+      class="punch-deletebtn s-40-btn"
+      type="submit"
+      (click)="saveNewPunch($event)"
+    >
+      <i class="mdi mdi-content-save"></i>
+    </button>
+    <button
+      mat-icon-button
+      class="arrow-btn s-40-btn"
+      (click)="cancelNewPunch()"
+    >
+      <i class="mdi mdi-cancel"></i>
+    </button>
+  </div>
+</div>

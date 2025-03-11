@@ -1,0 +1,307 @@
+<div
+  id="orders"
+  class="page-layout simple fullwidth order-detail"
+>
+  <div
+    class="back-header"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <button
+      mat-icon-button
+      class="back-btn"
+      uiSref="app.punch-patterns"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <button
+        *ngIf="patternIsModified"
+        aria-label="Save Changes"
+        class="save-btn"
+        (click)="saveChanges()"
+        matTooltip="Save changes"
+        [disabled]="disableSave"
+      >
+        <i class="mdi mdi-content-save-all save-icon"></i>
+        Save Changes
+      </button>
+      <button
+        *ngIf="patternIsModified"
+        aria-label="Cancel Changes"
+        class="cancel-btn"
+        (click)="cancelUnsavedChanges()"
+        matTooltip="Cancel Changes"
+      >
+        Cancel Changes
+      </button>
+    </div>
+  </div>
+  <div
+    class="content p-24 md-background md-hue-1"
+    *ngIf="pattern"
+  >
+    <div class="machine-detail">
+      <div class="machine-detail__item">
+        <div class="machine-detail__title"><span translate="patternName"></span>:</div>
+        <div
+          class="machine-detail__content"
+          *ngIf="!patternIsNew"
+        >
+          {{ pattern.patternName }}
+        </div>
+        <app-edit-input
+          *ngIf="patternIsNew"
+          class="machine-detail__content"
+          [(ngModel)]="pattern.patternName"
+          [showEditButtons]="true"
+          (onaftersave)="onChangePatternDetail($event, '/patternName')"
+        >
+          {{ pattern.patternName }}
+        </app-edit-input>
+      </div>
+      <div class="machine-detail__item">
+        <div class="machine-detail__title"><span translate="created"></span>:</div>
+        <div class="machine-detail__content">
+          {{ pattern.importDate | date : 'MM/dd/yyyy' }}
+        </div>
+      </div>
+      <div class="machine-detail__item">
+        <div class="machine-detail__content">
+          <mat-checkbox
+            class="yellow-checkbox setting-enabled"
+            aria-label="checkbox"
+            [(ngModel)]="pattern.isMacro"
+            (change)="updatePunchDetail()"
+          >
+            <span translate="patternMacro"></span>
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="machine-detail__item">
+        <div class="machine-detail__title">
+          <span translate="defaultLength"></span> ({{ 'in' | userDisplayUnits : true }}):
+        </div>
+        <div class="machine-detail__content">
+          <app-edit-input
+            [(ngModel)]="pattern.defaultLength"
+            [showEditButtons]="true"
+            type="number"
+            (onaftersave)="updatePunchDetail()"
+          >
+            {{ pattern.defaultLength }}
+          </app-edit-input>
+        </div>
+      </div>
+      <div class="machine-detail__item">
+        <div class="machine-detail__title"><span translate="lastUsed"></span>:</div>
+        <div class="machine-detail__content">
+          {{ pattern.lastUsedDate | date : 'MM/dd/yyyy' }}
+        </div>
+      </div>
+      <div class="machine-detail__item">
+        <div class="machine-detail__content">
+          <mat-checkbox
+            class="yellow-checkbox setting-enabled"
+            aria-label="checkbox"
+            [(ngModel)]="pattern.isPermanent"
+            (change)="updatePunchDetail()"
+          >
+            <span translate="permanent"></span>
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <mat-tab-group
+      class="xl200-tabs"
+      mat-stretch-tabs="false"
+      dynamicHeight
+      [selectedIndex]="selectedTabIndex"
+      (selectedIndexChange)="selectTab($event)"
+    >
+      <mat-tab label="Punches">
+        <ng-scrollbar
+          visibility="hover"
+          class="xl-list-container punch-list-container"
+        >
+          <div class="material-usage-item sub-header">
+            <div
+              class="main-con"
+              *ngFor="let item of punchColumns"
+            >
+              {{ item.displayName | translate }}
+              <span *ngIf="item.field === 'xOffset' || item.field === 'yOffset'"
+                >({{ 'in' | userDisplayUnits }})</span
+              >
+            </div>
+            <div class="action-col"></div>
+            <div class="action-col"></div>
+          </div>
+          <div class="material-usage-content">
+            <app-punch-row
+              *ngFor="
+                let punch of punches | orderBy : 'sequence';
+                let index = index;
+                let first = first;
+                let last = last
+              "
+              [punch]="punch"
+              [availableMacros]="availableMacros"
+              [isMacro]="pattern.isMacro"
+              [index]="index"
+              [isFirst]="first"
+              [isLast]="last"
+              (save)="updatePunchDetail($event, index)"
+              (moveDown)="movePunchDown($event)"
+              (delete)="deletePunchRow(sequence)"
+            ></app-punch-row>
+            <div
+              *ngIf="addNew"
+              class="add-new"
+            >
+              <app-punch-row
+                [punch]="newPunch"
+                [availableMacros]="availableMacros"
+                [isMacro]="pattern.isMacro"
+                [isNew]="true"
+                (saveNew)="saveNewPunch($event)"
+                (cancel)="cancelNewPunch()"
+              ></app-punch-row>
+            </div>
+          </div>
+        </ng-scrollbar>
+      </mat-tab>
+      <mat-tab label="XL Patterns">
+        <table
+          mat-table
+          [dataSource]="pattern.machinePatterns"
+          multiTemplateDataRows
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="expand">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              aria-label="row actions"
+            >
+              &nbsp;
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+            >
+              <button
+                mat-icon-button
+                aria-label="expand row"
+                (click)="
+                  expandedElement = expandedElement === element ? null : element;
+                  $event.stopPropagation()
+                "
+              >
+                <mat-icon *ngIf="expandedElement === element">keyboard_arrow_down</mat-icon>
+                <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_right</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <ng-container
+            matColumnDef="{{ column.field }}"
+            *ngFor="let column of xlPatternsColumns"
+          >
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+            >
+              {{ column.displayName | translate }}
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+            >
+              {{
+                column.field === 'operations' ? element[column.field].length : element[column.field]
+              }}
+            </td>
+          </ng-container>
+
+          <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+          <ng-container matColumnDef="expandedDetail">
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [attr.colspan]="xlPatternColumnsToDisplayWithExpand.length"
+              class="expaned-td"
+            >
+              <div
+                class="example-element-detail"
+                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
+              >
+                <div class="material-usage-item sub-header">
+                  <div
+                    class="main-con"
+                    *ngFor="let item of xlPatternSubColumns"
+                  >
+                    {{ item.displayName | translate }}
+                  </div>
+                </div>
+                <div class="material-usage-content">
+                  <div
+                    class="material-usage-item"
+                    *ngFor="let operation of element.operations"
+                  >
+                    <div
+                      class="main-con"
+                      *ngFor="let item of xlPatternSubColumns"
+                    >
+                      <!-- todo: review this. It seams that referenceColumns was intended to be used as a lookup to 
+                                 translate 'LeadingEdge' to 'Leading Edge' and the like. `referenceColumns` is an array of 
+                                 `{value, text}` and not an object or map. Therefore, this will not work. The non-friendly text
+                                 is fine for now (much better than the binding error). -->
+                      <!-- {{
+                        item.field === 'xReference'
+                          ? referenceColumns[operation.xReference].text
+                          : item.field === 'yReference'
+                          ? yReferenceColumns[operation[item.field]].text
+                          : operation[item.field]
+                      }} -->
+                      {{ operation[item.field] | translate }}
+                    </div>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="xlPatternColumnsToDisplayWithExpand"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let element; columns: xlPatternColumnsToDisplayWithExpand"
+            class="pattern-row"
+            [class.pattern-expanded-row]="expandedElement === element"
+            (click)="expandedElement = expandedElement === element ? null : element"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: ['expandedDetail']"
+            class="pattern-detail-row"
+          ></tr>
+        </table>
+      </mat-tab>
+      <mat-tab label="History">
+        <app-production-log [patternName]="patternName"></app-production-log>
+      </mat-tab>
+    </mat-tab-group>
+    <button
+      *ngIf="selectedTabIndex === 0"
+      mat-fab
+      color="success"
+      class="add-button"
+      (click)="addPunch()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,112 @@
+<div class="page-layout">
+  <div class="header">
+    <div
+      fxFlex
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <span class="h2 text-upper">Punch Patterns</span>
+      <div class="filters-div tooling-filter-container">
+        <i class="icon icon-filter-outline filter-icon gray-icon"></i>
+        <div class="search-input">
+          <input
+            class="report-search"
+            placeholder="Filter..."
+            [(ngModel)]="searchTxt"
+            (onEvent)="applyFilter($event)"
+            debounceKeyUp
+            [debounceTime]="200"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-24 md-background">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      [matSortActive]="sortState?.active"
+      [matSortDirection]="sortState?.direction"
+      (matSortChange)="announceSortChange($event)"
+      class="mat-elevation-z8 list-table"
+    >
+      <ng-container matColumnDef="patternName">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+        >
+          {{ 'patternName' | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let row"
+        >
+          <app-link-helper
+            [documentId]="'PunchPattern/' + row.id"
+            [labelTxt]="row.patternName"
+            [hideType]="true"
+          ></app-link-helper>
+        </td>
+      </ng-container>
+      <ng-container
+        *ngFor="let column of columns"
+        [matColumnDef]="column.columnDef"
+      >
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          [sortActionDescription]="column.sortDes"
+        >
+          {{ column.displayName | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let row"
+        >
+          {{ column.cell(row) }}
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="gotoDetail(row)"
+      ></tr>
+      <tr
+        class="mat-row"
+        *matNoDataRow
+      >
+        <td
+          class="mat-cell"
+          colspan="4"
+        >
+          No data matching the filter
+        </td>
+      </tr>
+    </table>
+    <mat-card>
+      <mat-paginator
+        [pageSizeOptions]="[15, 25, 50, 100]"
+        aria-label="Select page of punch patterns"
+        class="pattern-list-page"
+      ></mat-paginator>
+    </mat-card>
+    <button
+      *ngIf="userHasEditorRole"
+      mat-fab
+      color="success"
+      class="add-button"
+      (click)="addPattern()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
