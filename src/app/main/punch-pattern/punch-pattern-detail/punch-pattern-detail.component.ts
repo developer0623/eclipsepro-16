@@ -1,11 +1,8 @@
 import {
   Component,
   Renderer2,
-  ElementRef,
   ViewChild,
   OnDestroy,
-  Inject,
-  OnInit,
 } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import * as _ from 'lodash';
@@ -19,16 +16,17 @@ import {
   ReferenceColumnsDef,
 } from 'src/app/core/dto';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Ams } from 'src/app/amsconfig';
 import { UserHasRole } from '../../shared/services/store/user/selector';
 import { ProductionLogComponent } from '../../shared/components/production-log/production-log.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ClientDataStore } from '../../shared/services/clientData.store';
+import { CanComponentDeactivate  } from './confirm-exist.guard';
 
 @Component({
   selector: 'app-punch-pattern-detail',
@@ -42,7 +40,7 @@ import { ClientDataStore } from '../../shared/services/clientData.store';
     ]),
   ],
 })
-export class PunchPatternDetailComponent implements OnDestroy, OnInit {
+export class PunchPatternDetailComponent implements OnDestroy, CanComponentDeactivate  {
   @ViewChild(ProductionLogComponent) productionLogComponent: ProductionLogComponent;
   patternId: string;
   unmodifiedPattern: PatternDef;
@@ -191,7 +189,6 @@ export class PunchPatternDetailComponent implements OnDestroy, OnInit {
   ];
   keyDownListenerFunc: Function;
   userRolesSub_;
-  private transDeregister: () => void;
 
   constructor(
     private http: HttpClient,
@@ -199,8 +196,6 @@ export class PunchPatternDetailComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
     private renderer: Renderer2,
-    // private state: StateService,
-    // private transitionService: TransitionService,
     public dialog: MatDialog,
     private clientDataStore: ClientDataStore,
     private store: Store
@@ -458,29 +453,19 @@ export class PunchPatternDetailComponent implements OnDestroy, OnInit {
     });
   }
 
-  ngOnInit(): void {
-    // this.transDeregister = this.transitionService.onBefore({}, (transition) => {
-    //   if (this.patternIsModified || this.patternIsNew) {
-    //     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //       width: '300px',
-    //     });
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    if (this.patternIsModified || this.patternIsNew) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '300px',
+      });
 
-    //     dialogRef.afterClosed().subscribe((result) => {
-    //       if (result) {
-    //         this.transDeregister();
-    //         this.state.go(transition.to().name);
-    //       }
-    //     });
-    //     return false;
-    //   }
-    // }) as () => void;
+      return dialogRef.afterClosed()
+    }
+    return true;
   }
 
   ngOnDestroy(): void {
     this.keyDownListenerFunc();
     this.userRolesSub_.unsubscribe();
-    if (this.transDeregister) {
-      this.transDeregister();
-    }
   }
 }

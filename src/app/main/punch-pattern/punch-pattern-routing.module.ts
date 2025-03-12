@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PunchPatternListComponent } from './punch-pattern-list/punch-pattern-list.component';
 import { PunchPatternDetailComponent } from './punch-pattern-detail/punch-pattern-detail.component';
+import { confirmExitGuard } from './punch-pattern-detail/confirm-exist.guard';
 
 const routes: Routes = [
   {
@@ -11,7 +12,7 @@ const routes: Routes = [
   {
     path: ':id',
     component: PunchPatternDetailComponent,
-    data: { name: '' }
+    canDeactivate: [confirmExitGuard]
   }
 ];
 
