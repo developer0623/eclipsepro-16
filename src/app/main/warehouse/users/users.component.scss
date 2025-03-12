@@ -1,0 +1,167 @@
+$zone-color: #ccc;
+$zone-color2: #ddd;
+.user-class {
+  .first-td {
+    width: 150px;
+    text-align: center;
+  }
+  .nth-td {
+    width: 200px;
+    text-align: center;
+  }
+
+  .bold-font {
+    font-weight: bold;
+  }
+  .mat-content {
+    overflow-x: auto;
+    display: flex;
+    scroll-behavior: smooth;
+  }
+  .table-container {
+    display: table;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.5);
+    margin: 20px 10px;
+    td {
+      background-color: $zone-color;
+      .user-type-select {
+        width: 200px;
+        padding: 3px 5px;
+      }
+    }
+
+    td:first-child {
+      background-color: white;
+    }
+    td:nth-child(2n + 3) {
+      background-color: $zone-color2;
+    }
+    mat-checkbox {
+      margin: 10px 0;
+    }
+
+    .indeterminate {
+      .mat-ink-ripple {
+        .mat-icon {
+          background-color: rgba(236, 177, 0, 0.87);
+          color: rgba(255, 255, 255, 0.87);
+          border-color: rgba(236, 177, 0, 0.87);
+          &::after {
+            border-color: white;
+          }
+        }
+      }
+    }
+
+    .waring-icon {
+      position: absolute;
+      left: 27px;
+      top: 11px;
+      color: rgba(191, 23, 23, 0.7);
+    }
+
+    mat-toolbar {
+      color: rgba(255, 255, 255, 0.87);
+      background-color: rgb(71, 71, 71);
+      min-height: 30px;
+      height: 40px;
+      .md-toolbar-tools {
+      }
+    }
+
+    .user-type-select {
+      margin: 0;
+      .md-select-value {
+        font-size: 12px;
+        border-bottom-color: transparent !important;
+
+        .md-select-icon {
+          width: 10px;
+        }
+      }
+    }
+
+    .warehouse-table,
+    .machine-table {
+      .first-td {
+        font-size: 18px;
+        font-weight: 400;
+        position: relative;
+        text-align: left;
+        padding-left: 16px;
+      }
+
+      md-checkbox {
+        margin: 10px 0px;
+      }
+
+      tr {
+        border-bottom: 1px solid #aaa;
+      }
+    }
+
+    .user-table {
+      th {
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      md-checkbox {
+        min-height: 12px;
+        min-width: 12px;
+        .md-container {
+          width: 16px;
+          height: 16px;
+        }
+        .md-icon {
+          width: 16px;
+          height: 16px;
+
+          &:after {
+            width: 5.66667px;
+            height: 11.33333px;
+          }
+        }
+      }
+    }
+  }
+}
+:host ::ng-deep mat-checkbox.mdc-checkbox--disabled.mat-mdc-checkbox-checked {
+  .mdc-form-field {
+    .mdc-checkbox {
+      .mdc-checkbox__background {
+        background-color: rgba(236, 177, 0, 0.87);
+      }
+    }
+  }
+}
+:host ::ng-deep mat-form-field.user-type-select {
+  .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused
+    .mdc-floating-label,
+  .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused
+    .mdc-floating-label--float-above {
+    color: #d19d30 !important;
+    color: transparent !important;
+  }
+
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+    border-bottom-color: #ecb100 !important;
+    border-bottom-color: transparent !important;
+  }
+  &.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+    color: #ecb100 !important;
+    color: transparent !important;
+  }
+  .mdc-text-field {
+    background-color: transparent;
+  }
+}
+:host ::ng-deep mat-option {
+  background-color: red;
+  .mdc-list-item__primary-text {
+    color: black;
+  }
+  .mat-pseudo-checkbox {
+    color: black;
+  }
+}

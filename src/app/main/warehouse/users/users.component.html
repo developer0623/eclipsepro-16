@@ -1,0 +1,113 @@
+<div
+  id="warehouse"
+  class="page-layout simple fullwidth white-bg user-class"
+  [ngClass]="{ 'no-scroll': panelIsOpen }"
+  ngsf-fullscreen
+>
+  <div class="header">
+    <div
+      fxFlex
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <span class="h2 text-upper">WAREHOUSE: USERS</span>
+    </div>
+  </div>
+
+  <div class="content md-background md-hue-1 p-24">
+    <div
+      class="mat-content"
+      fxLayout="column"
+      fxLayoutAlign="start stretch"
+    >
+      <div class="table-container">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th class="first-td bold-font">USERS</th>
+              <th
+                class="nth-td bold-font"
+                *ngFor="let user of users"
+              >
+                {{ user.userName }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="first-td font-size-16">Active</td>
+              <td
+                class="nth-td"
+                *ngFor="let user of users"
+              >
+                <mat-select
+                  class="user-type-select"
+                  [(ngModel)]="user.transferType"
+                  panelClass="yellow-select-panel"
+                >
+                  <mat-option
+                    *ngFor="let type of transferTypes"
+                    [value]="type.title"
+                    [selected]="type.title == user.transferType"
+                  >
+                    {{ type.title }}
+                  </mat-option>
+                </mat-select>
+                <mat-checkbox
+                  aria-label="Select All"
+                  class="yellow-checkbox setting-locked"
+                ></mat-checkbox>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        class="table-container"
+        *ngFor="let facet of facets"
+      >
+        <mat-toolbar>
+          <span>{{ facet.title }}</span>
+          <span class="flex-spacer"></span>
+        </mat-toolbar>
+        <table class="machine-table">
+          <thead>
+            <tr>
+              <th class="first-td bold-font"></th>
+              <th
+                class="nth-td bold-font"
+                *ngFor="let user of facet.userSettings"
+              >
+                <mat-checkbox
+                  aria-label="Select All"
+                  [checked]="user.isAllFacetChecked"
+                  [indeterminate]="user.isFacetIndeterminate"
+                  [disabled]="true"
+                  class="yellow-checkbox"
+                >
+                </mat-checkbox>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let filter of facet.filters">
+              <td class="first-td">{{ filter.title }}</td>
+              <td
+                class="nth-td"
+                *ngFor="let user of filter.userSettings"
+              >
+                <mat-checkbox
+                  aria-label="Select All"
+                  [disabled]="true"
+                  [checked]="user.isFilterChecked"
+                >
+                </mat-checkbox>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

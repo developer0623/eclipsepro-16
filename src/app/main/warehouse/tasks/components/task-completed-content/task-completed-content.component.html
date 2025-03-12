@@ -1,0 +1,31 @@
+<div class="task-completed-content1">
+  <div class="sub-item1">
+    <span
+      *ngIf="task.overrideCode && task.overrideCode.codeSet == 'NonpreferredReasons'"
+      [matTooltip]="task.overrideCode.name"
+    >
+      <img src="./assets/images/taskicons/alert.png" />
+      <mat-tooltip>{{ task.overrideCode.name }}</mat-tooltip>
+    </span>
+    <span
+      *ngIf="task.overrideCode && task.overrideCode.codeSet == 'OverrideReasons'"
+      [matTooltip]="task.overrideCode.name"
+    >
+      <img src="./assets/images/taskicons/error.png" />
+    </span>
+  </div>
+
+  <div class="sub-item2">
+    <mat-icon fontIcon="icon-check"></mat-icon>
+    {{ task.taskState }}
+    <span class="completed-date1">
+      {{ task.completedDate | date : 'MM/dd/yy' }}
+    </span>
+    <span class="completed-date2">{{ task.completedDate | date : 'hh:mm a' }}</span>
+  </div>
+
+  <div
+    class="sub-item3"
+    [innerHTML]="task.completedDate | taskCompleteAgo : task.startedDate"
+  ></div>
+</div>

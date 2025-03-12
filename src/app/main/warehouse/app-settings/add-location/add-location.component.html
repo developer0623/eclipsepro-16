@@ -1,0 +1,43 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Add Location
+  </h2>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>Category</mat-label>
+    <mat-select
+      [(ngModel)]="location.category"
+      panelClass="yellow-select-panel"
+      class="yellow-select"
+      placeholder="Category"
+      required
+    >
+      <mat-option value="Warehouse">WAREHOUSE</mat-option>
+      <mat-option value="StagingBay">STAGING BAY</mat-option>
+      <mat-option value="Truck">TRUCK</mat-option>
+      <mat-option value="LoadingDock">LOADING DOCK</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="yellow-input">
+    <mat-label>Name</mat-label>
+    <input
+      matInput
+      [(ngModel)]="location.name"
+      required
+    />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button
+    mat-button
+    (click)="add()"
+    class="add-btn"
+    color="success"
+  >
+    ADD
+  </button>
+</div>

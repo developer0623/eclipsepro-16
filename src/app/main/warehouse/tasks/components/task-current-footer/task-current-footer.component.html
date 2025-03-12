@@ -1,0 +1,37 @@
+<div class="task-footer-item1">
+  <div
+    class="sub-item1 task-coil-state"
+    *ngIf="task.taskState == 'Ready' && !task.preferredCoils.length"
+  >
+    No Coil
+  </div>
+  <div
+    class="sub-item1 task-ready-state"
+    *ngIf="task.taskState == 'Ready' && task.preferredCoils.length"
+  >
+    Ready
+  </div>
+  <div
+    class="sub-item1 task-uncomplete"
+    *ngIf="task.taskState == 'Uncomplete'"
+  >
+    <i class="icon icon-alert-octagon"></i>
+    Cannot Complete
+  </div>
+  <div
+    class="sub-item1 task-available"
+    *ngIf="task.taskState == 'Available'"
+  >
+    Available in 3H 10M
+  </div>
+
+  <div class="sub-item2">
+    <span *ngIf="timeOffsetFlag">DUE</span
+    >{{ task.requiredDate | date : (timeOffsetFlag ? 'h:mm a' : 'MMM/d') }}
+  </div>
+
+  <div
+    class="sub-item3"
+    [innerHTML]="task.requiredDate | taskTimeAgo"
+  ></div>
+</div>

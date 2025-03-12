@@ -95,6 +95,10 @@ i {
   height: calc(100vh - 228px) !important;
 }
 
+table {
+  border-spacing: 0 !important;
+}
+
 #fury-splash-screen {
   display: block;
   position: absolute;

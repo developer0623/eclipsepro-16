@@ -109,6 +109,28 @@ export class AppComponent {
           },
         ]
       },
+      {
+        name: 'Warehouse',
+        icon: 'mdi-forklift',
+        position: 60,
+        subItems: [
+          {
+            name: 'Tasks',
+            routeOrFunction: '/warehouse/tasks',
+            position: 10
+          },
+          {
+            name: 'Users',
+            routeOrFunction: '/warehouse/users',
+            position: 20
+          },
+          {
+            name: 'App Settings',
+            routeOrFunction: '/warehouse/app-settings',
+            position: 30
+          },
+        ]
+      },
       // {
       //   name: 'Calendar',
       //   routeOrFunction: '/apps/calendar',

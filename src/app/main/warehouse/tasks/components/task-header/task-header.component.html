@@ -1,0 +1,36 @@
+<div class="task-header-item1">
+  <div class="sub-item1">
+    <img
+      src="./assets/images/taskicons/zone.png"
+      class="item-img"
+    />
+    {{ task.sourceLocation }}
+  </div>
+  <div class="arrow-sub-item"></div>
+  <div class="sub-item2">
+    <img
+      src="./assets/images/taskicons/machine.png"
+      class="item-img"
+    />
+    {{ task.desinationLocation }}
+  </div>
+</div>
+
+<div class="task-header-item2">
+  <img
+    src="./assets/images/taskicons/fill.png"
+    class="item-img"
+  />
+  <div class="sub-item item-name">{{ task.coilType.gauge }} <span class="sign-class">G</span></div>
+  <div class="sub-item item-material">
+    <app-link-helper
+      [documentId]="'Material/' + task.coilType.coilTypeCode"
+      [labelTxt]="task.coilType.coilTypeCode"
+      [hideType]="true"
+    ></app-link-helper>
+  </div>
+  <div class="sub-item item-size">
+    {{ task.requiredFt | unitsFormat : 'ft' : 0 : true }}
+    <span class="sign-class">Ft</span>
+  </div>
+</div>

@@ -1,0 +1,165 @@
+<div
+  id="warehouse"
+  class="page-layout simple fullwidth white-bg"
+  [ngClass]="{ 'no-scroll': panelIsOpen }"
+  ngsf-fullscreen
+>
+  <div class="header">
+    <div
+      fxFlex
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <span class="h2 text-upper">WAREHOUSE: TASKS</span>
+      <div class="toolbar">
+        <button
+          mat-icon-button
+          routerLink="/dashboard-eclipsepro"
+          class="sidenav-toggle"
+          [ngClass]="{ 'icon-fullscreen': !fullscreen, 'icon-fullscreen-exit': fullscreen }"
+          (click)="toggleFullscreen()"
+          aria-label="Toggle fullscreen"
+          matTooltip="Toggle fullscreen"
+        ></button>
+      </div>
+    </div>
+  </div>
+  <div class="content md-background md-hue-1 scroll-content">
+    <div class="task-content">
+      <div class="task-list current-task-list">
+        <div
+          fxLayout="row"
+          class="task-list-header"
+          fxLayoutAlign="center start"
+        >
+          CURRENT LIST
+        </div>
+        <div layout="column">
+          <mat-card
+            class="task-part"
+            *ngFor="let task of readyTasks; trackBy: trackByID"
+          >
+            <task-item
+              [task]="task"
+              [state]="0"
+            ></task-item>
+          </mat-card>
+
+          <mat-card
+            *ngIf="readyTasksRemaining"
+            class="not-showed-title"
+          >
+            {{ readyTasksRemaining }} tasks not shown
+          </mat-card>
+        </div>
+      </div>
+      <div class="task-list active-task-list">
+        <div
+          fxLayout="row"
+          class="task-list-header"
+          fxLayoutAlign="center start"
+        >
+          ACTIVE
+        </div>
+        <div layout="column">
+          <mat-card
+            class="task-part"
+            *ngFor="let task of activeTasks; trackBy: trackByID"
+          >
+            <task-item
+              [task]="task"
+              [state]="1"
+            ></task-item>
+          </mat-card>
+
+          <mat-card
+            *ngIf="activeTasksRemaining"
+            class="not-showed-title"
+          >
+            {{ activeUnshownCount }} tasks not shown
+          </mat-card>
+        </div>
+      </div>
+      <div class="task-list completed-task-list">
+        <div
+          fxLayout="row"
+          class="task-list-header"
+          fxLayoutAlign="center start"
+        >
+          COMPLETED
+        </div>
+        <div class="task-complete-calendar">
+          <div class="showed-calendar">
+            <button
+              mat-icon-button
+              (click)="onChangeDate(-1)"
+              class="s-30-btn"
+            >
+              <mat-icon> chevron_left </mat-icon>
+            </button>
+
+            <p>
+              {{ comFilterDate.date | date : 'MMM dd' }}
+              <span>{{ comFilterDate.date | date : 'yyyy' }}</span>
+            </p>
+            <button
+              mat-icon-button
+              class="s-30-btn"
+              (click)="onChangeDate(1)"
+            >
+              <mat-icon> chevron_right </mat-icon>
+            </button>
+          </div>
+
+          <input
+            class="hide-date-picker"
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="comFilterDate.date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+            class="open-icon active-date-btn"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
+
+        <div
+          fxLayout="column"
+          class="completed-list"
+        >
+          <mat-card
+            class="task-part"
+            *ngFor="let task of completedTasks; trackBy: trackByID"
+          >
+            <task-item
+              [task]="task"
+              [state]="2"
+            ></task-item>
+          </mat-card>
+
+          <mat-card
+            *ngIf="completedTasksRemaining"
+            class="not-showed-title"
+          >
+            {{ completedTasksRemaining }} tasks not shown
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-around"
+      *ngIf="!loading"
+    >
+      <mat-progress-spinner
+        class="md-accent md-hue-1"
+        [diameter]="70"
+        mode="indeterminate"
+      >
+      </mat-progress-spinner>
+    </div>
+  </div>
+</div>

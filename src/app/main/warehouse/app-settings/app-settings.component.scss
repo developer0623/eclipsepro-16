@@ -1,0 +1,39 @@
+.nonprefered-reason-list,
+.wrongcoil-reason-list {
+  width: 600px;
+  margin: 10px 50px 30px;
+  padding-bottom: 0px;
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.5);
+
+  .reason-subheader {
+    font-size: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    margin: 0 !important;
+    padding: 16px 8px;
+  }
+
+  .reason-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
+
+  .add-item {
+    cursor: pointer;
+  }
+
+  .error-title {
+    font-size: 18px;
+  }
+}
+
+.general-tab-content {
+  padding-left: 80px;
+}
+.warning-time-select {
+  width: 120px;
+  margin: 0px;
+}
+
+.error-title {
+  font-size: 18px;
+  margin: 0;
+}

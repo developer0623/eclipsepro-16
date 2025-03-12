@@ -1,0 +1,113 @@
+<div
+  id="warehouse"
+  class="page-layout simple fullwidth white-bg"
+  [ngClass]="{ 'no-scroll': panelIsOpen }"
+>
+  <div class="header">
+    <div
+      fxFlex
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <span class="h2 text-upper">WAREHOUSE: APP SETTINGS</span>
+    </div>
+  </div>
+  <div class="content md-background md-hue-1 scroll-content">
+    <mat-tab-group
+      class="xl200-tabs"
+      mat-stretch-tabs="false"
+      dynamicHeight
+      [selectedIndex]="selectedTabIndex"
+      (selectedIndexChange)="onChangeTab($event)"
+    >
+      <mat-tab label="General">
+        <div class="general-tab-content">
+          <h3 class="time-title">Warning Time</h3>
+          <mat-select
+            [(ngModel)]="selectedTime"
+            panelClass="yellow-select-panel"
+            class="yellow-select warning-time-select"
+            placeholder="Time Select"
+          >
+            <mat-option
+              *ngFor="let time of warningTimes"
+              [value]="time.value"
+            >
+              <span>{{ time.name }}</span>
+            </mat-option>
+          </mat-select>
+        </div>
+      </mat-tab>
+      <mat-tab label="Error Reasons">
+        <mat-list
+          *ngFor="let item of reasonsGroup | objectToArray"
+          class="nonprefered-reason-list"
+        >
+          <div
+            class="reason-subheader"
+            mat-subheader
+          >
+            {{ item.key | translate }}
+          </div>
+          <mat-list-item
+            class="reason-item"
+            *ngFor="let reason of item.value"
+          >
+            <mat-icon matListItemIcon>menu</mat-icon>
+            <p class="error-title">{{ reason.reason }}</p>
+            <button
+              mat-icon-button
+              (click)="removeReson(reason)"
+              matListItemMeta
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+          <mat-list-item
+            class="add-item"
+            (click)="gotoAddReason(item.value[0].codeSet)"
+          >
+            <mat-icon matListItemIcon>add</mat-icon>
+            <p class="error-title">Add New Reason</p>
+          </mat-list-item>
+        </mat-list>
+      </mat-tab>
+      <mat-tab label="Locations">
+        <mat-list
+          class="wrongcoil-reason-list"
+          *ngFor="let locationArray of locations"
+        >
+          <div
+            mat-subheader
+            class="reason-subheader"
+          >
+            {{ locationArray.title }}
+          </div>
+          <mat-list-item
+            class="reason-item"
+            *ngFor="let location of locationArray.items"
+          >
+            <mat-icon matListItemIcon>menu</mat-icon>
+            <p class="error-title">{{ location.name }}</p>
+            <button
+              mat-icon-button
+              *ngIf="!locationArray.doNotEdit"
+              (click)="removeLocation(location)"
+              matListItemMeta
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+          <mat-list-item
+            class="add-item"
+            *ngIf="!locationArray.doNotEdit"
+            (click)="gotoAddLocation(locationArray)"
+          >
+            <mat-icon matListItemIcon>add</mat-icon>
+            <p class="error-title">Add New Area</p>
+          </mat-list-item>
+        </mat-list>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

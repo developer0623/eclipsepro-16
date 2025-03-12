@@ -1,0 +1,42 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Add Reason
+  </h2>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>CodeSet</mat-label>
+    <mat-select
+      [(ngModel)]="reason.codeSet"
+      panelClass="yellow-select-panel"
+      class="yellow-select"
+      placeholder="CodeSet"
+      required
+    >
+      <mat-option value="NonpreferredReasons">Nonpreferred Reasons</mat-option>
+      <mat-option value="OverrideReasons">Override Reasons</mat-option>
+      <mat-option value="UnattainableReasons">Cannot Complete Reasons</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="yellow-input">
+    <mat-label>Reason</mat-label>
+    <input
+      matInput
+      [(ngModel)]="reason.reason"
+      required
+    />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button
+    mat-button
+    (click)="add()"
+    class="add-btn"
+    color="success"
+  >
+    ADD
+  </button>
+</div>

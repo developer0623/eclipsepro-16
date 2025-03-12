@@ -1,0 +1,21 @@
+<div class="task-footer-item1">
+  <div class="sub-item1 gray-color">{{ task.userName }}</div>
+
+  <div class="sub-item2">
+    <span *ngIf="timeOffsetFlag">DUE</span
+    >{{ task.requiredDate | date : (timeOffsetFlag ? 'h:mm a' : 'MMM/d') }}
+  </div>
+
+  <div
+    class="sub-item3"
+    *ngIf="state === 1"
+    [innerHTML]="task.requiredDate | taskTimeAgo"
+  ></div>
+
+  <div
+    class="sub-item3"
+    *ngIf="state === 2"
+  >
+    0<span class="time-sign">M</span>
+  </div>
+</div>

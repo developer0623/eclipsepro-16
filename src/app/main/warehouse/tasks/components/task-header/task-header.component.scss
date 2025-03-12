@@ -1,0 +1,128 @@
+$zone-color: #c7c7c7;
+$zone-color2: #d7d7d7;
+$gray-color: #999;
+.task-header-item1 {
+  width: 100%;
+  display: flex;
+  height: 30px;
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+
+  .arrow-sub-item {
+    position: absolute;
+    bottom: auto;
+    left: 45%;
+    border-width: 15px 0 15px 15px;
+    border-color: transparent $zone-color;
+    border-style: solid;
+
+    display: block;
+    width: 0;
+  }
+
+  .sub-item1 {
+    float: left;
+    display: flex;
+    align-items: center;
+    width: 45%;
+    flex: none;
+    background-color: $zone-color;
+    height: 100%;
+    padding-left: 5px;
+    border-radius: 4px 0 0 0;
+    text-transform: capitalize;
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+    }
+  }
+
+  .sub-item2 {
+    float: left;
+    padding-left: 30px;
+    display: flex;
+    align-items: center;
+    // width: 42%;
+    flex: 1;
+    background-color: $zone-color2;
+    height: 100%;
+    border-radius: 0 4px 0 0;
+    text-transform: capitalize;
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+    }
+  }
+}
+
+.task-header-item2 {
+  width: 100%;
+  display: flex;
+  height: 30px;
+  position: relative;
+  font-size: 12px;
+  font-weight: 500;
+  // border-radius: 0 0 4px 4px;
+  background-color: #fff;
+  padding-left: 5px;
+  border-bottom: 2px solid rgba(10, 10, 10, 0.3);
+
+  .item-img {
+    margin-top: 4px;
+    float: left;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sub-item {
+    float: left;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex: none;
+  }
+
+  .item-name {
+    color: #111;
+    margin-left: 5px;
+    width: 15%;
+  }
+
+  .item-material {
+    color: #111;
+    margin-left: 5px;
+    width: 35%;
+    font-size: 13px;
+  }
+
+  .item-size {
+    flex: 1;
+    // color: #999;
+    margin-left: 5px;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+  }
+
+  .item-state {
+    float: right;
+    text-align: right;
+    min-width: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: #639d34;
+  }
+
+  .sign-class {
+    font-size: 11px;
+    color: $gray-color;
+    margin-left: 2px;
+    font-weight: 400;
+  }
+}

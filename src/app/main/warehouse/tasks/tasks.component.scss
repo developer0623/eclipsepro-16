@@ -1,0 +1,138 @@
+$gray-color: #999;
+$zone-color: #c7c7c7;
+$zone-color2: #d7d7d7;
+$main-color: #555;
+$main-font-color: rgba(0, 0, 0, 0.87);
+
+#warehouse {
+  mat-card {
+    margin: 8px;
+  }
+  .toolbar button {
+    padding: 0;
+    width: 36px;
+    height: 36px;
+  }
+  .task-content {
+    width: 100%;
+    display: inline-table;
+  }
+
+  .not-showed-title {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .task-list {
+    margin: 0 2%;
+    width: 46%;
+    display: block;
+    float: left;
+    @media screen and (min-width: 1280px) {
+      width: 29%;
+    }
+
+    .task-list-header {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+  .current-task-list,
+  .active-task-list {
+    .task-list-header {
+      margin-bottom: 28px;
+    }
+  }
+
+  .task-part {
+    margin: 8px;
+    display: inline-flex !important;
+    width: calc(100% - 16px);
+
+    // box-shadow: 3px 6px 6px 0px rgba(0, 0, 0, 0.2), 5px 2px 2px -1px rgba(0, 0, 0, 0.2), 4px 1px 5px 1px rgba(0, 0, 0, 0.084);
+  }
+
+  .task-complete-calendar {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 4px;
+
+    .real-calendar {
+      visibility: hidden;
+    }
+
+    .showed-calendar {
+      position: absolute;
+      display: flex;
+      z-index: 10;
+      p {
+        margin: 0;
+        font-size: 20px;
+        color: rgba(0, 0, 0, 0.7);
+
+        span {
+          margin-left: 10px;
+          font-size: 15px;
+          color: rgba(0, 0, 0, 0.5);
+        }
+        padding: 0px 5px 0 10px;
+      }
+    }
+
+    .open-icon {
+      position: absolute;
+      right: 20px;
+    }
+  }
+
+  .red-color {
+    color: #d8475a;
+  }
+
+  .late-sign {
+    font-size: 13px;
+    margin-right: 2px;
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  .letter-bold {
+    font-weight: bold;
+  }
+}
+
+.hide-date-picker {
+  width: 0px !important;
+  border: 0px !important;
+  padding: 0px !important;
+}
+
+.completed-list {
+  margin-top: 6px;
+}
+
+::ng-deep {
+  .active-date-btn {
+    button {
+      width: 40px !important;
+      height: 40px !important;
+      margin: auto 0 !important;
+      padding: 0 !important;
+      .mat-mdc-button-touch-target {
+        width: 40px !important;
+        height: 40px !important;
+      }
+
+      svg {
+        position: relative;
+        top: 3px;
+      }
+    }
+  }
+}

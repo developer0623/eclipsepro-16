@@ -1,0 +1,31 @@
+<div class="task-content-item1">
+  <div class="sub-item1">
+    <span
+      *ngIf="task.overrideCode && task.overrideCode.codeSet === 'NonpreferredReasons'"
+      [matTooltip]="task.overrideCode.name"
+    >
+      <img src="./assets/images/taskicons/alert.png" />
+    </span>
+    <span
+      *ngIf="task.overrideCode && task.overrideCode.codeSet === 'OverrideReasons'"
+      [matTooltip]="task.overrideCode.name"
+    >
+      <img src="./assets/images/taskicons/error.png" />
+    </span>
+  </div>
+
+  <div class="sub-item2 gray-color">
+    <mat-icon
+      [fontIcon]="{
+        'icon-magnify': task.taskState === 'InProcess',
+        'icon-arrow-right': task.taskState === 'InTransit'
+      }"
+    ></mat-icon>
+    {{ task.taskState }}
+  </div>
+
+  <div
+    class="sub-item3"
+    [innerHTML]="task.taskState === 'InProcess' ? '' : (task.startedDate | taskActiveAgo)"
+  ></div>
+</div>

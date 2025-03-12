@@ -1,0 +1,27 @@
+<app-task-header
+  [task]="task" 
+></app-task-header>
+<app-task-active-content
+  [task]="task"
+  [loadImage]="loadImage"
+  *ngIf="state === 1"
+></app-task-active-content>
+<app-task-completed-content
+  [task]="task"
+  [loadImage]="loadImage"
+  *ngIf="state === 2"
+></app-task-completed-content>
+<app-task-active-footer
+  [task]="task"
+  [state]="state"
+  [loadImage]="loadImage"
+  [timeOffsetFlag]="timeOffsetFlag"
+  *ngIf="state"
+></app-task-active-footer>
+<app-task-current-footer
+  [task]="task"
+  [state]="state"
+  [loadImage]="loadImage"
+  [timeOffsetFlag]="timeOffsetFlag"
+  *ngIf="!state"
+></app-task-current-footer>
