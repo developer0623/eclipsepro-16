@@ -7,6 +7,7 @@
 @import './styles/dashboards/machines.scss';
 @import './styles/machines/xl200/xl200.scss';
 @import './styles/report/report.scss';
+@import './styles/orders/orders.scss';
 @import './assets/icons/style.css';
 
 html, body {
@@ -54,12 +55,28 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 }
 
+.mt-8 {
+  margin-top: 8px;
+}
+
 .font-size-20 {
   font-size: 20px;
 }
 
+.font-size-16 {
+  font-size: 16px;
+}
+
+.font-size-14 {
+  font-size: 14px;
+}
+
 .font-weight-500 {
   font-weight: 500;
+}
+
+.line-height-26 {
+  line-height: 26px;
 }
 
 i {
@@ -72,6 +89,10 @@ i {
 
 .gray-icon {
   color: rgba(0,0,0,0.54);
+}
+
+.full-page-grid {
+  height: calc(100vh - 228px) !important;
 }
 
 #fury-splash-screen {

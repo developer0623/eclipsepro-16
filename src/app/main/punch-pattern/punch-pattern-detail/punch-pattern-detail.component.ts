@@ -19,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Ams } from 'src/app/amsconfig';
 import { UserHasRole } from '../../shared/services/store/user/selector';

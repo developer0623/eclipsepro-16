@@ -1,0 +1,77 @@
+<mat-toolbar color="success">
+  <span>Print coil tag: {{ coil.coilId }}</span>
+  <span class="example-spacer"></span>
+  <button
+    mat-icon-button
+    aria-label="Close"
+    (click)="cancel()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>Choose printer</mat-label>
+    <mat-select
+      [(ngModel)]="selectedPrinter"
+      panelClass="yellow-select-panel"
+      class="yellow-select"
+      placeholder="Choose printer"
+      required
+    >
+      <mat-option
+        *ngFor="let printer of printers"
+        [value]="printer.name"
+      >
+        <span>{{ printer.name }}</span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="yellow-input">
+    <mat-label>Choose coil tag</mat-label>
+    <mat-select
+      [(ngModel)]="selectedCoilTag"
+      panelClass="yellow-select-panel"
+      class="yellow-select"
+      placeholder="Choose coil tag"
+      required
+    >
+      <mat-option
+        *ngFor="let tag of coilTags"
+        [value]="tag.name"
+      >
+        <span>{{ tag.name }}</span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="error-list">
+    <div
+      class="error-item"
+      *ngFor="let err of errors.errors"
+    >
+      <div class="icon-content">
+        <mat-icon>close</mat-icon>
+      </div>
+
+      <div class="error-content">{{ err }}</div>
+    </div>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    CANCEL
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+</div>

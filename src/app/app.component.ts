@@ -92,6 +92,23 @@ export class AppComponent {
         icon: 'mdi-stamper',
         position: 40,
       },
+      {
+        name: 'inventory',
+        icon: 'mdi-clipboard-check',
+        position: 50,
+        subItems: [
+          {
+            name: 'materials',
+            routeOrFunction: '/inventory/coil-types',
+            position: 10
+          },
+          {
+            name: 'coils',
+            routeOrFunction: '/inventory/coils',
+            position: 20
+          },
+        ]
+      },
       // {
       //   name: 'Calendar',
       //   routeOrFunction: '/apps/calendar',

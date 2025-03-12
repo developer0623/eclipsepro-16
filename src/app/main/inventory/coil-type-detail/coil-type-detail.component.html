@@ -1,0 +1,159 @@
+<div
+  id="inventory"
+  class="page-layout simple fullwidth white-bg scroll-content"
+>
+  <div class="white-bg">
+    <div
+      class="toolbar white-bg p-0"
+      fxLayout="row"
+      fxLayoutAlign="space-between start"
+    >
+      <div fxLayout="column">
+        <span class="font-size-20 mt-8 text-capitalize mb-0 line-height-26"
+          ><span translate="material"></span>: {{ coilType.materialCode }}</span
+        >
+        <span class="font-size-16 secondary-text">{{ coilType.description }}</span>
+      </div>
+
+      <div
+        fxLayout="row"
+        fxLayoutAlign="end"
+      >
+        <table class="font-size-14">
+          <tbody>
+            <tr>
+              <th class="text-right pr-8"><span translate="onHand"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{ coilType.onHandFt | unitsFormat : 'ft' : 1 }}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right pr-8"><span translate="demand"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{ coilType.demandFt | unitsFormat : 'ft' : 1 }}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right pr-8"><span translate="balance"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{ coilType.balanceFt | unitsFormat : 'ft' : 1 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="content fullpage-datatable">
+      <mat-accordion
+        multi
+        class="coil-type-detail-accordion"
+      >
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Details </mat-panel-title>
+            <mat-panel-description> </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div
+            class="p-24"
+            fxLayout="row wrap"
+            fxLayoutAlign="space-between start"
+            flex="100"
+          >
+            <div
+              class="pr-24"
+              flex
+            >
+              <table class="font-size-14">
+                <tbody>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="width"></span>:</th>
+                    <td class="text-right pl-8 secondary-text">
+                      {{ coilType.widthIn | unitsFormat : 'in' : 2 }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="thickness"></span>:</th>
+                    <td class="text-right pl-8 secondary-text">
+                      {{ coilType.thicknessIn | unitsFormat : 'in' : 2 }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="pr-24"
+              flex
+            >
+              <table class="font-size-14">
+                <tbody>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="gauge"></span>:</th>
+                    <td class="text-right pl-8 secondary-text">
+                      {{ coilType.gauge | unitsFormat : 'ga' : 0 }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right pr-8">Lbs Per Feet:</th>
+                    <!-- todo:i18n -->
+                    <td class="text-right pl-8 secondary-text">
+                      {{ coilType.lbsPerFt | unitsFormat : 'lbs' : 2 }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="pr-24"
+              flex
+            >
+              <table class="font-size-14">
+                <tbody>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="color"></span>:</th>
+                    <td class="text-right pl-8 secondary-text text-capitalize">
+                      {{ coilType.color }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="materialType"></span>:</th>
+                    <td class="text-right pl-8 secondary-text text-capitalize">
+                      {{ coilType.type }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <button
+              class="edit-btn"
+              (click)="editDialog()"
+            >
+              <i class="mdi mdi-pencil edit-icon"></i>
+              Edit
+            </button>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Active Inventory</mat-panel-title>
+            <mat-panel-description> </mat-panel-description>
+          </mat-expansion-panel-header>
+          <ag-grid-angular
+            class="ag-theme-balham inventory-detail-grid"
+            [gridOptions]="agCoilGridOptions"
+          >
+          </ag-grid-angular>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Production Summary</mat-panel-title>
+            <mat-panel-description> </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-consumption-summary
+            [material]="materialCode"
+            class="full-page-grid"
+          ></app-consumption-summary>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

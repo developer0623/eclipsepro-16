@@ -1,0 +1,224 @@
+<div
+  id="inventory"
+  class="page-layout simple fullwidth white-bg scroll-content"
+>
+  <div class="white-bg">
+    <div
+      class="toolbar white-bg p-0"
+      fxLayout="row"
+      fxLayoutAlign="space-between start"
+    >
+      <div fxLayout="column">
+        <span class="font-size-20 mt-8 text-capitalize mb-0 line-height-26"
+          ><span translate="coilId"></span>: {{ coil.coilId }}</span
+        >
+        <span class="font-size-16 secondary-text">{{ coil.description }}</span>
+        <span class="font-size-16 secondary-text">
+          <a
+            class="td-link ml-5"
+            [routerLink]="['/inventory', 'coil-types', coil.materialCode]"
+            >{{ coil.materialCode }}</a
+          ></span
+        >
+      </div>
+
+      <div
+        fxLayout="row"
+        fxLayoutAlign="end"
+      >
+        <table class="font-size-14">
+          <tbody>
+            <tr>
+              <th class="text-right pr-8"><span translate="starting"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{ coil.lengthStartFt | unitsFormat : 'ft' : 0 }}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th class="text-right pr-8"><span translate="used"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{ coil.lengthUsedFt | unitsFormat : 'ft' : 0 }}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th class="text-right pr-8"><span translate="scrap"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{
+                  coil.lengthNonExemptScrapFt + coil.lengthExemptScrapFt | unitsFormat : 'ft' : 0
+                }}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th class="text-right pr-8"><span translate="adjustments"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{ coil.lengthOtherAdjustmentsFt | unitsFormat : 'ft' : 0 }}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th class="text-right pr-8"><span translate="remaining"></span>:</th>
+              <td class="text-right pl-8 secondary-text">
+                {{ coil.lengthRemainingFt | unitsFormat : 'ft' : 0 }}
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="content fullpage-datatable">
+      <mat-accordion
+        multi
+        class="coil-type-detail-accordion"
+      >
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Details </mat-panel-title>
+            <mat-panel-description> </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div
+            class="p-24"
+            fxLayout="row wrap"
+            fxLayoutAlign="space-between start"
+            fxFlex="100"
+          >
+            <div
+              class="pr-24"
+              fxFlex
+            >
+              <table class="font-size-14">
+                <tbody>
+                  <tr>
+                    <th class="text-right pr-8">Status:</th>
+                    <td class="secondary-text">
+                      <span
+                        *ngIf="!coil.isComplete"
+                        translate="active"
+                      ></span>
+                      <span
+                        *ngIf="coil.isComplete"
+                        translate="inactive"
+                      ></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="completed"></span>:</th>
+                    <td class="secondary-text">{{ coil.isComplete || 'NA' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="pr-24"
+              fxFlex
+            >
+              <table class="font-size-14">
+                <tbody>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="vendor"></span>:</th>
+                    <td class="secondary-text">{{ coil.vendorName || 'NA' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="heatNumber"></span>:</th>
+                    <td class="secondary-text">{{ coil.heatNumber || 'NA' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="pr-24"
+              fxFlex
+            >
+              <table class="font-size-14">
+                <tbody>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="dateIn"></span>:</th>
+                    <td class="text-right secondary-text">{{ coil.dateIn | amsDate }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="dateOut"></span>:</th>
+                    <td class="text-right secondary-text">{{ coil.dateOut | amsDate }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="pr-24"
+              fxFlex
+            >
+              <table class="font-size-14">
+                <tbody>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="Weight"></span>:</th>
+                    <td class="text-right secondary-text">
+                      {{ coil.currentWeightLbs | unitsFormat : 'lbs' : 0 }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right pr-8"><span translate="scrap"></span> :</th>
+                    <td class="text-right secondary-text pl-8">
+                      {{
+                        coil.lengthExemptScrapFt + coil.lengthNonExemptScrapFt
+                          | unitsFormat : 'ft' : 1 || 'NA'
+                      }}
+                      ({{
+                        (coil.lengthExemptScrapFt + coil.lengthNonExemptScrapFt) /
+                          coil.lengthStartFt | unitsFormat : '%' : 1
+                      }})
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="tag"
+              fxLayout="row"
+              fxLayoutAlign="center center"
+            >
+              Tag:
+              <a
+                href="/gen/coil/{{ coil.coilId }}?output=pdf"
+                mat-icon-button
+                class="s-30-btn pdf-btn"
+                target="_blank"
+                matTooltip="View the tag"
+                matTooltipPosition="above"
+              >
+                <i class="icon-file-pdf"> </i>
+              </a>
+              <button
+                mat-icon-button
+                (click)="onPrintClick()"
+                class="s-30-btn"
+                matTooltip="Print the tag"
+                matTooltipPosition="above"
+              >
+                <i class="icon-printer"> </i>
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Consumption Summary</mat-panel-title>
+            <mat-panel-description> </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-consumption-summary
+            [coil]="coilId"
+            class="full-page-grid"
+          ></app-consumption-summary>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>PRODUCTION LOG</mat-panel-title>
+            <mat-panel-description> </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-production-log [coil]="coilId"></app-production-log>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

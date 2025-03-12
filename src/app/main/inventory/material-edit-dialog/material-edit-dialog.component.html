@@ -1,0 +1,140 @@
+<mat-toolbar color="success">
+  <span>Coil Type: {{ coilType.materialCode }}</span>
+  <span class="example-spacer"></span>
+  <button
+    mat-icon-button
+    aria-label="Close"
+    (click)="cancel()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<div mat-dialog-content>
+  <div fxLayout.gt-xs="row">
+    <mat-form-field class="yellow-input">
+      <mat-label>Description</mat-label>
+      <input
+        matInput
+        [(ngModel)]="coilType.description"
+      />
+    </mat-form-field>
+  </div>
+  <div fxLayout.gt-sm="row">
+    <div
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field
+        class="yellow-input small-width"
+        fxFlex.gt-sm
+      >
+        <mat-label>Gauge</mat-label>
+        <input
+          matInput
+          [(ngModel)]="coilType.gauge"
+        />
+      </mat-form-field>
+      <mat-form-field
+        class="yellow-input small-width"
+        fxFlex.gt-sm
+      >
+        <mat-label>Thickness</mat-label>
+        <input
+          matInput
+          [(ngModel)]="coilType.thicknessIn"
+        />
+      </mat-form-field>
+    </div>
+    <div
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field
+        class="yellow-input small-width"
+        fxFlex.gt-sm
+      >
+        <mat-label>Width</mat-label>
+        <input
+          matInput
+          [(ngModel)]="coilType.widthIn"
+        />
+      </mat-form-field>
+      <mat-form-field
+        class="yellow-input small-width"
+        fxFlex.gt-sm
+      >
+        <mat-label>Lbs Per Feet</mat-label>
+        <input
+          matInput
+          [(ngModel)]="coilType.lbsPerFt"
+        />
+      </mat-form-field>
+    </div>
+    <div
+      fxLayout="column"
+      fxFlex
+    >
+      <mat-form-field
+        class="yellow-input small-width"
+        [floatLabel]="'always'"
+        fxFlex.gt-sm
+      >
+        <mat-label>Color</mat-label>
+        <input
+          type="text"
+          matInput
+          [matAutocomplete]="colorAutocomplete"
+          [(ngModel)]="coilType.color"
+        />
+        <mat-autocomplete #colorAutocomplete="matAutocomplete">
+          <mat-option
+            *ngFor="let item of queryColorSearch(coilType.color)"
+            [value]="item"
+          >
+            <span [innerHTML]="item | highlight : coilType.color"></span>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field
+        class="yellow-input small-width"
+        [floatLabel]="'always'"
+        fxFlex.gt-sm
+      >
+        <mat-label>Type</mat-label>
+        <input
+          type="text"
+          matInput
+          [matAutocomplete]="typeAutocomplete"
+          [(ngModel)]="coilType.type"
+        />
+        <mat-autocomplete #typeAutocomplete="matAutocomplete">
+          <mat-option
+            *ngFor="let item of queryTypeSearch(coilType.type)"
+            [value]="item"
+          >
+            <span [innerHTML]="item | highlight : coilType.type"></span>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    CANCEL
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+</div>

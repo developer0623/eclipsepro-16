@@ -2000,3 +2000,7 @@ export interface IAgentStatus {
   };
   isAgentReachable: boolean;
 }
+
+export interface ApiErrorResult {
+  errors: string[];
+}

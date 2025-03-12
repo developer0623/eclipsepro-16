@@ -102,7 +102,7 @@ export class CoilTypePreviewComponent implements OnInit, OnDestroy {
 
   onGetData() {
     if (!!this.mainSub_) {
-      this.mainSub_.subscribe();
+      this.mainSub_.unsubscribe();
     }
 
     this.mainSub_ = this.clientDataStore
@@ -248,7 +248,7 @@ export class CoilTypePreviewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isOpen = false;
     if (!!this.mainSub_) {
-      this.mainSub_.subscribe();
+      this.mainSub_.unsubscribe();
     }
   }
 }

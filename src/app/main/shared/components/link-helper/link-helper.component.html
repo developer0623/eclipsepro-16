@@ -12,8 +12,7 @@
 <span *ngIf="docType === 'Coil' && idFound">
   <a
     class="td-link ml-5"
-    uiSref="app.inventory_coils.detail"
-    [uiParams]="{ id: docId }"
+    [routerLink]="['/inventory/coils', docId]"
   >
     <span *ngIf="!hideType">Coil:</span>{{ labelTxt || docId }}
   </a>
@@ -24,8 +23,7 @@
 >
   <a
     class="td-link ml-5"
-    uiSref="app.punch-patterns_list.detail"
-    [uiParams]="{ id: docId }"
+    [routerLink]="['/punch-patterns', docId]"
   >
     <span *ngIf="!hideType">Pattern:</span>{{ labelTxt || docId }}
   </a>
@@ -36,8 +34,7 @@
 >
   <a
     class="td-link ml-5"
-    uiSref="app.inventory_coil-types.detail"
-    [uiParams]="{ id: docId }"
+    [routerLink]="['/inventory/coil-types', docId]"
   >
     <span *ngIf="!hideType">Material:</span>{{ labelTxt || docId }}
   </a>

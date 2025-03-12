@@ -30,7 +30,6 @@ import { DashboardsRoutingModule } from './dashboards-routing.module';
     DirectivesModule,
     FlexLayoutModule,
     DashboardsRoutingModule,
-    // UIRouterModule.forChild({ states: [dashboardsState] }),
     CdkMenuTrigger,
     CdkMenu,
     CdkMenuItem,

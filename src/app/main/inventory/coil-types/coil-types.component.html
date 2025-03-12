@@ -1,0 +1,107 @@
+<div
+  class="page-layout datatable-layout simple fullwidth white-bg"
+  fxLayout="column"
+>
+  <div
+    class="white-bg"
+    fxLayout="column"
+    fxFlex
+  >
+    <div
+      class="content fullpage-datatable"
+      fxLayout="column"
+      fxFlex
+    >
+      <div
+        class="order-toolbar"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+      >
+        <div class="order-header__normal">Coil Types</div>
+
+        <div class="grid-filter">
+          <i class="icon icon-filter-outline filter-icon gray-icon"></i>
+          <div class="search-input">
+            <input
+              class="report-search"
+              placeholder="Filter..."
+              [(ngModel)]="searchTxt"
+              (onEvent)="onFilter()"
+              debounceKeyUp
+              [debounceTime]="200"
+            />
+          </div>
+        </div>
+
+        <div class="print-icon-column float-right">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="colMenu"
+            class="main-dropdown-btn"
+          >
+            <i class="icon icon-cog menu-icon gray-icon"></i>
+          </button>
+          <mat-menu
+            #colMenu="matMenu"
+            xPosition="before"
+          >
+            <div class="checkbox-menu-header">
+              <span (click)="$event.stopPropagation(); $event.preventDefault()"
+                >Add/Remove Column</span
+              >
+              <mat-icon>close</mat-icon>
+            </div>
+            <div class="scroll-menu-list">
+              <button
+                *ngFor="let item of columns"
+                mat-menu-item
+                aria-label="{{ item.headerName }}"
+                (click)="onCoilTypesGridOptionsToggle(item, $event)"
+              >
+                <mat-icon
+                  *ngIf="item.hide"
+                  class="empty"
+                  >check_box_outline_blank</mat-icon
+                >
+                <mat-icon
+                  *ngIf="!item.hide"
+                  class="checked"
+                  >check_box</mat-icon
+                >
+                {{ item.headerName | translate }}
+              </button>
+              <div
+                fxLayout="row"
+                fxLayoutAlign="center center"
+                class="filter-items-div"
+              >
+                <button
+                  class="reset-btn"
+                  mat-button
+                  (click)="onReset()"
+                >
+                  Reset Defaults
+                </button>
+              </div>
+            </div>
+          </mat-menu>
+
+          <button
+            aria-label="Select Shift 1"
+            mat-icon-button
+            class="print-btn"
+            (click)="openPrintPreview()"
+          >
+            <i class="icon icon-printer header-icon gray-icon"></i>
+          </button>
+        </div>
+      </div>
+      <ag-grid-angular
+        style="width: 100%; height: 100%"
+        class="ag-theme-balham"
+        [gridOptions]="agGridOptions"
+      >
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>
