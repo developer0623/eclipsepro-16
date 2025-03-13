@@ -1,0 +1,155 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <app-report-header
+    [subject]="'Coil Scrap Breakdown 🧪'"
+    (onFilter)="onFilter($event)"
+  ></app-report-header>
+  <div class="summary-title-header">
+    <app-custom-menu
+      class="menu-column duration"
+      subject="DURATION"
+      [menuList]="durations"
+      [selectedItem]="selectedDuration"
+      (onChange)="onChangeDuration($event)"
+    ></app-custom-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [duration]="selectedDuration"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <div class="header-icon-column float-right print-hide">
+      <a
+        class="excel-icon"
+        href="/_api/reports/coilscrap?{{ fileDownloadQueryString }}&format=csv"
+        target="_self"
+        [matTooltip]="'downloadCsv' | translate"
+      >
+        <i class="icon icon-file-excel"></i>
+      </a>
+    </div>
+  </div>
+  <div class="summary-main-scroll-container">
+    <div
+      class="coil-summary-header"
+      [ngClass]="{ 'is-expand': onGetPadding() }"
+    >
+      <div class="main-col">Coil Number</div>
+      <div class="main-col">Coil Material</div>
+      <div class="main-col">Heat Number</div>
+      <div class="desc">Desc</div>
+      <div class="main-col">
+        <span class="num-col"> Net Scrap ({{ 'ft' | userDisplayUnits }})</span>
+      </div>
+    </div>
+    <mat-accordion
+      multi
+      class="coil-summary-accordian"
+      togglePosition="before"
+    >
+      <cdk-virtual-scroll-viewport
+        itemSize="50"
+        class="coli-summary-viewport"
+      >
+        <mat-expansion-panel
+          class="coil-summary-expansion"
+          *cdkVirtualFor="let item of filteredList; templateCacheSize: 0"
+        >
+          <mat-expansion-panel-header class="coil-summary-accoridian-header">
+            <div class="coil-summary-item item-header">
+              <div class="main-col">
+                <a
+                  class="td-link"
+                  (click)="$event.stopPropagation()"
+                  uiSref="app.inventory_coils.detail"
+                  [uiParams]="{ id: item.coil.coilSerialNumber }"
+                >
+                  {{ item.coil.coilSerialNumber }}
+                </a>
+              </div>
+              <div class="main-col">
+                <a
+                  class="td-link"
+                  (click)="$event.stopPropagation()"
+                  uiSref="app.inventory_coil-types.detail"
+                  [uiParams]="{ id: item.material.materialCode }"
+                >
+                  {{ item.material.materialCode }}</a
+                >
+              </div>
+              <div class="main-col">{{ item.coil.heatNumber }}</div>
+              <div class="desc">{{ item.coil.description }}</div>
+              <div class="main-col">
+                <span class="num-col"> {{ item.scrapFt | unitsFormat : 'ft' : 1 : true }}</span>
+              </div>
+            </div>
+          </mat-expansion-panel-header>
+          <div class="order-detail">
+            <div class="coil-summary-sub-item sub-header">
+              <div class="main-col">Group</div>
+              <div class="main-col">Code</div>
+              <div class="main-col">Reason</div>
+              <div class="main-col">
+                <span class="num-col"> Net Scrap ({{ 'ft' | userDisplayUnits }})</span>
+              </div>
+              <div class="main-col">
+                <span class="num-col"> Weight ({{ 'lbs' | userDisplayUnits }})</span>
+              </div>
+              <div class="main-col">Scrap %</div>
+            </div>
+            <div
+              class="coil-summary-sub-item"
+              *ngFor="let item1 of item.groups[0].reasons"
+            >
+              <div class="main-col">{{ item.groups[0].groupTitle }}</div>
+              <div class="main-col">{{ item1.scrapCode }}</div>
+              <div class="main-col">{{ item1.scrapReason }}</div>
+              <div class="main-col">
+                <span class="num-col"> {{ item1.scrapFt | unitsFormat : 'ft' : 1 : true }}</span>
+              </div>
+              <div class="main-col">
+                <span class="num-col">
+                  {{
+                    item1.scrapFt * item.material.lbsPerFt | unitsFormat : 'lbs' : 1 : true
+                  }}</span
+                >
+              </div>
+              <div class="main-col">
+                <span class="num-col"> {{ item1.scrapPct | unitsFormat : '%' : 2 : true }}</span>
+              </div>
+            </div>
+            <div class="coil-summary-sub-item">
+              <div class="main-col">{{ item.groups[0].groupTitle }}</div>
+              <div class="main-col"></div>
+              <div class="main-col"></div>
+              <div class="main-col">
+                <span class="num-col">
+                  {{ item.groups[0].scrapFt | unitsFormat : 'ft' : 1 : true }}</span
+                >
+              </div>
+              <div class="main-col">
+                <span class="num-col">
+                  {{
+                    item.groups[0].scrapFt * item.material.lbsPerFt | unitsFormat : 'lbs' : 1 : true
+                  }}</span
+                >
+              </div>
+              <div class="main-col"></div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </cdk-virtual-scroll-viewport>
+    </mat-accordion>
+  </div>
+</div>

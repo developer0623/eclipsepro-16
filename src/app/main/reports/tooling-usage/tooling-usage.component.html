@@ -1,0 +1,164 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="main-header">
+    <h2 class="text-upper">Tooling Code Usage 🧪</h2>
+  </div>
+  <div class="summary-title-header">
+    <app-custom-menu
+      class="menu-column duration"
+      subject="DURATION"
+      [menuList]="durations"
+      [selectedItem]="selectedDuration"
+      (onChange)="onChangeDuration($event)"
+    ></app-custom-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [duration]="selectedDuration"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <div class="header-icon-column float-right print-hide">
+      <a
+        class="excel-icon"
+        href="/_api/reports/toolingusage?{{ fileDownloadQueryString }}&format=csv"
+        target="_self"
+        [matTooltip]="'downloadCsv' | translate"
+      >
+        <i class="icon icon-file-excel"></i>
+      </a>
+    </div>
+  </div>
+  <ng-scrollbar
+    visibility="hover"
+    class="summary-main-scroll-container"
+  >
+    <div class="coil-summary-header">
+      <div class="date">{{ selectedDuration }}</div>
+      <div class="material">Tooling Code</div>
+      <div class="main-col">Good ({{ 'ft' | userDisplayUnits }})</div>
+      <div class="main-col">SCRAP ({{ 'ft' | userDisplayUnits }})</div>
+      <div class="main-col">Total ({{ 'ft' | userDisplayUnits }})</div>
+      <div class="main-col">SCRAP (%)</div>
+    </div>
+    <mat-accordion
+      multi
+      class="coil-summary-accordian"
+      togglePosition="before"
+    >
+      <mat-expansion-panel
+        class="coil-summary-expansion"
+        *ngFor="let item of summaryList.groups"
+      >
+        <mat-expansion-panel-header class="coil-summary-accoridian-header">
+          <div class="coil-summary-item item-header">
+            <div
+              class="date"
+              *ngIf="item.key.day"
+            >
+              {{ item.key.month }}/{{ item.key.day }}/{{ item.key.year }}
+            </div>
+            <div
+              class="date"
+              *ngIf="item.key.weekOfYear"
+            >
+              {{ item.key.year }}-{{ item.key.weekOfYear }}
+            </div>
+            <div
+              class="date"
+              *ngIf="!item.key.day && !item.key.weekOfYear"
+            >
+              {{ item.key.month }}/{{ item.key.year }}
+            </div>
+            <div class="material"></div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.lengthUsedFt | unitsFormat : 'ft' : 0 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.lengthScrapFt | unitsFormat : 'ft' : 0 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ item.lengthScrapFt + item.lengthUsedFt | unitsFormat : 'ft' : 0 : true }}</span
+              >
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.scrapPerc | unitsFormat : '%' : 2 : true }}</span>
+            </div>
+          </div>
+        </mat-expansion-panel-header>
+        <div class="order-detail">
+          <div
+            class="coil-summary-sub-item"
+            *ngFor="let item1 of item.records"
+          >
+            <div class="date"></div>
+            <div class="material">
+              <a
+                class="td-link"
+                (click)="$event.stopPropagation()"
+                uiSref="app.tooling.detail"
+                [uiParams]="{ id: item1.toolingCode }"
+              >
+                {{ item1.toolingCode }}
+              </a>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item1.lengthUsedFt | unitsFormat : 'ft' : 0 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ item1.lengthScrapFt | unitsFormat : 'ft' : 0 : true }}</span
+              >
+            </div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ item1.lengthScrapFt + item1.lengthUsedFt | unitsFormat : 'ft' : 0 : true }}</span
+              >
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item1.scrapPerc | unitsFormat : '%' : 2 : true }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <div
+        class="coil-summary-sub-item h-48"
+        *ngIf="!!summaryList"
+      >
+        <div class="date"></div>
+        <div class="material"></div>
+        <div class="main-col">
+          <span class="num-col">
+            {{ summaryList.lengthUsedFt | unitsFormat : 'ft' : 0 : true }}</span
+          >
+        </div>
+        <div class="main-col">
+          <span class="num-col">
+            {{ summaryList.lengthScrapFt | unitsFormat : 'ft' : 0 : true }}</span
+          >
+        </div>
+        <div class="main-col">
+          <span class="num-col">
+            {{
+              summaryList.lengthScrapFt + summaryList.lengthUsedFt | unitsFormat : 'ft' : 0 : true
+            }}</span
+          >
+        </div>
+        <div class="main-col">
+          <span class="num-col"> {{ summaryList.scrapPerc | unitsFormat : '%' : 2 : true }}</span>
+        </div>
+      </div>
+    </mat-accordion>
+  </ng-scrollbar>
+</div>

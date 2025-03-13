@@ -1,0 +1,24 @@
+<div
+  (mouseenter)="onShowTooltip()"
+  (mouseleave)="onHideTooltip()"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+>
+  {{ item.title }}
+  <div *ngIf="isPercent">%</div>
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayPositions]="positions"
+>
+  <div class="production-summary-title-expalin">
+    <div class="title">{{ item.title }}</div>
+    <div
+      class="description"
+      [innerHTML]="item.description"
+    ></div>
+  </div>
+</ng-template>

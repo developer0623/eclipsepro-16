@@ -1,0 +1,58 @@
+<div class="date-column-content-usage">
+  <button
+    mat-icon-button
+    class="change-btn print-hide"
+    (click)="onChangeDate(-1)"
+    aria-label="Previous date"
+  >
+    <i class="icon icon-chevron-left white-icon"></i>
+  </button>
+
+  <p [innerHtml]="startDate | maDate : duration"></p>
+  <input
+    class="hide-date-picker"
+    matInput
+    [matDatepicker]="picker"
+    [matDatepickerFilter]="onlyAllowDate"
+    [(ngModel)]="startDate"
+    [max]="startMaxDate"
+    (dateChange)="onChangeStartDate()"
+  />
+  <mat-datepicker-toggle
+    matSuffix
+    [for]="picker"
+    class="white-btn print-hide"
+  ></mat-datepicker-toggle>
+  <mat-datepicker
+    #picker
+    [startView]="calType"
+  ></mat-datepicker>
+  <div>-</div>
+  <p [innerHtml]="endDate | maDate : duration"></p>
+  <input
+    class="hide-date-picker"
+    matInput
+    [matDatepicker]="picker1"
+    [matDatepickerFilter]="onlyAllowEndDate"
+    [(ngModel)]="endDate"
+    [max]="endMaxDate"
+    (dateChange)="onChangeEndDate()"
+  />
+  <mat-datepicker-toggle
+    matSuffix
+    [for]="picker1"
+    class="white-btn print-hide"
+  ></mat-datepicker-toggle>
+  <mat-datepicker
+    #picker1
+    [startView]="calType"
+  ></mat-datepicker>
+  <button
+    mat-icon-button
+    class="change-btn print-hide"
+    (click)="onChangeDate(1)"
+    aria-label="Next date"
+  >
+    <i class="icon icon-chevron-right white-icon"></i>
+  </button>
+</div>

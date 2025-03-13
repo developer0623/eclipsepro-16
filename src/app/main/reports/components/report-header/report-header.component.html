@@ -1,0 +1,41 @@
+<div class="main-header">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <span class="h2 text-upper">{{ subject }}</span>
+    <button
+      mat-icon-button
+      aria-label="Filter Icon"
+      matTooltip="Filter these results"
+      class="report-filter-btn print-hide"
+      (click)="onOpenFilter()"
+    >
+      <i class="icon s24 icon-filter-outline"></i>
+    </button>
+
+    <div
+      class="report-filter-container"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+      [ngClass]="{ 'expand-container': isOpenFilter }"
+    >
+      <input
+        [appFocusMe]="focusInput"
+        class="report-search"
+        [(ngModel)]="searchTxt"
+        (onEvent)="onChange()"
+        debounceKeyUp
+        [debounceTime]="400"
+      />
+      <button
+        mat-icon-button
+        class="filter-close-btn"
+        aria-label="Filter Icon"
+        (click)="onCloseFilter()"
+      >
+        <i class="icon s24 icon-close"></i>
+      </button>
+    </div>
+  </div>
+</div>

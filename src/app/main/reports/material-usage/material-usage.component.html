@@ -1,0 +1,237 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="main-header">
+    <h2 class="text-upper">Material Usage 🧪</h2>
+  </div>
+  <div class="summary-title-header">
+    <app-custom-menu
+      class="menu-column duration"
+      subject="DURATION"
+      [menuList]="durations"
+      [selectedItem]="selectedDuration"
+      (onChange)="onChangeDuration($event)"
+    ></app-custom-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [duration]="selectedDuration"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <div class="header-icon-column float-right print-hide">
+      <a
+        class="excel-icon"
+        href="/_api/reports/materialusage?{{ fileDownloadQueryString }}&format=csv"
+        target="_self"
+        [matTooltip]="'downloadCsv' | translate"
+      >
+        <i class="icon icon-file-excel"></i>
+      </a>
+    </div>
+  </div>
+  <div class="summary-main-scroll-container">
+    <table
+      *ngIf="reportModel"
+      mat-table
+      [dataSource]="reportModel.groups"
+      multiTemplateDataRows
+      class="mat-elevation-z8 material-usage-table"
+    >
+      <ng-container matColumnDef="expand">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          aria-label="row actions"
+        >
+          &nbsp;
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+        >
+          <button
+            mat-icon-button
+            aria-label="expand row"
+            (click)="
+              expandedElement = expandedElement === element ? null : element;
+              $event.stopPropagation()
+            "
+          >
+            <mat-icon *ngIf="expandedElement === element">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_right</mat-icon>
+          </button>
+        </td>
+        <td
+          mat-footer-cell
+          *matFooterCellDef
+        >
+          &nbsp;
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+        >
+          {{ selectedDuration }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+        >
+          <span *ngIf="element.key.day">
+            {{ element.key.month }}/{{ element.key.day }}/{{ element.key.year }}
+          </span>
+          <span *ngIf="element.key.weekOfYear">
+            {{ element.key.year }}-{{ element.key.weekOfYear }}
+          </span>
+          <span *ngIf="!element.key.day && !element.key.weekOfYear">
+            {{ element.key.month }}/{{ element.key.year }}
+          </span>
+        </td>
+        <td
+          mat-footer-cell
+          *matFooterCellDef
+        >
+          &nbsp;
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="material">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+        >
+          Material Code
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+        >
+          &nbsp;
+        </td>
+        <td
+          mat-footer-cell
+          *matFooterCellDef
+        >
+          &nbsp;
+        </td>
+      </ng-container>
+      <ng-container
+        matColumnDef="{{ column.field }}"
+        *ngFor="let column of columns"
+      >
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+        >
+          {{ column.displayName }} ({{
+            column.unit === '%' ? column.unit : (column.unit | userDisplayUnits)
+          }})
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+        >
+          <span class="num-col">
+            {{
+              column.unit === '%'
+                ? (element[column.field] | unitsFormat : '%' : 2 : true)
+                : (element[column.field] | unitsFormat : column.unit : 0 : true)
+            }}
+          </span>
+        </td>
+        <td
+          mat-footer-cell
+          *matFooterCellDef
+        >
+          <span class="num-col">
+            {{
+              column.unit === '%'
+                ? (reportModel[column.field] | unitsFormat : '%' : 2 : true)
+                : (reportModel[column.field] | unitsFormat : column.unit : 0 : true)
+            }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+      <ng-container matColumnDef="expandedDetail">
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="columnsToDisplayWithExpand.length"
+          class="expaned-td"
+        >
+          <div
+            class="example-element-detail"
+            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
+          >
+            <div class="material-usage-content">
+              <div
+                class="material-usage-item"
+                *ngFor="let record of element.records"
+              >
+                <div class="expand"></div>
+                <div class="date"></div>
+                <div class="material">
+                  <a
+                    class="td-link"
+                    (click)="$event.stopPropagation()"
+                    uiSref="app.inventory_coil-types.detail"
+                    [uiParams]="{ id: record.materialCode }"
+                  >
+                    {{ record.materialCode }}
+                  </a>
+                </div>
+                <div
+                  class="main-con"
+                  *ngFor="let item of columns"
+                >
+                  <span class="num-col">
+                    {{
+                      item.unit === '%'
+                        ? (record[item.field] | unitsFormat : '%' : 2 : true)
+                        : (record[item.field] | unitsFormat : item.unit : 0 : true)
+                    }}
+                  </span>
+                </div>
+              </div>
+              <div></div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="columnsToDisplayWithExpand"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: columnsToDisplayWithExpand"
+        class="material-usage-row"
+        [class.pattern-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element"
+      ></tr>
+      <tr
+        mat-footer-row
+        *matFooterRowDef="columnsToDisplayWithExpand"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']"
+        class="material-usage-detail-row"
+      ></tr>
+    </table>
+  </div>
+</div>

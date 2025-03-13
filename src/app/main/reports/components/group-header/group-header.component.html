@@ -1,0 +1,92 @@
+<div class="group-content-item">
+  <div class="group-content-item-title">Total Length:</div>
+  <div class="group-content-item-content">
+    {{ header.totalFt | unitsFormat : 'ft' : 1 : true }}
+    {{ 'ft' | userDisplayUnits }}
+  </div>
+</div>
+<div class="group-content-item">
+  <div class="group-content-item-title">Good Length:</div>
+  <div class="group-content-item-content">
+    {{ header.goodFt | unitsFormat : 'ft' : 1 : true }}
+    {{ 'ft' | userDisplayUnits }}
+  </div>
+</div>
+<div class="group-content-item">
+  <div class="group-content-item-title">Net Scrap Length:</div>
+  <div class="group-content-item-content">
+    {{ header.netScrapFt | unitsFormat : 'ft' : 1 : true }}
+    {{ 'ft' | userDisplayUnits }}
+  </div>
+</div>
+<!-- <div class="group-content-item">
+    <div class="group-content-item-title">Average Footage:</div>
+    <div class="group-content-item-content"></div>
+  </div> -->
+<div class="group-content-item">
+  <div class="group-content-item-title">Scrap Length %:</div>
+  <div class="group-content-item-content">
+    {{ header.scrapFtPct | unitsFormat : '%' : 2 }}
+  </div>
+</div>
+<!-- <div class="group-content-item">
+    <div class="group-content-item-title">Scrap Cost:</div>
+    <div class="group-content-item-content"></div>
+  </div> -->
+<div class="group-content-item">
+  <div class="group-content-item-title">Reclaimed Length:</div>
+  <div class="group-content-item-content">
+    {{ header.reclaimedScrapFt | unitsFormat : 'ft' : 1 : true }}
+    {{ 'ft' | userDisplayUnits }}
+  </div>
+</div>
+<!-- <div class="group-content-item">
+    <div class="group-content-item-title">Average Speed:</div>
+    <div class="group-content-item-content"></div>
+  </div> -->
+<div class="group-content-item">
+  <div class="group-content-item-title">Total Weight:</div>
+  <div class="group-content-item-content">
+    {{ header.totalLbs | unitsFormat : 'lbs' : 1 }}
+  </div>
+</div>
+<div class="group-content-item">
+  <div class="group-content-item-title">Good Weight:</div>
+  <div class="group-content-item-content">
+    {{ header.goodLbs | unitsFormat : 'lbs' : 1 }}
+  </div>
+</div>
+<div class="group-content-item">
+  <div class="group-content-item-title">Net Scrap Weight:</div>
+  <div class="group-content-item-content">
+    {{ header.scrapLbs | unitsFormat : 'lbs' : 1 }}
+  </div>
+</div>
+<div class="group-content-item">
+  <div class="group-content-item-title">Scrap Weight %:</div>
+  <div class="group-content-item-content">
+    {{ header.scrapLbsPct | unitsFormat : '%' : 2 }}
+  </div>
+</div>
+<!-- <div class="group-content-item">
+    <div class="group-content-item-title">Raw Material Scrap:</div>
+    <div class="group-content-item-content"></div>
+  </div> -->
+<div class="group-content-item">
+  <div class="group-content-item-title">Reclaimed Weight:</div>
+  <div class="group-content-item-content">
+    {{ header.reclaimedLbs | unitsFormat : 'lbs' : 1 }}
+  </div>
+</div>
+<div class="group-content-item">
+  <div class="group-content-item-title">Run Minutes:</div>
+  <div class="group-content-item-content">
+    {{ header.runMinutes | number : '1.1-1' }}
+  </div>
+</div>
+<div class="group-content-item">
+  <div class="group-content-item-title">Total Minutes:</div>
+  <div class="group-content-item-content">
+    {{ header.totalMinutes | number : '1.1-1' }}
+  </div>
+</div>

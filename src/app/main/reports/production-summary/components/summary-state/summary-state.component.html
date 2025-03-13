@@ -1,0 +1,24 @@
+<div class="summary-state">
+  <div class="chart-content">
+    <div
+      class="main-area"
+      [ngStyle]="getMainArea(order)"
+      *ngFor="let order of [0, 1, 2]"
+    ></div>
+
+    <div
+      class="target-pos"
+      [ngStyle]="getTargetPos()"
+    ></div>
+    <div
+      class="value-area"
+      [ngStyle]="getValueArea()"
+    ></div>
+  </div>
+  <!-- <div class="axis-content" ng-if="data.maxValue !== 1">
+      <div class="axis-number">{{data.minValue}}</div>
+      <div class="axis-number" [ngStyle]="getRangePos(0)">{{data.okRangeStart}}</div>
+      <div class="axis-number" [ngStyle]="getRangePos(1)">{{data.okRangeEnd}}</div>
+      <div class="axis-number">{{data.maxValue}}</div>
+    </div> -->
+</div>

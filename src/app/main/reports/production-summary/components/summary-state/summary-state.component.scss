@@ -1,0 +1,49 @@
+.summary-state {
+  padding: 12px 15px 0 15px;
+
+  .chart-content {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 14px;
+
+    .target-pos {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background-color: black;
+      z-index: 2;
+    }
+
+    .value-area {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      height: 6px;
+    }
+
+    // padding: 10px 10px 5px 10px;
+  }
+
+  .axis-content {
+    position: relative;
+    width: 100%;
+    margin-top: 4px;
+
+    .axis-number {
+      position: absolute;
+      width: 50px;
+      text-align: center;
+      font-size: 10px;
+
+      &:first-child {
+        left: -25px;
+      }
+
+      &:last-child {
+        right: -25px;
+      }
+    }
+  }
+}

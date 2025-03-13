@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { IProductionSummaryReportRecord } from 'src/app/core/dto';
-import { Sch } from 'src/app/core/services/jobs.service.types';
+import { Sch } from './jobs.service.types';
 import { ClientDataStore } from './clientData.store';
 
 @Injectable({

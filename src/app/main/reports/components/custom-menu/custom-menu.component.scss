@@ -1,0 +1,14 @@
+.main-dropdown-btn {
+  width: 30px !important;
+  height: 30px !important;
+  margin: auto 0 !important;
+  padding: 0 !important;
+  .icon-chevron-down {
+    position: relative;
+    top: -1px;
+  }
+}
+
+.menu-item-content {
+  text-transform: capitalize;
+}

@@ -1,0 +1,89 @@
+<div class="print-summary-timebar">
+  <div
+    class="print-summary-timebar__machine"
+    *ngIf="!state"
+  >
+    <div
+      class="machine-content"
+      *ngIf="machine"
+    >
+      {{ machine }}
+    </div>
+    <div
+      class="machine-timebar"
+      *ngIf="!machine"
+    >
+      TIME BAR
+    </div>
+  </div>
+  <div class="print-summary-timebar__body">
+    <div
+      class="timebar-header"
+      [ngClass]="{ is_1117: state }"
+    >
+      <div class="timebar-header__item">
+        <div class="timebar-header__title">
+          <div class="timebar-header__circle column-running"></div>
+          RUNNING
+        </div>
+        <div class="timebar-header__body">{{ data.running | summaryPercent }}<span>%</span></div>
+      </div>
+      <div class="timebar-header__item">
+        <div class="timebar-header__title">
+          <div class="timebar-header__circle column-changeover"></div>
+          CHANGEOVER
+        </div>
+        <div class="timebar-header__body">{{ data.changeover | summaryPercent }}<span>%</span></div>
+      </div>
+      <div class="timebar-header__item">
+        <div class="timebar-header__title">
+          <div class="timebar-header__circle column-breakdown"></div>
+          BREAKDOWN
+        </div>
+        <div class="timebar-header__body">{{ data.breakdown | summaryPercent }}<span>%</span></div>
+      </div>
+      <div class="timebar-header__item">
+        <div class="timebar-header__title">
+          <div class="timebar-header__circle column-other"></div>
+          OTHER DOWNTIME
+        </div>
+        <div class="timebar-header__body">
+          {{ data.otherDowntime | summaryPercent }}<span>%</span>
+        </div>
+      </div>
+      <div class="timebar-header__item">
+        <div class="timebar-header__title">
+          <div class="timebar-header__circle column-expert"></div>
+          EXEMPT
+        </div>
+        <div class="timebar-header__body">{{ data.exempt | summaryPercent }}<span>%</span></div>
+      </div>
+      <div class="timebar-header__item">
+        <div class="timebar-header__title">
+          <div class="timebar-header__circle timebar-unschedule"></div>
+          UNSCHEDULED
+        </div>
+        <div class="timebar-header__body">
+          {{ data.unscheduled | summaryPercent }}<span>%</span>
+        </div>
+      </div>
+    </div>
+    <div class="chart-content">
+      <div
+        class="main-area"
+        [ngStyle]="getMainArea(order)"
+        *ngFor="let order of [0, 1, 2, 3, 4, 5]"
+      ></div>
+    </div>
+    <div
+      class="print-summary-timebar__bottom"
+      [ngStyle]="getBottomWidth()"
+    >
+      <div class="print-summary-timebar__line"></div>
+      <div class="print-summary-timebar__date">
+        {{ data.durationTime | date : "HH'H' mm'M' ss'S'" }}
+      </div>
+      <div class="print-summary-timebar__line"></div>
+    </div>
+  </div>
+</div>

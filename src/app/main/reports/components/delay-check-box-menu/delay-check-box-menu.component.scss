@@ -1,0 +1,63 @@
+.menuTrigger {
+  .mat-icon {
+    margin-right: -8px;
+  }
+}
+
+// handle visiblity of checkboxes in simple menu
+.mat-menu-item {
+  .mat-icon.checked {
+    display: none;
+    pointer-events: none;
+  }
+  .mat-icon.empty {
+    pointer-events: none;
+  }
+}
+
+.main-dropdown-btn {
+  width: 30px !important;
+  height: 30px !important;
+  margin: auto 0 !important;
+  padding: 0 !important;
+  .icon-chevron-down {
+    position: relative;
+    top: -1px;
+  }
+}
+
+.empty {
+  color: rgba(0, 0, 0, 0.54) !important;
+}
+
+.checked {
+  color: rgba(236, 177, 0, 0.87) !important;
+}
+
+.group-key {
+  line-height: 26px;
+  padding: 0 16px;
+  font-weight: bold;
+}
+
+.checkbox-menu-header {
+  line-height: 30px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 210px;
+  span {
+    flex: 1;
+  }
+
+  mat-icon {
+    cursor: pointer;
+  }
+}
+
+::ng-deep .delay-check-menu {
+  max-width: none !important;
+  max-height: 500px;
+  overflow-y: auto;
+}

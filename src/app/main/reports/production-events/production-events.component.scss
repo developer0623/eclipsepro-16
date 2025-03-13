@@ -1,0 +1,19 @@
+.summary-main-scroll-container {
+  height: calc(100vh - 190px);
+  padding: 0 24px;
+}
+
+.material-usage-content {
+  width: 100%;
+  height: 100%;
+}
+
+::ng-deep .production-evnts-grid-container {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  ag-grid-angular {
+    height: calc(100vh - 238px);
+  }
+}

@@ -1,0 +1,85 @@
+.main-header {
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 76px;
+  min-height: 0;
+  max-height: auto;
+  padding: 13px 24px 0 24px;
+  opacity: 1;
+  background-color: #e0e0e0 !important;
+}
+
+.excel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.example-element-detail {
+  overflow: hidden;
+  // display: flex;
+}
+
+.expaned-td {
+  padding: 0;
+}
+
+.material-usage-row {
+  cursor: pointer;
+}
+
+.material-usage-row:hover {
+  background-color: #ddd;
+}
+
+tr.material-usage-detail-row {
+  height: 0;
+}
+
+.material-usage-item {
+  padding: 0;
+  .expand {
+    width: 48px;
+  }
+  .date {
+    width: 14%;
+  }
+
+  .material {
+    width: 14%;
+  }
+}
+
+.mat-column-date {
+  width: 14% !important;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.mat-column-material {
+  width: 14% !important;
+  text-align: center;
+}
+
+.mat-column-expand {
+  width: 48px !important;
+}
+
+.material-usage-table {
+  .mat-mdc-header-cell,
+  td {
+    text-align: center;
+    width: calc(9% - 6px);
+    padding: 0;
+  }
+}
+
+.num-col {
+  text-align: right;
+  padding-right: 10%;
+  width: 60%;
+  display: block;
+  margin: 0 auto;
+}

@@ -1,0 +1,197 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg quality-audit main-print-body"
+  ngsf-fullscreen
+>
+  <app-report-header
+    class="print-hide"
+    [subject]="'Quality Audit 🧪'"
+    (onFilter)="onFilter($event)"
+  ></app-report-header>
+  <div class="summary-title-header print-hide">
+    <app-checkbox-menu
+      class="menu-column duration"
+      subject="SHIFT"
+      [menuSubject]="'SHIFT'"
+      [menuList]="shiftMenus"
+      [small]="true"
+      (onChange)="onChangeShifts($event)"
+    ></app-checkbox-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [duration]="'day'"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <div class="header-icon-column float-right print-hide">
+      <a
+        class="excel-icon"
+        href="/_api/reports/qualityaudit?{{ fileDownloadQueryString }}&format=csv"
+        target="_self"
+        [matTooltip]="'downloadCsv' | translate"
+      >
+        <i class="icon icon-file-excel"></i>
+      </a>
+    </div>
+  </div>
+  <div class="print-content__main-titles">
+    <div class="print-content__title1">Eclipsepro</div>
+    <div class="print-content__title2">Quality Audit</div>
+  </div>
+  <div class="md-background md-hue-1 report-main-content">
+    <div class="material-usage-content print-hide">
+      <ng-scrollbar class="quality-scroll-container">
+        <cdk-virtual-scroll-viewport
+          itemSize="30"
+          class="quality-audit-list"
+          scrollViewport
+        >
+          <ng-container
+            *cdkVirtualFor="let item of mainRows; let i = index"
+            [ngSwitch]="item.type"
+          >
+            <div
+              class="group-header b-t-1"
+              [ngClass]="{ 'mt-20': i !== 0 }"
+              *ngSwitchCase="'quality-header'"
+            >
+              <div class="group-key">Machine:</div>
+              <div class="group-key-val">{{ item.machineNumber }}</div>
+              <div class="group-key">Shift:</div>
+              <div class="group-key-val">{{ item.shift }}</div>
+            </div>
+            <div
+              class="order-summary-item-header b-s-1"
+              *ngSwitchCase="'group-header'"
+            >
+              <div class="main-col">
+                Order:
+                <span class="sub-content">
+                  <a
+                    *ngIf="item.ordId > 0; else other_content"
+                    class="td-link"
+                    uiSref="app.inventory_coil-types.detail"
+                    [uiParams]="{ id: item.materialCode }"
+                  >
+                    {{ item.materialCode }}
+                  </a>
+                  <ng-template #other_content>{{ item.orderCode }}</ng-template>
+                </span>
+              </div>
+              <div class="main-col">
+                Material:
+                <span class="sub-content">
+                  <a
+                    class="td-link"
+                    uiSref="app.inventory_coil-types.detail"
+                    [uiParams]="{ id: item.materialCode }"
+                  >
+                    {{ item.materialCode }}
+                  </a>
+                </span>
+              </div>
+              <div class="main-col">
+                Tooling:<span class="sub-content">{{ item.toolingCode }}</span>
+              </div>
+              <div class="main-col">
+                Customer:<span class="sub-content">{{ item.customerName }}</span>
+              </div>
+            </div>
+
+            <div
+              class="material-usage-item sub-header b-s-1"
+              *ngSwitchCase="'entry-header'"
+            >
+              <div class="main-col">Date</div>
+              <div class="main-col">Prompt</div>
+              <div class="main-col">Audit Value</div>
+              <div class="main-col">Employee ID & Name</div>
+              <div class="main-col">Coil Number</div>
+            </div>
+            <div
+              class="material-usage-item b-s-1"
+              *ngSwitchDefault
+            >
+              <div class="main-col">{{ item.recordDate | date : 'MM/dd/yyyy hh:mm:ss' }}</div>
+              <div class="main-col">{{ item.listText }} ({{ item.listId }})</div>
+              <div class="main-col">{{ item.listValue }}</div>
+              <div class="main-col">{{ item.employeeNumber }} {{ item.employeeName }}</div>
+              <div class="main-col">
+                <a
+                  class="td-link"
+                  uiSref="app.inventory_coils.detail"
+                  [uiParams]="{ id: item.coilSerialNumber }"
+                >
+                  {{ item.coilSerialNumber }}
+                </a>
+              </div>
+            </div>
+          </ng-container>
+        </cdk-virtual-scroll-viewport>
+      </ng-scrollbar>
+    </div>
+    <div class="material-usage-content main-hide">
+      <div
+        *ngFor="let item of filteredList"
+        class="order-summary-item"
+      >
+        <div class="group-header">
+          <div class="group-key">Machine:</div>
+          <div class="group-key-val">{{ item.machineNumber }}</div>
+          <div class="group-key">Shift:</div>
+          <div class="group-key-val">{{ item.shift }}</div>
+        </div>
+
+        <div
+          *ngFor="let gitem of item.groups"
+          class=""
+        >
+          <div class="order-summary-item-header">
+            <div class="main-col">
+              Order:<span class="sub-content">{{ gitem.key.orderCode }}</span>
+            </div>
+            <div class="main-col">
+              Material:
+              <span class="sub-content">
+                {{ gitem.key.materialCode }}
+              </span>
+            </div>
+            <div class="main-col">
+              Tooling:<span class="sub-content">{{ gitem.key.toolingCode }}</span>
+            </div>
+            <div class="main-col">
+              Customer:<span class="sub-content">{{ gitem.key.customerName }}</span>
+            </div>
+          </div>
+          <div class="material-usage-item sub-header">
+            <div class="main-col">Date</div>
+            <div class="main-col">Prompt</div>
+            <div class="main-col">Audit Value</div>
+            <div class="main-col">Employee ID & Name</div>
+            <div class="main-col">Coil Number</div>
+          </div>
+          <div
+            *ngFor="let entry of gitem.entries"
+            class="material-usage-item"
+          >
+            <div class="main-col">{{ entry.recordDate | date : 'MM/dd/yyyy hh:mm:ss' }}</div>
+            <div class="main-col">{{ entry.listText }} ({{ entry.listId }})</div>
+            <div class="main-col">{{ entry.listValue }}</div>
+            <div class="main-col">{{ entry.employeeNumber }} {{ entry.employeeName }}</div>
+            <div class="main-col">
+              {{ entry.coilSerialNumber }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

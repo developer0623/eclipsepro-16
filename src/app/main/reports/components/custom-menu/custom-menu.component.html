@@ -1,0 +1,33 @@
+<div class="menu-title">
+  {{ subject ? subject + ':' : '' }}
+  <span>
+    {{ selectedItem.name ? selectedItem.name : selectedItem }}
+  </span>
+</div>
+
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="customMenu"
+  class="main-dropdown-btn print-hide"
+>
+  <i class="icon icon-chevron-down menu-icon"></i>
+</button>
+<mat-menu
+  #customMenu="matMenu"
+  class="main-menu"
+  xPosition="before"
+>
+  <button
+    mat-menu-item
+    class="main-menu-item"
+    [ngClass]="{
+      'selected-menu-item': item.selector
+        ? item.selector === selectedItem.selector
+        : item === selectedItem
+    }"
+    *ngFor="let item of menuList"
+    (click)="onChangeItem(item)"
+  >
+    <span class="menu-item-content">{{ item.name ? item.name : item }}</span>
+  </button>
+</mat-menu>

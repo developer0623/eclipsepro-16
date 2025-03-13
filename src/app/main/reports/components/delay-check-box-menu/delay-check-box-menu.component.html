@@ -1,0 +1,69 @@
+<div class="menu-title">
+  {{ subject }}:
+  <span>{{ onGetTitle() }}</span>
+</div>
+
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="menu"
+  aria-label="Machines"
+  class="main-dropdown-btn"
+>
+  <i class="icon icon-chevron-down menu-icon"></i>
+</button>
+<mat-menu
+  #menu="matMenu"
+  xPosition="before"
+  class="delay-check-menu"
+>
+  <div class="checkbox-menu-header">
+    <span (click)="$event.stopPropagation(); $event.preventDefault()">{{ menuSubject }}</span>
+    <mat-icon>close</mat-icon>
+  </div>
+  <button
+    mat-menu-item
+    (click)="onClickItem(allItem, $event)"
+  >
+    <mat-icon
+      *ngIf="!allItem.isChecked && !isAllIndeterminate()"
+      class="empty"
+      >check_box_outline_blank</mat-icon
+    >
+    <mat-icon
+      *ngIf="allItem.isChecked"
+      class="checked"
+      >check_box</mat-icon
+    >
+    <mat-icon
+      *ngIf="isAllIndeterminate()"
+      class="checked"
+      >indeterminate_check_box</mat-icon
+    >
+    All
+  </button>
+  <section *ngFor="let group of menuList | groupBy : 'category'">
+    <div
+      class="group-key"
+      (click)="onClickGroupHeader($event)"
+    >
+      {{ group.key }}
+    </div>
+    <button
+      *ngFor="let item of group.value"
+      mat-menu-item
+      (click)="onClickItem(item, $event)"
+    >
+      <mat-icon
+        *ngIf="!item.isChecked"
+        class="empty"
+        >check_box_outline_blank</mat-icon
+      >
+      <mat-icon
+        *ngIf="item.isChecked"
+        class="checked"
+        >check_box</mat-icon
+      >
+      {{ item.description }}
+    </button>
+  </section>
+</mat-menu>

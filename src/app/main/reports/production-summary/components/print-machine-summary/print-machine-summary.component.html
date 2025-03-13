@@ -1,0 +1,78 @@
+<div class="print-summary-content">
+  <div class="ms-column column-title">
+    <div class="machine-content">{{ machine }}</div>
+  </div>
+
+  <div class="ms-column column-good-scrap">
+    <div class="main-content">
+      <div>{{ data.totalGoodLn.primary | numberFilter }} <span>FT</span></div>
+      <div>{{ data.totalGoodLn.secondary }} <span>pcs</span></div>
+    </div>
+    <div class="bullet-content">
+      <!-- <app-print-summary-state [data]='data.totalGoodLn.bullet'></app-print-summary-state> -->
+    </div>
+  </div>
+
+  <div class="ms-column column-good-scrap">
+    <div class="main-content">
+      <div>{{ data.netScrap.primary | summaryPercent }} <span>%</span></div>
+      <div>{{ data.netScrap.secondary | numberFilter }} <span>FT</span></div>
+    </div>
+    <div class="bullet-content">
+      <app-print-summary-state
+        [data]="data.netScrap.bullet"
+        [state]="true"
+      ></app-print-summary-state>
+    </div>
+  </div>
+
+  <div class="ms-column column-running">
+    <div class="main-content">
+      {{ data.runningThroughput.primary | numberFilter }} <span>FTM</span>
+    </div>
+
+    <div class="bullet-content">
+      <app-print-summary-state [data]="data.runningThroughput.bullet"></app-print-summary-state>
+    </div>
+  </div>
+
+  <div class="ms-column column-oee-target">
+    <div class="main-content">{{ data.oEE.primary | summaryPercent }} <span>%</span></div>
+
+    <div class="bullet-content">
+      <app-print-summary-state [data]="data.oEE.bullet"></app-print-summary-state>
+    </div>
+  </div>
+
+  <div class="ms-column column-oee-target">
+    <div class="main-content">{{ data.target.primary | summaryPercent }} <span>%</span></div>
+
+    <div class="bullet-content">
+      <app-print-summary-state [data]="data.target.bullet"></app-print-summary-state>
+    </div>
+  </div>
+
+  <div class="ms-column column-asy first-hide">
+    <div class="main-content">{{ data.availability.primary | summaryPercent }} <span>%</span></div>
+
+    <div class="bullet-content">
+      <app-print-summary-state [data]="data.availability.bullet"></app-print-summary-state>
+    </div>
+  </div>
+
+  <div class="ms-column column-asy first-hide">
+    <div class="main-content">{{ data.speed.primary | summaryPercent }} <span>%</span></div>
+
+    <div class="bullet-content">
+      <app-print-summary-state [data]="data.speed.bullet"></app-print-summary-state>
+    </div>
+  </div>
+
+  <div class="ms-column column-asy first-hide">
+    <div class="main-content">{{ data.yield.primary | summaryPercent }} <span>%</span></div>
+
+    <div class="bullet-content">
+      <app-print-summary-state [data]="data.yield.bullet"></app-print-summary-state>
+    </div>
+  </div>
+</div>

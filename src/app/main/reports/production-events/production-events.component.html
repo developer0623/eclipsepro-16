@@ -1,0 +1,44 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <app-report-header
+    [subject]="'Production Events'"
+    (onFilter)="onFilter($event)"
+  ></app-report-header>
+  <div class="summary-title-header">
+    <app-checkbox-menu
+      class="menu-column duration"
+      subject="SHIFT"
+      [menuSubject]="'SHIFT'"
+      [menuList]="shiftMenus"
+      [small]="true"
+      (onChange)="onChangeShifts($event)"
+    ></app-checkbox-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      duration="day"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+  </div>
+  <div class="summary-main-scroll-container">
+    <app-production-log
+      [machines]="machineNums"
+      [startDate]="startDate.format('YYYY-MM-DD')"
+      [endDate]="endDate.format('YYYY-MM-DD')"
+      [shifts]="shifts"
+      [domLayout]="'normal'"
+      class="production-evnts-grid-container"
+    ></app-production-log>
+  </div>
+</div>

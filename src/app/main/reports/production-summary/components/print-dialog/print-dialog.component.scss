@@ -1,0 +1,62 @@
+.white-color {
+  color: white;
+}
+
+::ng-deep .summary-print__radioBtn {
+  .mdc-label {
+    margin-bottom: 0px !important;
+  }
+}
+
+.page-break {
+  display: none;
+}
+
+.summary-print {
+  background: white;
+  color: #000;
+
+  &__select-part {
+    display: flex;
+  }
+
+  &__style {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10%;
+  }
+
+  &__style-title {
+    font-size: 15px;
+    line-height: 15px;
+    margin-bottom: 5px;
+    color: #aaa;
+  }
+
+  &__radioGr {
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+
+  &__radioBtn {
+    margin-right: 10px;
+    margin-bottom: 0px;
+    color: #aaa;
+
+    .md-off {
+      border-color: #aaa;
+    }
+
+    &.md-checked {
+      color: #333;
+    }
+  }
+
+  &__preview {
+    margin: 30px 30px 20px 30px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-size: 17px;
+  }
+}

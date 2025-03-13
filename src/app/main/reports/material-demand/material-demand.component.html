@@ -1,0 +1,207 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="main-header">
+    <h2 class="text-upper">Material Demand 🧪</h2>
+  </div>
+  <div class="summary-title-header">
+    <app-custom-menu
+      class="menu-column duration"
+      subject="DURATION"
+      [menuList]="durations"
+      [selectedItem]="selectedDuration"
+      (onChange)="onChangeDuration($event)"
+    ></app-custom-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [duration]="selectedDuration"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-custom-menu
+      class="menu-column float-right status-column"
+      subject="Schedule Status"
+      [menuList]="scheduleStatusList"
+      [selectedItem]="selectedScheduleStatus"
+      (onChange)="onChangeStatus($event)"
+    ></app-custom-menu>
+    <div class="header-icon-column float-right print-hide">
+      <a
+        class="excel-icon"
+        href="/_api/reports/materialdemand?{{ fileDownloadQueryString }}&format=csv"
+        target="_self"
+        [matTooltip]="'downloadCsv' | translate"
+      >
+        <i class="icon icon-file-excel"></i>
+      </a>
+    </div>
+  </div>
+  <ng-scrollbar
+    visibility="hover"
+    class="summary-main-scroll-container"
+  >
+    <div class="coil-summary-header">
+      <div
+        class="material mouse-pointer"
+        (click)="onSortBy('material')"
+      >
+        Material
+        <i
+          class="icon-sort-ascending sort-icon"
+          *ngIf="sortDir === 'asc' && sortKey === 'material'"
+        ></i>
+        <i
+          class="icon-sort-descending sort-icon"
+          *ngIf="sortDir === 'desc' && sortKey === 'material'"
+        ></i>
+      </div>
+      <div class="date">{{ selectedDuration }}</div>
+      <div
+        class="main-col mouse-pointer"
+        (click)="onSortBy('onHandFt')"
+      >
+        On Hand ({{ 'ft' | userDisplayUnits }})
+        <i
+          class="icon-sort-ascending sort-icon"
+          *ngIf="sortDir === 'asc' && sortKey === 'onHandFt'"
+        ></i>
+        <i
+          class="icon-sort-descending sort-icon"
+          *ngIf="sortDir === 'desc' && sortKey === 'onHandFt'"
+        ></i>
+      </div>
+      <div
+        class="main-col mouse-pointer"
+        (click)="onSortBy('demandFt')"
+      >
+        Demand ({{ 'ft' | userDisplayUnits }})
+        <i
+          class="icon-sort-ascending sort-icon"
+          *ngIf="sortDir === 'asc' && sortKey === 'demandFt'"
+        ></i>
+        <i
+          class="icon-sort-descending sort-icon"
+          *ngIf="sortDir === 'desc' && sortKey === 'demandFt'"
+        ></i>
+      </div>
+      <div
+        class="main-col mouse-pointer"
+        (click)="onSortBy('balanceFt')"
+      >
+        Balance ({{ 'ft' | userDisplayUnits }})
+        <i
+          class="icon-sort-ascending sort-icon"
+          *ngIf="sortDir === 'asc' && sortKey === 'balanceFt'"
+        ></i>
+        <i
+          class="icon-sort-descending sort-icon"
+          *ngIf="sortDir === 'desc' && sortKey === 'balanceFt'"
+        ></i>
+      </div>
+    </div>
+    <mat-accordion
+      multi
+      class="coil-summary-accordian"
+      togglePosition="before"
+    >
+      <ng-container *ngFor="let item of sortedSummaryList.groups">
+        <ng-container *ngIf="item.demandFt > 0; else defaultTemp">
+          <mat-expansion-panel class="coil-summary-expansion">
+            <mat-expansion-panel-header class="coil-summary-accoridian-header">
+              <div class="coil-summary-item item-header">
+                <a
+                  class="td-link material"
+                  (click)="$event.stopPropagation()"
+                  uiSref="app.inventory_coil-types.detail"
+                  [uiParams]="{ id: item.material }"
+                >
+                  {{ item.material }}
+                </a>
+                <div class="date"></div>
+                <div class="main-col">
+                  <span class="num-col"> {{ item.onHandFt | unitsFormat : 'ft' : 1 : true }} </span>
+                </div>
+                <div class="main-col">
+                  <span class="num-col"> {{ item.demandFt | unitsFormat : 'ft' : 1 : true }} </span>
+                </div>
+                <div class="main-col">
+                  <span class="num-col">
+                    {{ item.balanceFt | unitsFormat : 'ft' : 1 : true }}
+                  </span>
+                </div>
+              </div>
+            </mat-expansion-panel-header>
+            <div class="order-detail">
+              <div
+                class="coil-summary-sub-item"
+                *ngFor="let item1 of item.records"
+              >
+                <div class="material"></div>
+                <div
+                  class="date"
+                  *ngIf="item1.key.day"
+                >
+                  {{ item1.key.month }}/{{ item1.key.day }}/{{ item1.key.year }}
+                </div>
+                <div
+                  class="date"
+                  *ngIf="item1.key.weekOfYear"
+                >
+                  {{ item1.key.year }}-{{ item1.key.weekOfYear }}
+                </div>
+                <div
+                  class="date"
+                  *ngIf="!item1.key.day && !item1.key.weekOfYear"
+                >
+                  {{ item1.key.month }}/{{ item1.key.year }}
+                </div>
+                <div class="main-col">
+                  <span class="num-col">
+                    {{ item1.onHandFt | unitsFormat : 'ft' : 1 : true }}
+                  </span>
+                </div>
+                <div class="main-col">
+                  <span class="num-col">
+                    {{ item1.demandFt | unitsFormat : 'ft' : 1 : true }}
+                  </span>
+                </div>
+                <div class="main-col">
+                  <span class="num-col">
+                    {{ item1.balanceFt | unitsFormat : 'ft' : 1 : true }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </ng-container>
+        <ng-template #defaultTemp>
+          <div class="coil-summary-sub-item h-48">
+            <div class="material">
+              <a
+                class="td-link"
+                (click)="$event.stopPropagation()"
+                uiSref="app.inventory_coil-types.detail"
+                [uiParams]="{ id: item.material }"
+              >
+                {{ item.material }}
+              </a>
+            </div>
+            <div class="date"></div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.onHandFt | unitsFormat : 'ft' : 1 : true }} </span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.demandFt | unitsFormat : 'ft' : 1 : true }} </span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.balanceFt | unitsFormat : 'ft' : 1 : true }} </span>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+    </mat-accordion>
+  </ng-scrollbar>
+</div>

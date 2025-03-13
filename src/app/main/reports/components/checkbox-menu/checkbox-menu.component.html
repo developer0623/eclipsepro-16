@@ -1,0 +1,63 @@
+<div class="menu-title">
+  {{ subject }}:
+  <span>{{ onGetTitle() }}</span>
+</div>
+
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="menu"
+  aria-label="Machines"
+  class="main-dropdown-btn print-hide"
+>
+  <i class="icon icon-chevron-down menu-icon"></i>
+</button>
+<mat-menu
+  #menu="matMenu"
+  xPosition="before"
+>
+  <div
+    class="checkbox-menu-header"
+    [ngClass]="{ 'small-menu': small }"
+  >
+    <span (click)="$event.stopPropagation(); $event.preventDefault()">{{ menuSubject }}</span>
+    <mat-icon>close</mat-icon>
+  </div>
+  <button
+    mat-menu-item
+    (click)="onClickItem(allItem, $event)"
+  >
+    <mat-icon
+      *ngIf="!allItem.isChecked && !isAllIndeterminate()"
+      class="empty"
+      >check_box_outline_blank</mat-icon
+    >
+    <mat-icon
+      *ngIf="allItem.isChecked"
+      class="checked"
+      >check_box</mat-icon
+    >
+    <mat-icon
+      *ngIf="isAllIndeterminate()"
+      class="checked"
+      >indeterminate_check_box</mat-icon
+    >
+    All
+  </button>
+  <button
+    *ngFor="let item of menuList"
+    mat-menu-item
+    (click)="onClickItem(item, $event)"
+  >
+    <mat-icon
+      *ngIf="!item.isChecked"
+      class="empty"
+      >check_box_outline_blank</mat-icon
+    >
+    <mat-icon
+      *ngIf="item.isChecked"
+      class="checked"
+      >check_box</mat-icon
+    >
+    {{ item.name }}
+  </button>
+</mat-menu>

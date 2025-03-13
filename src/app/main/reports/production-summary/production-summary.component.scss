@@ -1,0 +1,138 @@
+.summary-main-scroll-container {
+  height: calc(100vh - 190px);
+}
+
+.report-main-content {
+  padding: 24px;
+}
+
+.main-header {
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 76px;
+  min-height: 0;
+  max-height: auto;
+  padding: 13px 24px 0 24px;
+  opacity: 1;
+  background-color: #e0e0e0 !important;
+}
+.mh-column {
+  display: flex;
+  justify-content: center;
+}
+
+app-header-tooltip {
+  display: block;
+}
+
+::ng-deep .hide-date-picker {
+  width: 0px !important;
+  border: 0px !important;
+  padding: 0px !important;
+  .mat-date-range-input-separator {
+    display: none !important;
+  }
+}
+
+.white-icon {
+  color: white;
+}
+
+.white-btn {
+  color: white;
+}
+
+.date-column-content-usage {
+  min-width: 410px;
+  position: relative;
+}
+
+::ng-deep .change-btn {
+  width: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
+
+  .mat-mdc-button-touch-target {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+.custom-date-content {
+  position: absolute;
+  width: 500px;
+  height: 310px;
+  left: calc(50% - 250px);
+  top: 0px;
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12),
+    0 3px 5px -1px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  border-radius: 4px;
+  background-color: white;
+
+  .custom-header {
+    background-color: #ecaf1d;
+    color: white;
+    font-weight: 300;
+  }
+
+  .footer {
+    position: absolute;
+    background-color: transparent;
+    color: #ecaf1d;
+    bottom: 0px;
+  }
+
+  .cal-container {
+    width: 170px;
+  }
+
+  .custom-date-content-main {
+    .main-row {
+      margin-top: 35px;
+
+      label {
+        font-size: 17px;
+        //    -webkit-font-smoothing: none;
+      }
+
+      .right-column {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .custom-duration-content {
+          position: relative;
+          display: flex;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+          padding-right: 15px;
+
+          .custom-duration-label {
+            position: absolute;
+            top: -20px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.54);
+            font-weight: 700;
+          }
+
+          .custom-duration-input {
+            width: 50px;
+            border: none;
+            color: black;
+            line-height: 19px;
+          }
+        }
+      }
+    }
+  }
+}
+.custom-date-footer {
+  padding: 10px 32px;
+}
+::ng-deep .custom-duration-select {
+  width: 76px !important;
+  margin: 0;
+  .mat-mdc-select-value {
+    text-align: right;
+    padding-right: 6px;
+  }
+}

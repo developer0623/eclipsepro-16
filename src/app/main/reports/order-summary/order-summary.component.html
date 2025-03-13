@@ -1,0 +1,212 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <app-report-header
+    [subject]="'Order Summary 🧪'"
+    (onFilter)="onFilter($event)"
+  ></app-report-header>
+  <div class="summary-title-header">
+    <app-checkbox-menu
+      class="menu-column duration"
+      subject="SHIFT"
+      [menuSubject]="'SHIFT'"
+      [menuList]="shiftMenus"
+      [small]="true"
+      (onChange)="onChangeShifts($event)"
+    ></app-checkbox-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      [duration]="'day'"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <div class="header-icon-column float-right print-hide">
+      <a
+        class="excel-icon"
+        href="/_api/reports/ordersummary?{{ fileDownloadQueryString }}&format=csv"
+        target="_self"
+        [matTooltip]="'downloadCsv' | translate"
+      >
+        <i class="icon icon-file-excel"></i>
+      </a>
+    </div>
+  </div>
+  <div class="md-background md-hue-1 report-main-content">
+    <div class="material-usage-content">
+      <cdk-virtual-scroll-viewport
+        itemSize="30"
+        class="order-summary-list"
+      >
+        <ng-container
+          *cdkVirtualFor="let item of mainRows"
+          [ngSwitch]="item.type"
+        >
+          <div
+            class="order-summary-item-header b-t-1"
+            *ngSwitchCase="'order'"
+          >
+            <div class="main-col">
+              Order:<span class="sub-content">{{ item.orderCode }}</span>
+            </div>
+
+            <div class="main-col">
+              Material:<span class="sub-content">{{ item.materialCode }}</span>
+            </div>
+            <div class="main-col">
+              Tooling:<span class="sub-content">{{ item.toolingCode }}</span>
+            </div>
+          </div>
+          <div
+            class="order-summary-bundle b-s-1"
+            *ngSwitchCase="'bundle'"
+          >
+            Bundle Id:<span class="sub-content">{{ item.bundleIdentity }}</span>
+          </div>
+          <div
+            class="group-content pt-15 b-s-1"
+            *ngSwitchCase="'prodRun-group'"
+          >
+            <div class="group-content-item">
+              <div class="group-content-item-title">Coil Number:</div>
+              <div class="group-content-item-content">{{ item.coilSerialNumber }}</div>
+            </div>
+            <div class="group-content-item">
+              <div class="group-content-item-title">Coil Material:</div>
+              <div class="group-content-item-content">{{ item.coilMaterial }}</div>
+            </div>
+            <div class="group-content-item">
+              <div class="group-content-item-title">Heat Number:</div>
+              <div class="group-content-item-content">{{ item.coilHeatNumber }}</div>
+            </div>
+            <div class="group-content-item">
+              <div class="group-content-item-title">Machine:</div>
+              <div class="group-content-item-content">{{ item.machineNumber }}</div>
+            </div>
+            <div class="group-content-item">
+              <div class="group-content-item-title">Date:</div>
+              <div class="group-content-item-content">
+                {{ item.productionDate | date : 'MM/dd/yyyy' }}
+              </div>
+            </div>
+            <div class="group-content-item">
+              <div class="group-content-item-title">Shift:</div>
+              <div class="group-content-item-content">{{ item.shift }}</div>
+            </div>
+            <div class="group-content-item">
+              <div class="group-content-item-title">Employee:</div>
+              <div class="group-content-item-content">{{ item.employeeNumber }}</div>
+            </div>
+          </div>
+          <div
+            class="material-usage-item sub-header b-s-1"
+            *ngSwitchCase="'prodRun-title'"
+          >
+            <div class="main-col">Bundle</div>
+            <div class="main-col">Qty</div>
+            <div class="main-col">Length</div>
+            <div class="main-col">Part Number</div>
+            <div class="main-col">Opt</div>
+            <div class="main-col">Total Good Ft</div>
+            <div class="main-col">Total Good Lbs</div>
+            <div class="main-col">Net Scrap Ft</div>
+            <div class="main-col">Net Scrap Lbs</div>
+            <div class="main-col">Reclaimed Scrap Ft</div>
+          </div>
+          <div
+            class="material-usage-item b-s-1"
+            *ngSwitchCase="'prodRun-item'"
+          >
+            <div class="main-col">
+              {{ item.bundle }}
+            </div>
+            <div class="main-col">
+              {{ item.quantity }}
+            </div>
+            <div class="main-col">
+              {{ item.partLengthIn }}
+            </div>
+            <div class="main-col">
+              {{ item.punchPartName }}
+            </div>
+            <div class="main-col">
+              {{ item.punchOption }}
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.goodFt | unitsFormat : 'ft' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.goodLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.scrapFt | unitsFormat : 'ft' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.scrapLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ item.reclaimedScrapFt | unitsFormat : 'ft' : 1 : true }}</span
+              >
+            </div>
+          </div>
+          <div
+            class="material-usage-item b-b-1 mb-20"
+            *ngSwitchCase="'Total for Order'"
+          >
+            <div class="coil-total-header">{{ item.type }}:</div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.goodFt | unitsFormat : 'ft' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.goodLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.scrapFt | unitsFormat : 'ft' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.scrapLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ item.reclaimedScrapFt | unitsFormat : 'ft' : 1 : true }}</span
+              >
+            </div>
+          </div>
+          <div
+            class="material-usage-item b-s-1"
+            *ngSwitchDefault
+          >
+            <div class="coil-total-header">{{ item.type }}:</div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.goodFt | unitsFormat : 'ft' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.goodLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.scrapFt | unitsFormat : 'ft' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col"> {{ item.scrapLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+            </div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ item.reclaimedScrapFt | unitsFormat : 'ft' : 1 : true }}</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+</div>

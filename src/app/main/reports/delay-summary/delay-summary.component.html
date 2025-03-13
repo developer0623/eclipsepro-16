@@ -1,0 +1,229 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="main-header print-hide">
+    <h2 class="text-upper">Delay Summary</h2>
+  </div>
+  <div class="summary-title-header print-hide">
+    <app-custom-menu
+      class="menu-column duration"
+      subject="GroupBy"
+      [menuList]="groupByList"
+      [selectedItem]="selectedGroup"
+      (onChange)="onChangeGroup($event)"
+    ></app-custom-menu>
+    <app-custom-menu
+      class="menu-column duration"
+      subject="ThenBy"
+      [menuList]="thenByList"
+      [selectedItem]="selectedThen"
+      (onChange)="onChangeThen($event)"
+    ></app-custom-menu>
+    <app-report-date-col
+      class="date-column"
+      [startDate]="startDate"
+      [endDate]="endDate"
+      duration="day"
+      (onChange)="onChangeDate($event)"
+    ></app-report-date-col>
+    <app-checkbox-menu
+      class="menu-column float-right duration"
+      subject="SHIFT"
+      [menuSubject]="'SHIFT'"
+      [menuList]="shiftMenus"
+      [small]="true"
+      (onChange)="onChangeShifts($event)"
+    ></app-checkbox-menu>
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <app-delay-check-box-menu
+      class="menu-column float-right"
+      subject="CODES"
+      [menuSubject]="'Delay Codes'"
+      [menuList]="delayCodes"
+      (onChange)="onChangeDowntimeCodes($event)"
+    ></app-delay-check-box-menu>
+    <div class="print-icon-column float-right print-hide">
+      <button
+        mat-icon-button
+        aria-label="Select Shift 1"
+        (click)="openPrintPreview($event)"
+      >
+        <i class="icon icon-printer header-icon"></i>
+      </button>
+    </div>
+
+    <div class="header-icon-column float-right print-hide">
+      <a
+        class="excel-icon"
+        href="/_api/reports/downtimesummary?{{ fileDownloadQueryString }}&format=csv"
+        target="_self"
+        [matTooltip]="'downloadCsv' | translate"
+      >
+        <i class="icon icon-file-excel"></i>
+      </a>
+    </div>
+  </div>
+  <ng-scrollbar
+    visibility="hover"
+    class="summary-main-scroll-container print-scroll"
+  >
+    <div class="content md-background md-hue-1 report-main-content">
+      <div
+        id="main-print-body"
+        class="material-usage-content"
+      >
+        <div
+          *ngFor="let group1 of filteredList.groups"
+          class="repeated-item summary-accordian-group"
+          flex
+        >
+          <div
+            class="print-page-break"
+            *ngFor="let group2 of group1.groups"
+            flex
+          >
+            <div class="print-report-header">
+              <div class="main-header">
+                <h2 class="text-upper">Delay Summary</h2>
+              </div>
+              <div
+                class="print-content__date"
+                [innerHtml]="this.startDate | printDateFilter : this.endDate : this.duration"
+              ></div>
+            </div>
+
+            <div class="summary-accordian-item">
+              <div class="summary-group-item">
+                <div
+                  class="group-header"
+                  [innerHTML]="onGetGroupHeader(group1.key, group2.key)"
+                ></div>
+                <app-group-header
+                  class="group-content"
+                  [header]="group2.header"
+                >
+                </app-group-header>
+              </div>
+
+              <div class="material-usage-item sub-header">
+                <div class="main-con">Code</div>
+                <div class="main-con">Delay Reason</div>
+                <div class="main-con">Minutes</div>
+                <div class="main-con">% Downtime</div>
+                <div class="main-con">% Total Time</div>
+                <div class="main-con">Occurrences</div>
+              </div>
+              <div *ngFor="let exemptGroup of group2.groups">
+                <div *ngFor="let bucketGroup of exemptGroup.groups">
+                  <div
+                    *ngFor="let reason of bucketGroup.reasons"
+                    class="material-usage-item"
+                  >
+                    <div class="main-con">{{ reason.key.codeValue }}</div>
+                    <div class="main-con">{{ reason.codeDescription }}</div>
+                    <div class="main-con">
+                      <span class="num-col"> {{ reason.downMinutes | number : '1.1-1' }} </span>
+                    </div>
+                    <div class="main-con">
+                      <span class="num-col">
+                        {{ reason.downPctOfDown | unitsFormat : '%' : 2 : true }}
+                      </span>
+                    </div>
+                    <div class="main-con">
+                      <span class="num-col">
+                        {{ reason.downPctOfTotal | unitsFormat : '%' : 2 : true }}
+                      </span>
+                    </div>
+                    <div class="main-con">
+                      <span class="num-col">{{ reason.occurrences }}</span>
+                    </div>
+                  </div>
+                  <div class="material-usage-item">
+                    <div class="reason-total">
+                      {{ bucketGroup.key.codeBucket || 'Undefined' }}
+                    </div>
+                    <div class="main-con">
+                      <span class="num-col">
+                        {{ bucketGroup.downMinutes | number : '1.1-1' }}
+                      </span>
+                    </div>
+                    <div class="main-con">
+                      <span class="num-col">
+                        {{ bucketGroup.downPctOfDown | unitsFormat : '%' : 2 : true }}
+                      </span>
+                    </div>
+                    <div class="main-con">
+                      <span class="num-col">
+                        {{ bucketGroup.downPctOfTotal | unitsFormat : '%' : 2 : true }}
+                      </span>
+                    </div>
+                    <div class="main-con">
+                      <span class="num-col">{{ bucketGroup.occurrences }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="material-usage-item">
+                  <div
+                    class="reason-total"
+                    *ngIf="exemptGroup.key.exempt"
+                  >
+                    Exempt
+                  </div>
+                  <div
+                    class="reason-total"
+                    *ngIf="!exemptGroup.key.exempt"
+                  >
+                    Non-Exempt
+                  </div>
+                  <div class="main-con">
+                    <span class="num-col"> {{ exemptGroup.downMinutes | number : '1.1-1' }} </span>
+                  </div>
+                  <div class="main-con">
+                    <span class="num-col">
+                      {{ exemptGroup.downPctOfDown | unitsFormat : '%' : 2 : true }}
+                    </span>
+                  </div>
+                  <div class="main-con">
+                    <span class="num-col">
+                      {{ exemptGroup.downPctOfTotal | unitsFormat : '%' : 2 : true }}
+                    </span>
+                  </div>
+                  <div class="main-con">
+                    <span class="num-col">{{ exemptGroup.occurrences }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="material-usage-item">
+                <div class="reason-total">Total</div>
+                <div class="main-con">
+                  <span class="num-col"> {{ group2.downMinutes | number : '1.1-1' }} </span>
+                </div>
+                <div class="main-con">
+                  <span class="num-col">
+                    {{ group2.downPctOfDown | unitsFormat : '%' : 2 : true }}
+                  </span>
+                </div>
+                <div class="main-con">
+                  <span class="num-col">
+                    {{ group2.downPctOfTotal | unitsFormat : '%' : 2 : true }}
+                  </span>
+                </div>
+                <div class="main-con">
+                  <span class="num-col">{{ group2.occurrences }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-scrollbar>
+</div>

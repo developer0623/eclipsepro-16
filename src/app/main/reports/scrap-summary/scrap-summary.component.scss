@@ -1,0 +1,26 @@
+.excel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.summary-main-scroll-container {
+  height: calc(100vh - 190px);
+}
+
+.report-main-content {
+  padding: 24px;
+}
+
+.main-header {
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 76px;
+  min-height: 0;
+  max-height: auto;
+  padding: 13px 24px 0 24px;
+  opacity: 1;
+  background-color: #e0e0e0 !important;
+}

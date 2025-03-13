@@ -1,0 +1,661 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg order-sequence main-print-body"
+  ngsf-fullscreen
+>
+  <app-report-header
+    [subject]="'Order Sequence'"
+    class="print-hide"
+    (onFilter)="onFilter($event)"
+  ></app-report-header>
+  <div class="summary-title-header print-hide">
+    <app-custom-menu
+      class="menu-column display-type-menu"
+      subject=""
+      [menuList]="displayTypes"
+      [selectedItem]="selectedDisplayType"
+      (onChange)="onChangeType($event)"
+    ></app-custom-menu>
+    <app-checkbox-menu
+      class="menu-column"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <app-custom-menu
+      class="menu-column display-type-menu"
+      subject="Schedule Status:"
+      [menuList]="scheduleStatuses"
+      [selectedItem]="selectedScheduleStatus"
+      (onChange)="onChangeStatus($event)"
+    ></app-custom-menu>
+    <div class="header-icon-column ml-auto">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="colMenu"
+        class="menu-btn"
+      >
+        <i class="icon icon-cog menu-icon"></i>
+      </button>
+      <mat-menu
+        #colMenu="matMenu"
+        xPosition="before"
+      >
+        <div class="checkbox-menu-header">
+          <span (click)="$event.stopPropagation(); $event.preventDefault()">Add/Remove Column</span>
+          <mat-icon>close</mat-icon>
+        </div>
+        <div class="scroll-menu-list">
+          <div
+            fxLayout="row"
+            class="add-column"
+          >
+            Header Columns:
+          </div>
+          <button
+            *ngFor="let item of headerColumns"
+            mat-menu-item
+            aria-label="{{ item.title }}"
+            (click)="onHeaderColumnToggle(item, $event)"
+          >
+            <mat-icon
+              *ngIf="!item.isChecked"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="item.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            {{ item.title | translate }}
+          </button>
+          <mat-divider></mat-divider>
+          <div
+            fxLayout="row"
+            class="add-column"
+          >
+            Item Columns:
+          </div>
+          <button
+            *ngFor="let item of itemColumns"
+            mat-menu-item
+            aria-label="{{ item.title }}"
+            (click)="onItemColumnToggle(item, $event)"
+          >
+            <mat-icon
+              *ngIf="!item.isChecked"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="item.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            {{ item.title | translate }}
+          </button>
+          <mat-divider></mat-divider>
+          <div
+            fxLayout="row"
+            class="add-column"
+          >
+            Bundle Columns:
+          </div>
+          <button
+            *ngFor="let item of bundleColumns"
+            mat-menu-item
+            aria-label="{{ item.title }}"
+            (click)="onBundleColumnToggle(item, $event)"
+          >
+            <mat-icon
+              *ngIf="!item.isChecked"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="item.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            {{ item.title | translate }}
+          </button>
+        </div>
+      </mat-menu>
+
+      <button
+        aria-label="Select Shift 1"
+        mat-icon-button
+        class="print-btn"
+        (click)="openPrintPreview()"
+      >
+        <i class="icon icon-printer header-icon"></i>
+      </button>
+    </div>
+  </div>
+  <div class="print-content__main-titles">
+    <div class="print-content__title1">Eclipsepro</div>
+    <div class="print-content__title2">Order Sequence</div>
+  </div>
+
+  <ng-scrollbar
+    visibility="hover"
+    class="summary-main-scroll-container"
+  >
+    <ng-container [ngSwitch]="selectedDisplayType">
+      <div
+        class="material-usage-content"
+        *ngSwitchCase="'Items'"
+      >
+        <div
+          *ngFor="let item of filteredList; let first = first; let last = last; let index = index"
+          class="order-sequence-item repeated-item"
+        >
+          <div
+            class="order-summary-item-header order-sequence-machine-header"
+            *ngIf="
+              first ||
+              (!first && item.job.machineNumber !== filteredList[index - 1].job.machineNumber)
+            "
+          >
+            <div class="main-col">
+              Machine:<span class="sub-content">MACHINE {{ item.job.machineNumber }}</span>
+            </div>
+          </div>
+          <div class="order-summary-item-header">
+            <div class="main-col">
+              Order Number:
+              <div class="multi-col">
+                <span class="sub-content">
+                  <a
+                    uiSref="app.orders.detail"
+                    [uiParams]="{ id: item.job.ordId }"
+                  >
+                    {{ item.job.orderCode }}
+                  </a>
+                </span>
+                <span class="sub-content font-12">{{ item.job.customerName }}</span>
+              </div>
+            </div>
+            <div class="main-col multi-col-container">
+              Material
+              <div class="multi-col">
+                <span class="sub-content">
+                  <app-link-helper
+                    [documentId]="'Material/' + item.job.materialCode"
+                    [labelTxt]="item.job.materialCode"
+                    [hideType]="true"
+                  ></app-link-helper>
+                </span>
+                <span class="sub-content font-12">{{ item.job.materialDescription }}</span>
+              </div>
+            </div>
+            <div class="main-col multi-col-container">
+              Tooling Code:
+              <div class="multi-col">
+                <span class="sub-content">{{ item.job.toolingCode }}</span>
+                <span class="sub-content font-12">{{ item.job.toolingDescription }}</span>
+              </div>
+            </div>
+            <div class="main-col">
+              Seq#:<span class="sub-content">{{ item.job.sequence }}</span>
+            </div>
+          </div>
+          <div class="order-summary-item-header flex-wrap">
+            <div
+              class="sequence-detail-main-col"
+              *ngFor="let col of selectedHeaderColumns"
+            >
+              {{ col.title | translate }}:
+              <span class="sub-content">{{
+                item.job[col.field] | dynamicFilter : col.filter
+              }}</span>
+            </div>
+          </div>
+          <div class="summary-group-item mt-15">
+            <div class="material-usage-item sub-header">
+              <div class="main-col">Bundle</div>
+              <div class="main-col">Qty</div>
+              <div class="main-col">Length</div>
+              <div
+                class="main-col"
+                *ngFor="let col of selectedItemColumns"
+              >
+                {{ col.title | translate }}
+              </div>
+              <div class="main-col">Total Weight ({{ 'lbs' | userDisplayUnits }})</div>
+              <div class="main-col">Total Length ({{ 'ft' | userDisplayUnits }})</div>
+            </div>
+            <div
+              class="material-usage-item"
+              *ngFor="let item1 of item.items"
+            >
+              <div class="main-col">
+                <span> {{ item1.bundle }}</span>
+              </div>
+              <div class="main-col">
+                <span> {{ item1.quantity }}</span>
+              </div>
+              <div class="main-col">
+                <span> {{ item1.lengthIn | unitsFormat : 'in' : 3 }}</span>
+              </div>
+              <div
+                class="main-col"
+                *ngFor="let col of selectedItemColumns"
+              >
+                <span> {{ item1[col.field] | dynamicFilter : col.filter }}</span>
+              </div>
+              <div class="main-col">
+                <span class="num-col"> {{ item1.weightLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+              </div>
+              <div class="main-col">
+                <span class="num-col">
+                  {{ (item1.lengthIn * item1.quantity) / 12 | unitsFormat : 'ft' : 1 : true }}</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="material-usage-item">
+            <div
+              class="main-col"
+              [style.flex]="3 + selectedItemColumns.length"
+            ></div>
+            <div class="summary-col">
+              <!-- Order Weight: -->
+              <span class="num-col">
+                {{ item.job.totalLbs | unitsFormat : 'lbs' : 1 : true }}
+              </span>
+            </div>
+            <div class="summary-col">
+              <!-- Order Footage:  -->
+              <span class="num-col"> {{ item.job.totalFt | unitsFormat : 'ft' : 1 : true }} </span>
+            </div>
+          </div>
+
+          <div
+            class="material-usage-item last-item"
+            *ngIf="item.materialGroup.accLast"
+          >
+            <div
+              class="main-col"
+              [style.flex]="2 + selectedItemColumns.length"
+            ></div>
+            <div class="total-col">
+              Material
+              <app-link-helper
+                [documentId]="'Material/' + item.job.materialCode"
+                [labelTxt]="item.job.materialCode"
+                [hideType]="true"
+              ></app-link-helper>
+            </div>
+            <div class="total-col">
+              <span class="num-col">
+                {{ item.materialGroup.accLbs | unitsFormat : 'lbs' : 1 : true }}
+              </span>
+            </div>
+            <div class="total-col">
+              <span class="num-col">
+                {{ item.materialGroup.accFt | unitsFormat : 'ft' : 1 : true }}
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="material-usage-item last-item"
+            *ngIf="
+              last ||
+              (!last && item.job.machineNumber !== filteredList[index + 1].job.machineNumber)
+            "
+          >
+            <div class="sequence-total-header">Machine {{ item.job.machineNumber }}:</div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ groupVals[item.job.machineNumber].weight | unitsFormat : 'lbs' : 1 : true }}
+              </span>
+            </div>
+            <div class="main-col">
+              <span class="num-col">
+                {{ groupVals[item.job.machineNumber].length | unitsFormat : 'ft' : 1 : true }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="material-usage-content"
+        *ngSwitchCase="'Bundles'"
+      >
+        <div
+          *ngFor="let item of filteredList; let first = first; let last = last; let index = index"
+          class="order-sequence-item repeated-item"
+        >
+          <div
+            class="order-summary-item-header order-sequence-machine-header"
+            *ngIf="
+              first ||
+              (!first && item.job.machineNumber !== filteredList[index - 1].job.machineNumber)
+            "
+          >
+            <div class="main-col">
+              Machine:<span class="sub-content">MACHINE {{ item.job.machineNumber }}</span>
+            </div>
+          </div>
+          <div class="order-summary-item-header">
+            <div class="main-col">
+              Order Number:
+              <div class="multi-col">
+                <span class="sub-content">
+                  <a
+                    uiSref="app.orders.detail"
+                    [uiParams]="{ id: item.job.ordId }"
+                  >
+                    {{ item.job.orderCode }}
+                  </a>
+                </span>
+                <span class="sub-content font-12">{{ item.job.customerName }}</span>
+              </div>
+            </div>
+            <div class="main-col multi-col-container">
+              Material:
+              <div class="multi-col">
+                <span class="sub-content">
+                  <app-link-helper
+                    [documentId]="'Material/' + item.job.materialCode"
+                    [labelTxt]="item.job.materialCode"
+                    [hideType]="true"
+                  ></app-link-helper>
+                </span>
+                <span class="sub-content font-12">{{ item.job.materialDescription }}</span>
+              </div>
+            </div>
+            <div class="main-col multi-col-container">
+              Tooling Code:
+              <div class="multi-col">
+                <span class="sub-content">{{ item.job.toolingCode }}</span>
+                <span class="sub-content font-12">{{ item.job.toolingDescription }}</span>
+              </div>
+            </div>
+            <div class="main-col">
+              Seq#:<span class="sub-content">{{ item.job.sequence }}</span>
+            </div>
+          </div>
+          <div class="order-summary-item-header flex-wrap">
+            <div
+              class="sequence-detail-main-col"
+              *ngFor="let col of selectedHeaderColumns"
+            >
+              {{ col.title | translate }}:
+              <span class="sub-content">{{
+                item.job[col.field] | dynamicFilter : col.filter
+              }}</span>
+            </div>
+          </div>
+          <div class="summary-group-item mt-15">
+            <div class="material-usage-item sub-header">
+              <div class="main-col">Bundle</div>
+              <div class="main-col">Qty</div>
+              <div class="main-col">Min Length</div>
+              <div class="main-col">Max Length</div>
+              <div
+                class="main-col"
+                *ngFor="let col of selectedBundleColumns"
+              >
+                {{ col.title | translate }}
+              </div>
+              <div class="main-col">Total Weight ({{ 'lbs' | userDisplayUnits }})</div>
+              <div class="main-col">Total Length ({{ 'ft' | userDisplayUnits }})</div>
+            </div>
+            <div
+              class="material-usage-item"
+              *ngFor="let bundle of item.bundles"
+            >
+              <div class="main-col">
+                <span> {{ bundle.bundleNo }}</span>
+              </div>
+              <div class="main-col">
+                <span> {{ bundle.pieces }}</span>
+              </div>
+              <div class="main-col">
+                <span> {{ bundle.bundleMinLengthIn | unitsFormat : 'in' : 3 }}</span>
+              </div>
+              <div class="main-col">
+                <span> {{ bundle.bundleMaxLengthIn | unitsFormat : 'in' : 3 }}</span>
+              </div>
+              <div
+                class="main-col"
+                *ngFor="let col of selectedBundleColumns"
+              >
+                <span> {{ bundle[col.field] | dynamicFilter : col.filter }}</span>
+              </div>
+              <div class="main-col">
+                <span class="num-col"> {{ bundle.totalLbs | unitsFormat : 'lbs' : 1 : true }}</span>
+              </div>
+              <div class="main-col">
+                <span class="num-col"> {{ bundle.totalFt | unitsFormat : 'ft' : 1 : true }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="material-usage-item">
+            <div
+              class="main-col"
+              [style.flex]="4 + selectedBundleColumns.length"
+            ></div>
+            <div class="total-col">
+              <!-- Order Weight: -->
+              <span class="num-col">
+                {{ item.job.totalLbs | unitsFormat : 'lbs' : 1 : true }}
+              </span>
+            </div>
+            <div class="total-col">
+              <!-- Order Footage:  -->
+              <span class="num-col"> {{ item.job.totalFt | unitsFormat : 'ft' : 1 : true }} </span>
+            </div>
+          </div>
+          <!-- ========== -->
+
+          <!-- material total -->
+          <div
+            class="material-usage-item last-item"
+            *ngIf="item.materialGroup.accLast"
+          >
+            <div
+              class="main-col"
+              [style.flex]="3 + selectedBundleColumns.length"
+            ></div>
+            <div class="total-col">
+              Material
+              <app-link-helper
+                [documentId]="'Material/' + item.job.materialCode"
+                [labelTxt]="item.job.materialCode"
+                [hideType]="true"
+              ></app-link-helper>
+            </div>
+            <div class="total-col">
+              <span class="num-col">
+                {{ item.materialGroup.accLbs | unitsFormat : 'lbs' : 1 : true }}
+              </span>
+            </div>
+            <div class="total-col">
+              <span class="num-col">
+                {{ item.materialGroup.accFt | unitsFormat : 'ft' : 1 : true }}
+              </span>
+            </div>
+          </div>
+          <!-- machine total -->
+          <div
+            class="material-usage-item last-item"
+            *ngIf="
+              last ||
+              (!last && item.job.machineNumber !== filteredList[index + 1].job.machineNumber)
+            "
+          >
+            <div
+              class="main-col"
+              [style.flex]="3 + selectedBundleColumns.length"
+            ></div>
+            <div class="total-col">Machine {{ item.job.machineNumber }}:</div>
+            <div class="total-col">
+              <span class="num-col">
+                {{ groupVals[item.job.machineNumber].weight | unitsFormat : 'lbs' : 1 : true }}
+              </span>
+            </div>
+            <div class="total-col">
+              <span class="num-col">
+                {{ groupVals[item.job.machineNumber].length | unitsFormat : 'ft' : 1 : true }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="material-usage-content"
+        *ngSwitchCase="'Simple'"
+      >
+        <div class="material-usage-item sub-header">
+          <div class="main-col sequence-col">Seq</div>
+          <div class="main-col text-align-left">Order</div>
+          <div class="main-col text-align-left">Material</div>
+          <div class="main-col text-align-left">Tooling Code</div>
+          <div
+            *ngFor="let item of selectedHeaderColumns"
+            class="main-col"
+          >
+            {{ item.title | translate }}
+          </div>
+          <div class="main-col">Weight ({{ 'lbs' | userDisplayUnits }})</div>
+          <div class="main-col">Length ({{ 'ft' | userDisplayUnits }})</div>
+        </div>
+        <div class="order-sequence-simple-list">
+          <div
+            *ngFor="let item of filteredList; let first = first; let last = last; let index = index"
+            class="order-sequence-item repeated-item order-sequence-item-simple"
+            flex
+          >
+            <div
+              class="order-summary-item-header"
+              *ngIf="
+                first ||
+                (!first && item.job.machineNumber !== filteredList[index - 1].job.machineNumber)
+              "
+            >
+              <div class="main-col">
+                Machine:<span class="sub-content">MACHINE {{ item.job.machineNumber }}</span>
+              </div>
+            </div>
+            <div class="material-usage-item">
+              <div class="main-col sequence-col">{{ item.job.sequence }}</div>
+              <div class="main-col">
+                <div class="multi-col">
+                  <span class="text-align-left">
+                    <a
+                      uiSref="app.orders.detail"
+                      [uiParams]="{ id: item.job.ordId }"
+                    >
+                      {{ item.job.orderCode }}
+                    </a>
+                  </span>
+                  <span class="text-align-left pl-15"> {{ item.job.customerName }} </span>
+                </div>
+              </div>
+              <div class="main-col">
+                <div class="multi-col">
+                  <span class="text-align-left">
+                    <app-link-helper
+                      [documentId]="'Material/' + item.job.materialCode"
+                      [labelTxt]="item.job.materialCode"
+                      [hideType]="true"
+                    ></app-link-helper>
+                  </span>
+                  <span class="text-align-left pl-15"> {{ item.job.materialDescription }} </span>
+                </div>
+              </div>
+              <div class="main-col">
+                <div class="multi-col">
+                  <span class="text-align-left">{{ item.job.toolingCode }}</span>
+                  <span class="text-align-left pl-15"> {{ item.job.toolingDescription }} </span>
+                </div>
+              </div>
+              <div
+                *ngFor="let col of selectedHeaderColumns"
+                class="main-col"
+              >
+                <span class="sub-content">{{
+                  item.job[col.field] | dynamicFilter : col.filter
+                }}</span>
+              </div>
+              <div class="main-col">
+                <span
+                  class="num-col"
+                  *ngIf="item.job.material"
+                >
+                  {{ item.job.remainingLbs | unitsFormat : 'lbs' : 1 : true }}
+                </span>
+              </div>
+              <div class="main-col">
+                <span class="num-col">
+                  {{ item.job.remainingFt | unitsFormat : 'ft' : 1 : true }}
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="material-usage-item last-item"
+              *ngIf="item.materialGroup.accLast"
+            >
+              <div class="main-col sequence-col"></div>
+              <div
+                class="main-col"
+                [style.flex]="2 + selectedHeaderColumns.length"
+              ></div>
+              <div class="total-col">
+                Material
+                <app-link-helper
+                  [documentId]="'Material/' + item.job.materialCode"
+                  [labelTxt]="item.job.materialCode"
+                  [hideType]="true"
+                ></app-link-helper>
+              </div>
+              <div class="total-col">
+                <span class="num-col">
+                  {{ item.materialGroup.accLbs | unitsFormat : 'lbs' : 1 : true }}
+                </span>
+              </div>
+              <div class="total-col">
+                <span class="num-col">
+                  {{ item.materialGroup.accFt | unitsFormat : 'ft' : 1 : true }}
+                </span>
+              </div>
+            </div>
+            <!-- machine total -->
+            <div
+              class="material-usage-item last-item"
+              *ngIf="
+                last ||
+                (!last && item.job.machineNumber !== filteredList[index + 1].job.machineNumber)
+              "
+            >
+              <div class="main-col sequence-col"></div>
+              <div
+                class="main-col"
+                [style.flex]="2 + selectedHeaderColumns.length"
+              ></div>
+              <div class="total-col">Machine {{ item.job.machineNumber }}</div>
+              <div class="total-col">
+                <span class="num-col">
+                  {{ groupVals[item.job.machineNumber].weight | unitsFormat : 'lbs' : 1 : true }}
+                </span>
+              </div>
+              <div class="total-col">
+                <span class="num-col">
+                  {{ groupVals[item.job.machineNumber].length | unitsFormat : 'ft' : 1 : true }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-scrollbar>
+</div>

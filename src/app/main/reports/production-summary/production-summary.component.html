@@ -1,0 +1,258 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="main-header">
+    <h2 class="text-upper">PRODUCTION SUMMARY</h2>
+  </div>
+  <div class="summary-title-header">
+    <app-custom-menu
+      class="menu-column duration"
+      subject="DURATION"
+      [menuList]="durations"
+      [selectedItem]="selectedDuration"
+      (onChange)="onChangeDuration($event)"
+    ></app-custom-menu>
+    <app-checkbox-menu
+      class="menu-column duration"
+      subject="SHIFT"
+      [menuSubject]="'SHIFT'"
+      [menuList]="shiftMenus"
+      [small]="true"
+      (onChange)="onChangeShifts($event)"
+    ></app-checkbox-menu>
+    <div class="date-column">
+      <div class="date-column-content-usage">
+        <button
+          mat-icon-button
+          class="change-btn"
+          (click)="onChangeDate(-1)"
+          aria-label="Previous date"
+        >
+          <i class="icon icon-chevron-left white-icon"></i>
+        </button>
+
+        <p [innerHtml]="startDate | summaryDateFilter : endDate : selectedDuration"></p>
+        <button
+          mat-icon-button
+          class="change-btn"
+          (click)="onChangeDate(1)"
+          aria-label="Next date"
+        >
+          <i class="icon icon-chevron-right white-icon"></i>
+        </button>
+
+        <ng-template
+          [ngIf]="selectedDuration === 'Custom'"
+          [ngIfElse]="normal"
+        >
+          <button
+            mat-icon-button
+            (click)="onOpenCustomDate()"
+          >
+            <mat-icon>today</mat-icon>
+          </button>
+          <div
+            class="custom-date-content"
+            *ngIf="customDate.isOpen"
+          >
+            <mat-toolbar color="success">
+              <h2
+                mat-dialog-title
+                class="white-color"
+              >
+                CUSTOM DATE SELECTION
+              </h2>
+            </mat-toolbar>
+            <div class="custom-date-content-main">
+              <div
+                class="main-row"
+                fxLayout="row"
+                fxLayoutAlign="center center"
+                fxFlex
+              >
+                <div
+                  fxLayout="column"
+                  fxLayoutAlign="center center"
+                  fxFlex
+                >
+                  <mat-form-field class="cal-container">
+                    <mat-label>Beginning</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="startPicker"
+                      [(ngModel)]="customDate.startDate"
+                      (dateChange)="onChangeCustomStartDate()"
+                    />
+                    <mat-datepicker-toggle
+                      matIconSuffix
+                      [for]="startPicker"
+                    >
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                  </mat-form-field>
+                  <mat-form-field class="cal-container">
+                    <mat-label>Ending</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="endPicker"
+                      [(ngModel)]="customDate.endDate"
+                      (dateChange)="onChangeCustomEndDate()"
+                    />
+                    <mat-datepicker-toggle
+                      matIconSuffix
+                      [for]="endPicker"
+                    >
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div
+                  class="right-column"
+                  fxFlex
+                >
+                  <div class="custom-duration-content">
+                    <label class="custom-duration-label">For Duration:</label>
+                    <input
+                      class="custom-duration-input"
+                      [(ngModel)]="durationLength"
+                      (change)="onClickCustomDuration()"
+                    />
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="customSelectedDuration"
+                      (selectionChange)="onClickCustomDuration()"
+                      panelClass="yellow-select-panel"
+                      class="custom-duration-select yellow-select"
+                      [panelWidth]="110"
+                    >
+                      <mat-option
+                        *ngFor="let option of customDurations"
+                        [value]="option"
+                      >
+                        {{ option }}
+                      </mat-option>
+                    </mat-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              class="custom-date-footer"
+            >
+              <button
+                mat-button
+                (click)="onCancelCustomDate()"
+              >
+                CANCEL
+              </button>
+              <button
+                mat-button
+                color="success"
+                (click)="onApplyCustomDate()"
+              >
+                APPLY
+              </button>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template #normal>
+          <input
+            class="hide-date-picker"
+            matInput
+            [matDatepicker]="picker"
+            [matDatepickerFilter]="onlyAllowDate"
+            [(ngModel)]="startDate"
+            [max]="startMaxDate"
+            (dateChange)="onChangeStartDate()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+            class="white-btn"
+          ></mat-datepicker-toggle>
+          <mat-datepicker
+            #picker
+            [startView]="calType"
+          ></mat-datepicker>
+        </ng-template>
+      </div>
+    </div>
+
+    <app-checkbox-menu
+      class="menu-column float-right"
+      subject="MACHINES"
+      [menuSubject]="'SHOW MACHINES'"
+      [menuList]="machines"
+      (onChange)="onChangeMachines($event)"
+    ></app-checkbox-menu>
+    <div class="menu-column float-right">
+      <div class="menu-title">
+        MEASURE:
+        <span>
+          {{ selectedMeasure }}
+        </span>
+      </div>
+    </div>
+    <!-- It will be used later -->
+    <!-- <app-custom-menu
+      class="menu-column float-right"
+      subject="MEASURE"
+      [menuList]="durations"
+      [selectedItem]="selectedMeasure"
+      (onChange)="onChangeMeasure($event)"
+    ></app-custom-menu> -->
+    <div class="print-icon-column float-right">
+      <button
+        mat-icon-button
+        aria-label="Print Preview"
+        (click)="openPrintPreview($event)"
+      >
+        <i class="icon icon-printer header-icon"></i>
+      </button>
+    </div>
+  </div>
+  <ng-scrollbar
+    visibility="hover"
+    class="summary-main-scroll-container"
+  >
+    <div class="content md-background md-hue-1 report-main-content">
+      <div class="machine-summary-header">
+        <div class="mh-column column-title">MACHINE</div>
+        <div
+          class="mh-column {{ item.class }}"
+          *ngFor="let item of headers; let last = last"
+        >
+          <app-header-tooltip
+            [item]="item"
+            [isLast]="last"
+            dbl-click-callback="onSort(index)"
+          ></app-header-tooltip>
+        </div>
+      </div>
+      <div
+        class="machine-summary-list"
+        *ngFor="let item of summaryList"
+      >
+        <app-machine-summary
+          [machine]="item.machineName"
+          [data]="item"
+          *ngIf="item.availability"
+        ></app-machine-summary>
+        <div
+          class="summary-empty-item"
+          *ngIf="!item.availability"
+        >
+          <div class="column-title ms-column">{{ item.machineName }}</div>
+          <div class="summary-empty-item__content ms-column">No data available</div>
+        </div>
+      </div>
+    </div>
+  </ng-scrollbar>
+</div>

@@ -1,0 +1,19 @@
+<div class="summary-timebar">
+  <div class="chart-content">
+    <div
+      class="main-area"
+      [ngStyle]="getMainArea(order)"
+      *ngFor="let order of [0, 1, 2, 3, 4, 5]"
+    ></div>
+  </div>
+  <div
+    class="summary-timebar__bottom"
+    [ngStyle]="getBottomWidth()"
+  >
+    <div class="summary-timebar__line"></div>
+    <div class="summary-timebar__date">
+      {{ data.durationTime | date : "HH'H' mm'M' ss'S'" }}
+    </div>
+    <div class="summary-timebar__line"></div>
+  </div>
+</div>

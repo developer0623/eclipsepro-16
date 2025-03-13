@@ -131,6 +131,28 @@ export class AppComponent {
           },
         ]
       },
+      {
+        name: 'reports',
+        icon: 'mdi-chart-bar',
+        position: 70,
+        subItems: [
+          {
+            name: 'Coil Scrap Breakdown',
+            routeOrFunction: '/report/coil-scrap',
+            position: 10
+          },
+          // {
+          //   name: 'Users',
+          //   routeOrFunction: '/warehouse/users',
+          //   position: 20
+          // },
+          // {
+          //   name: 'App Settings',
+          //   routeOrFunction: '/warehouse/app-settings',
+          //   position: 30
+          // },
+        ]
+      },
       // {
       //   name: 'Calendar',
       //   routeOrFunction: '/apps/calendar',
