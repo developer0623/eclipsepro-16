@@ -1,17 +1,18 @@
-<div class="main-header">
+
   <div
     fxLayout="row"
     fxLayoutAlign="space-between center"
+    class="main-header"
   >
-    <span class="h2 text-upper">{{ subject }}</span>
+    <span class="h2 text-upper header-title">{{ subject }}</span>
     <button
       mat-icon-button
       aria-label="Filter Icon"
       matTooltip="Filter these results"
-      class="report-filter-btn print-hide"
+      class="report-filter-btn print-hide s-40-btn"
       (click)="onOpenFilter()"
     >
-      <i class="icon s24 icon-filter-outline"></i>
+      <i class="icon s24 icon-filter-outline gray-icon"></i>
     </button>
 
     <div
@@ -30,7 +31,7 @@
       />
       <button
         mat-icon-button
-        class="filter-close-btn"
+        class="filter-close-btn s-40-btn"
         aria-label="Filter Icon"
         (click)="onCloseFilter()"
       >
@@ -38,4 +39,3 @@
       </button>
     </div>
   </div>
-</div>

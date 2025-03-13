@@ -47,13 +47,8 @@ app-header-tooltip {
 }
 
 ::ng-deep .change-btn {
-  width: 30px !important;
-  height: 30px !important;
-  padding: 0 !important;
-
-  .mat-mdc-button-touch-target {
-    width: 30px !important;
-    height: 30px !important;
+  i {
+    top: 3px !important
   }
 }
 

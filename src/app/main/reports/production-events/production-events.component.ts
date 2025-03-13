@@ -194,6 +194,5 @@ export class ProductionEventsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 }

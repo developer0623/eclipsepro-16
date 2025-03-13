@@ -6,14 +6,10 @@
 
 .filter-close-btn {
   margin-left: 10px !important;
-  height: auto !important;
-  width: 58px;
 }
 
 .report-filter-btn {
   margin-left: auto !important;
-  height: auto !important;
-  width: 58px;
 }
 
 .report-search {
@@ -22,6 +18,7 @@
   border-radius: 5px;
   box-shadow: none;
   border: 1px solid #ccc;
+  outline: none;
 }
 
 .main-header {

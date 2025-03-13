@@ -223,14 +223,14 @@ export class ProductionSummaryComponent {
         switchMap((source) => source)
       )
       .subscribe((summaryData) => {
-        let newiTems = [];
+        let newItems = [];
         this.machines.forEach((machine) => {
           if (machine.isChecked) {
             let item = summaryData.find((r) => machine.id === r.id);
-            newiTems.push({ ...item, machineName: machine.description });
+            newItems.push({ ...item, machineName: machine.description });
           }
         });
-        this.summaryList = newiTems;
+        this.summaryList = newItems;
         appService.setLoading(false);
       });
 
@@ -238,7 +238,7 @@ export class ProductionSummaryComponent {
 
     const qsMachines: number[] = machines
       ? JSON.parse(machines).map((m) => Number(m))
-      : [];
+      : undefined;
 
     this.subscriptions_ = [
       this.clientDataStore
