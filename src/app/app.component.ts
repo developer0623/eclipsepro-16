@@ -137,20 +137,114 @@ export class AppComponent {
         position: 70,
         subItems: [
           {
-            name: 'Coil Scrap Breakdown',
-            routeOrFunction: '/report/coil-scrap',
+            name: 'productionSummary',
+            routeOrFunction: '/report/production-summary',
             position: 10
           },
-          // {
-          //   name: 'Users',
-          //   routeOrFunction: '/warehouse/users',
-          //   position: 20
-          // },
-          // {
-          //   name: 'App Settings',
-          //   routeOrFunction: '/warehouse/app-settings',
-          //   position: 30
-          // },
+          {
+            name: 'productionEvents',
+            routeOrFunction: '/report/production-events',
+            position: 20,
+            claims: 'pro.machine.reports',
+          },
+          {
+            name: 'goodProductionExplorer',
+            routeOrFunction: '/production-explorer/good-production',
+            position: 30,
+          },
+          {
+            name: 'Delay Summary',
+            routeOrFunction: '/report/delay-summary',
+            position: 40
+          },
+          {
+            name: 'downtimeExplorer',
+            routeOrFunction: '/production-explorer/downtime',
+            position: 50,
+          },
+          {
+            name: 'Scrap Summary',
+            routeOrFunction: '/report/scrap-summary',
+            position: 60,
+            claims: 'pro.machine.reports',
+          },
+          {
+            name: 'scrapExplorer',
+            routeOrFunction: '/production-explorer/scrap',
+            position: 70,
+          },
+          {
+            name: 'Coil Summary',
+            routeOrFunction: '/report/coil-summary',
+            position: 80,
+            badge: '🧪',
+            // claims: 'pro.machine.reports',
+          },
+          {
+            name: 'Coil Scrap Breakdown',
+            routeOrFunction: '/report/coil-scrap',
+            position: 90,
+            badge: '🧪',
+            // claims: 'pro.machine.reports',
+          },
+          
+          {
+            name: 'Material Usage',
+            routeOrFunction: '/report/material-usage',
+            position: 100,
+            claims: 'pro.machine.reports',
+            badge: '🧪',
+          },
+          {
+            name: 'Tooling Code Usage',
+            routeOrFunction: '/report/tooling-usage',
+            position: 110,
+            claims: 'pro.machine.reports',
+            badge: '🧪',
+          },
+          {
+            name: 'Material Demand',
+            routeOrFunction: '/report/material-demand',
+            position: 120,
+            claims: 'pro.machine.reports',
+            badge: '🧪',
+          },
+          {
+            name: 'Order Summary',
+            routeOrFunction: '/report/order-summary',
+            position: 130,
+            claims: 'pro.machine.reports',
+            badge: '🧪',
+          },
+          {
+            name: 'Order Summary',
+            routeOrFunction: '/report/order-sequence',
+            position: 140,
+            claims: 'pro.machine.reports',
+            
+          },
+          {
+            name: 'Quality Audit',
+            routeOrFunction: '/report/quality-audit',
+            position: 150,
+            claims: 'pro.machine.reports',
+            badge: '🧪',
+          },
+          {
+            name: 'Pathfinder Operations Explorer',
+            routeOrFunction: '/production-explorer/pathfinder-operations',
+            position: 160,
+            claims: 'pro.machine.reports.explorers',
+            badge: '🧪',
+            featureFlag: 'experimental',
+          },
+          {
+            name: 'Pathfinder Good Parts Explorer',
+            routeOrFunction: '/production-explorer/pathfinder-goodparts',
+            position: 170,
+            badge: '🧪',
+            featureFlag: 'experimental',
+          }, 
         ]
       },
       // {

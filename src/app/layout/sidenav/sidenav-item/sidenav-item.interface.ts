@@ -10,4 +10,6 @@ export class SidenavItem {
   badgeColor?: string;
   type?: 'item' | 'subheading';
   customClass?: string;
+  claims?: string;
+  featureFlag?: string;
 }
