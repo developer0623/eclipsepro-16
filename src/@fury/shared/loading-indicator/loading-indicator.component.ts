@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription, timer } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { PendingInterceptorService } from './pending-interceptor.service';
+import { AppService } from 'src/app/main/shared/services/app.service';
 
 @Component({
   selector: 'fury-loading-indicator',
@@ -21,7 +22,7 @@ export class LoadingIndicatorComponent implements OnInit, OnDestroy {
   public entryComponent: any = null;
   private subscription: Subscription;
 
-  constructor(private pendingRequestInterceptorService: PendingInterceptorService) {
+  constructor(private pendingRequestInterceptorService: PendingInterceptorService, public appservice: AppService) {
     this.subscription = this.pendingRequestInterceptorService
       .pendingRequestsStatus
       .pipe(debounce(this.handleDebounce.bind(this)))

@@ -13,7 +13,7 @@ const PendingInterceptorServiceExistingProvider = {
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
   ],
   declarations: [],
   providers: [

@@ -1,4 +1,3 @@
-<div class="progress"
-     *ngIf="isSpinnerVisible">
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+<div class="toolbar-progress" *ngIf="appservice.isLoading || isSpinnerVisible"     >
+     <mat-spinner [diameter]="64"></mat-spinner>
 </div>

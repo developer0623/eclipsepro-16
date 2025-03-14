@@ -348,8 +348,6 @@ export class ProductionSummaryComponent {
     exportQuery = deleteProperty('endDate', exportQuery);
     this.router.navigate([], {
       queryParams: exportQuery,
-      queryParamsHandling: 'merge',
-      replaceUrl: true
     });
   }
 
