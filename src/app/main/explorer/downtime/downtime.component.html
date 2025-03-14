@@ -1,0 +1,276 @@
+<div
+  id="dashboard-explorer"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="main-header">
+    <h2
+      class="text-upper"
+      translate="downtimeExplorer"
+    ></h2>
+
+    <mat-form-field
+      class="date-range-container"
+      [hintLabel]=""
+    >
+      <mat-label>Start Date - End Date</mat-label>
+      <mat-date-range-input
+        [rangePicker]="picker"
+        [min]="productionExplorerDataService.minDate"
+        [max]="productionExplorerDataService.maxDate"
+      >
+        <input
+          matStartDate
+          placeholder="Start date"
+          [(ngModel)]="productionExplorerDataService.startDate"
+          (dateChange)="update()"
+        />
+        <input
+          matEndDate
+          placeholder="End date"
+          [(ngModel)]="productionExplorerDataService.endDate"
+          (dateChange)="update()"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <button
+      mat-icon-button
+      matTooltip="Reset All"
+      (click)="resetAll()"
+      class="reset-btn"
+    >
+      <i class="mdi mdi-filter-remove"></i>
+    </button>
+
+    <a
+      class="excel-icon"
+      target="_self"
+      mat-icon-button
+      [matTooltip]="'downloadCsv' | translate"
+      href="{{ fileDownloadQueryString }}"
+    >
+      <i class="mdi mdi-microsoft-excel"></i>
+    </a>
+  </div>
+  <ng-scrollbar
+    visibility="hover"
+    class="summary-main-scroll-container"
+  >
+    <div class="content md-background md-hue-1 explorer-container">
+      <!-- WIDGET GROUP -->
+      <div
+        class="widget-group"
+        fxLayout.gt-xs="row wrap"
+        fxFlex="100"
+      >
+        <!-- WIDGET 1 -->
+        <div
+          class="ms-card"
+          fxFlex="100"
+        >
+          <app-dc-time-bar-chart
+            [dimension]="cfData.byDayDimension"
+            [group]="cfData.byDayGroup"
+            [chartTitle]="'Day'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="150"
+          ></app-dc-time-bar-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byReasonDimension"
+            [topCount]="8"
+            [group]="cfData.byReasonGroup"
+            [valueProperty]="'allDownMinutes'"
+            [chartTitle]="'Reason'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byShiftDimension"
+            [topCount]="8"
+            [group]="cfData.byShiftGroup"
+            [valueProperty]="'allDownMinutes'"
+            [chartTitle]="'Shift'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-linear-bar-chart
+            [dimension]="cfData.byDayOfWeekDimension"
+            [group]="cfData.byDayOfWeekGroup"
+            [valueProperty]="'allDownMinutes'"
+            [groupProperty]="'dayOfWeek'"
+            [chartTitle]="'Day'"
+            [height]="200"
+          ></app-dc-linear-bar-chart>
+        </div>
+
+        <!-- WIDGET 3 -->
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-linear-bar-chart
+            [dimension]="cfData.byHourOfDayDimension"
+            [group]="cfData.byHourOfDayGroup"
+            [valueProperty]="'allDownMinutes'"
+            [groupProperty]="'hourOfDay'"
+            [chartTitle]="'Hour'"
+            [height]="200"
+          ></app-dc-linear-bar-chart>
+        </div>
+
+        <!-- WIDGET 4 -->
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byMachineDimension"
+            [topCount]="8"
+            [group]="cfData.byMachineGroup"
+            [chartTitle]="'Machine'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <!-- WIDGET 5 -->
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byMaterialDimension"
+            [topCount]="8"
+            [group]="cfData.byMaterialGroup"
+            [chartTitle]="'Material'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byProductDimension"
+            [topCount]="8"
+            [group]="cfData.byProductGroup"
+            [chartTitle]="'Product'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <!-- WIDGET 6 -->
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byCustomerDimension"
+            [topCount]="8"
+            [group]="cfData.byCustomerGroup"
+            [chartTitle]="'Customer'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <!-- WIDGET 7 -->
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byCoilDimension"
+            [topCount]="8"
+            [group]="cfData.byCoilGroup"
+            [chartTitle]="'Coil'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <!-- WIDGET 8 -->
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byOperatorDimension"
+            [topCount]="8"
+            [group]="cfData.byOperatorGroup"
+            [chartTitle]="'Operator'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byPunchedDimension"
+            [topCount]="8"
+            [group]="cfData.byPunchedGroup"
+            [chartTitle]="'Punched'"
+            [valueProperty]="'allDownMinutes'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+      </div>
+    </div>
+  </ng-scrollbar>
+  <div
+    *ngIf="data.length === 0"
+    class="no-data"
+  >
+    <h2 translate="noDataAvailable"></h2>
+  </div>
+</div>

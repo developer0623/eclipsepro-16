@@ -1,0 +1,34 @@
+<div class="chart-container white-bg ms-card-content-wrapper p-16">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    class="pb-16 chart-title"
+  >
+    <div
+      fxLayout="row"
+      fxLayoutAlign="start center"
+    >
+      <div
+        class="h3 line-height-24 mr-8 text-caps"
+        translate="{{ chartTitle }}"
+      ></div>
+      <a
+        *ngIf="isFilterApplied"
+        class="reset text-upper"
+        translate="reset"
+        (click)="resetFilters()"
+      ></a>
+    </div>
+    <span
+      class="filter"
+      *ngIf="filteredXValue.length"
+    >
+      [{{ filteredXValue[0] | date : 'dd/MM/YYYY' }} ->
+      {{ filteredXValue[1] | date : 'dd/MM/YYYY' }}]
+    </span>
+  </div>
+  <div
+    #barchart
+    class="chart-content"
+  ></div>
+</div>

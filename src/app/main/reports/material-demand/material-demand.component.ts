@@ -44,7 +44,6 @@ export class MaterialDemandComponent implements OnInit, OnDestroy {
   >();
   fileDownloadQueryString: string;
   subscriptions_: Subscription[] = [];
-  transition$;
   sortKey = '';
   sortDir = '';
   sortedSummaryList: MaterialUsageReportModel = { groups: [] } as MaterialUsageReportModel;
@@ -217,6 +216,5 @@ export class MaterialDemandComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 }

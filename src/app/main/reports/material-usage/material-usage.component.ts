@@ -44,7 +44,6 @@ export class MaterialUsageComponent implements OnInit, OnDestroy {
   fileDownloadQueryString: string;
 
   subscriptions_: Subscription[] = [];
-  transition$;
 
   columns = [
     {
@@ -257,6 +256,5 @@ export class MaterialUsageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 }

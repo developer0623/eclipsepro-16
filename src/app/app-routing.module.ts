@@ -49,6 +49,10 @@ const routes: Routes = [
         path: 'report',
         loadChildren: () => import('./main/reports/reports.module').then(m => m.ReportsModule),
       },
+      {
+        path: 'production-explorer',
+        loadChildren: () => import('./main/explorer/explorer.module').then(m => m.ExplorerModule),
+      },
     ]
   }
 ];

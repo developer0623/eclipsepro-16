@@ -38,7 +38,6 @@ export class QualityAuditComponent implements OnDestroy, OnInit {
     { name: 3, isChecked: true },
   ];
   subscriptions_: Subscription[] = [];
-  transition$;
 
   constructor(
     public clientDataStore: ClientDataStore,
@@ -302,6 +301,5 @@ export class QualityAuditComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 }

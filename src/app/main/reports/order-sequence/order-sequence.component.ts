@@ -266,7 +266,6 @@ export class OrderSequenceComponent implements OnDestroy, OnInit {
   selectedItemColumns = [];
   selectedBundleColumns = [];
   subscriptions_: Subscription[] = [];
-  transition$;
 
   constructor(
     public clientDataStore: ClientDataStore,
@@ -608,6 +607,5 @@ export class OrderSequenceComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 }

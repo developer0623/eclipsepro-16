@@ -63,7 +63,6 @@ export class DelaySummaryComponent implements OnDestroy, OnInit {
   fileDownloadQueryString: string;
   factoryName: string = '';
   subscriptions_: Subscription[] = [];
-  transition$;
 
   constructor(
     public clientDataStore: ClientDataStore,
@@ -217,7 +216,6 @@ export class DelaySummaryComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 
   onGetGroupHeader(keyg, keyt) {

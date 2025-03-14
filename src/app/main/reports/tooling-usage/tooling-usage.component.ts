@@ -42,7 +42,6 @@ export class ToolingUsageComponent implements OnInit, OnDestroy {
   >();
   fileDownloadQueryString: string;
   subscriptions_: Subscription[] = [];
-  transition$;
   maxCol = 0;
 
   constructor(
@@ -212,6 +211,5 @@ export class ToolingUsageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 }

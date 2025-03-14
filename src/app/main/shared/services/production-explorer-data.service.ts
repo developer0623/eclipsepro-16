@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { Transition, StateService, TransitionOptions } from '@uirouter/core';
+import { ActivatedRoute, Router  } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  InitExplorerData,
-  SetExplorerDataCurrentRange,
-} from 'src/app/core/services/store/productionexplorer/actions';
 import {
   initExplorerDataAction,
   setExplorerDataCurrentRangeAction,
@@ -20,16 +16,21 @@ export class ProductionExplorerDataService {
   minDate: moment.Moment = moment().add(-1, 'months');
   maxDate: moment.Moment = moment();
 
-  constructor(private store: Store, private state: StateService) {}
+  constructor(
+    private store: Store,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  init(tran: Transition) {
-    const queryString = tran.params();
-    if (queryString.startDate) {
-      const m = moment(queryString.startDate);
+  init() {
+    const startDate = this.route.snapshot.paramMap.get('startDate');
+    if (startDate) {
+      const m = moment(startDate);
       if (m.isValid()) this.startDate = m;
     }
-    if (queryString.endDate) {
-      const m = moment(queryString.endDate);
+    const endDate = this.route.snapshot.paramMap.get('endDate');
+    if (endDate) {
+      const m = moment(endDate);
       if (m.isValid()) this.endDate = m;
     } else {
       this.updateQueryString();
@@ -70,7 +71,11 @@ export class ProductionExplorerDataService {
       endDate: this.endDate.format('YYYY-MM-DD'),
     };
 
-    this.state.go('.', exportQuery, { notify: false });
+    this.router.navigate([], {
+      queryParams: exportQuery,
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
   onGetParamsFromUrl(queryString) {

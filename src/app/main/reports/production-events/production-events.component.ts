@@ -41,7 +41,6 @@ export class ProductionEventsComponent implements OnInit, OnDestroy {
   machineNums: number[] = [];
 
   subscriptions_: Subscription[] = [];
-  transition$;
 
   constructor(
     public clientDataStore: ClientDataStore,

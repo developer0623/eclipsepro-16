@@ -62,7 +62,6 @@ export class ScrapSummaryComponent implements OnDestroy, OnInit {
   _filter;
   fileDownloadQueryString: string;
   subscriptions_: Subscription[] = [];
-  transition$;
   constructor(
     public clientDataStore: ClientDataStore,
     public appService: AppService,
@@ -181,7 +180,6 @@ export class ScrapSummaryComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
-    this.transition$.unsubscribe();
   }
 
   onGetGroupHeader(keyg, keyt) {

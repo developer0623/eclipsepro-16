@@ -1,0 +1,201 @@
+<div
+  id="dashboard-explorer"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="main-header">
+    <h2 class="text-upper">Pathfinder Good Parts Explorer 🧪</h2>
+
+    <mat-form-field
+      class="date-range-container"
+      [hintLabel]=""
+    >
+      <mat-label>Start Date - End Date</mat-label>
+      <mat-date-range-input
+        [rangePicker]="picker"
+        [min]="productionDeviceExplorerDataService.minDate"
+        [max]="productionDeviceExplorerDataService.maxDate"
+      >
+        <input
+          matStartDate
+          placeholder="Start date"
+          [(ngModel)]="productionDeviceExplorerDataService.startDate"
+          (dateChange)="update()"
+        />
+        <input
+          matEndDate
+          placeholder="End date"
+          [(ngModel)]="productionDeviceExplorerDataService.endDate"
+          (dateChange)="update()"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <button
+      mat-icon-button
+      matTooltip="Reset All"
+      (click)="resetAll()"
+      class="reset-btn"
+    >
+      <i class="mdi mdi-filter-remove"></i>
+    </button>
+
+    <a
+      class="excel-icon"
+      target="_self"
+      mat-icon-button
+      [matTooltip]="'downloadCsv' | translate"
+      href="{{ fileDownloadQueryString }}"
+    >
+      <i class="mdi mdi-microsoft-excel"></i>
+    </a>
+  </div>
+  <ng-scrollbar
+    visibility="hover"
+    class="summary-main-scroll-container"
+  >
+    <div class="content md-background md-hue-1 explorer-container">
+      <div
+        class="widget-group"
+        fxLayout.gt-xs="row wrap"
+        fxFlex="100"
+      >
+        <div
+          class="ms-card"
+          fxFlex="100"
+        >
+          <app-dc-time-bar-chart
+            [dimension]="cfData.byDayDimension"
+            [group]="cfData.byDayGroup"
+            [chartTitle]="'Day'"
+            [valueProperty]="'cycles'"
+            [height]="150"
+          ></app-dc-time-bar-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byMachineDimension"
+            [topCount]="8"
+            [group]="cfData.byMachineGroup"
+            [valueProperty]="'cycles'"
+            [chartTitle]="'Machine'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byMaterialDimension"
+            [topCount]="8"
+            [group]="cfData.byMaterialGroup"
+            [valueProperty]="'cycles'"
+            [chartTitle]="'Material'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byPartDimension"
+            [topCount]="8"
+            [group]="cfData.byPartGroup"
+            [valueProperty]="'cycles'"
+            [chartTitle]="'Profile'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byOperatorDimension"
+            [topCount]="8"
+            [group]="cfData.byOperatorGroup"
+            [chartTitle]="'Operator'"
+            [valueProperty]="'cycles'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-linear-bar-chart
+            [dimension]="cfData.byHourOfDayDimension"
+            [group]="cfData.byHourOfDayGroup"
+            [valueProperty]="'cycles'"
+            [groupProperty]="'hourOfDay'"
+            [chartTitle]="'Hour'"
+            [height]="200"
+          ></app-dc-linear-bar-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byPartGirthDimension"
+            [topCount]="8"
+            [group]="cfData.byPartGirthGroup"
+            [chartTitle]="'Part Girth'"
+            [valueProperty]="'cycles'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+
+        <div
+          class="ms-card"
+          fxFlex.xs="100"
+          fxFlex.sm="50"
+          fxFlex="25"
+        >
+          <app-dc-pareto-chart
+            [dimension]="cfData.byGeometryDimension"
+            [topCount]="8"
+            [group]="cfData.byGeometryGroup"
+            [chartTitle]="'Geometry'"
+            [valueProperty]="'cycles'"
+            [height]="200"
+          ></app-dc-pareto-chart>
+        </div>
+      </div>
+    </div>
+  </ng-scrollbar>
+  <div
+    *ngIf="data.length === 0"
+    class="no-data"
+  >
+    <h2 translate="noDataAvailable"></h2>
+  </div>
+</div>
