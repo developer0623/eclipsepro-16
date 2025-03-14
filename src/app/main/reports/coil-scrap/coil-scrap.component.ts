@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { scan, filter, tap, map, switchMap } from 'rxjs/operators';
-import { ActivatedRoute, Router  } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd  } from '@angular/router';
 import { IMachine } from 'src/app/core/dto';
 import { Ams } from 'src/app/amsconfig';
 import { CoilSummary, FilterState, DurationType } from '../report-type';
@@ -44,6 +44,7 @@ export class CoilScrapComponent implements OnInit, OnDestroy {
   fileDownloadQueryString: string;
   subscriptions_: Subscription[] = [];
   maxCol = 0;
+  transition$: Subscription;
 
   constructor(
     public clientDataStore: ClientDataStore,
@@ -51,7 +52,7 @@ export class CoilScrapComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    // private transManageService: TransitionManageService
+    private transManageService: TransitionManageService
   ) {
     const initialState = this.onGetFilterState();
     const reportFilterReducer = function (
@@ -131,8 +132,6 @@ export class CoilScrapComponent implements OnInit, OnDestroy {
     if (!query.isBack) {
       this.router.navigate([], {
         queryParams: exportQuery,
-        queryParamsHandling: 'merge',
-        replaceUrl: true
       });
     }
 
@@ -232,17 +231,19 @@ export class CoilScrapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this.maxCol = Math.round((window.innerHeight - 240) / 50);
-    // this.transition$ = this.transManageService.transitionObs$.subscribe((transition) => {
-    //   let transitionOptions: TransitionOptions = transition.options();
-    //   if (transitionOptions.source === 'url') {
-    //     const filterState = this.onGetFilterState(transition.params());
-    //     this.reportFilterChanges$.next({ ...filterState, isBack: true });
-    //   }
-    // });
+    this.maxCol = Math.round((window.innerHeight - 240) / 50);
+    this.transition$ = this.transManageService.transitionObs$.subscribe((transition) => {
+      console.log('22222', transition.get('startDate'))
+      // let transitionOptions: TransitionOptions = transition.options();
+      // if (transitionOptions.source === 'url') {
+      //   const filterState = this.onGetFilterState(transition.params());
+      //   this.reportFilterChanges$.next({ ...filterState, isBack: true });
+      // }
+    });
   }
 
   ngOnDestroy(): void {
     this.subscriptions_.forEach((sub) => sub.unsubscribe());
+    this.transition$.unsubscribe();
   }
 }

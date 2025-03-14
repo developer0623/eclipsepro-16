@@ -1,0 +1,191 @@
+<div
+  id="dashboard-report"
+  class="page-layout simple fullwidth white-bg production-summary"
+  ngsf-fullscreen
+>
+  <div class="header back-header red">
+    <button
+      mat-icon-button
+      (click)="gotoList()"
+    >
+      <mat-icon
+        aria-hidden="false"
+        aria-label="To back"
+      >arrow_back</mat-icon>
+    </button>
+  </div>
+  <mat-accordion
+    class="md-background md-hue-1 scroll-content tooling-accordian"
+    multi
+  >
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Details </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div
+        class="machine-detail"
+        *ngIf="tooling && toolingKeys"
+      >
+        <div
+          class="machine-detail__item"
+          *ngFor="let item of toolingKeys"
+        >
+          <div class="machine-detail__title">{{ item.name }}:</div>
+
+          <div
+            *ngIf="item.isEditable && userHasEditorRole"
+            class="machine-detail__content"
+          >
+            <app-edit-input
+              [(ngModel)]="tooling[item.field]"
+              [showEditButtons]="true"
+              type="number|text"
+              (onaftersave)="onChangeDetail($event, item.field)"
+            >
+              {{ tooling[item.field] }}
+            </app-edit-input>
+          </div>
+          <div
+            *ngIf="!item.isEditable || !userHasEditorRole"
+            class="machine-detail__content"
+          >
+            {{ tooling[item.field] }}
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Machines
+
+          <mat-icon
+            class="size-20"
+            *ngIf="tooling && tooling.hasUnassignedMachineTool"
+            matTooltip="This tooling is missing a required machine assignment."
+            aria-label="This tooling is missing a required machine assignment."
+            fontIcon="warning"
+          ></mat-icon>
+        </mat-panel-title>
+        <mat-panel-description></mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="tooling-machine-container">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+        >
+          <button
+            mat-icon-button
+            (click)="addMachine()"
+          >
+            <mat-icon
+              fontIcon="add"
+              aria-label="Add Machine"
+            ></mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="columMenu"
+          >
+            <mat-icon fontIcon="settings"></mat-icon>
+          </button>
+          <mat-menu #columMenu="matMenu">
+            <div class="checkbox-menu-header">
+              <span (click)="$event.stopPropagation(); $event.preventDefault()"
+                >Add/Remove Column</span
+              >
+              <mat-icon>close</mat-icon>
+            </div>
+            <button
+              *ngFor="let item of showedMachineKeys"
+              mat-menu-item
+              aria-label="{{ item.name }}"
+              (click)="onChangeColumn(item, $event)"
+            >
+              <mat-icon
+                *ngIf="!item.isChecked"
+                class="empty"
+                >check_box_outline_blank</mat-icon
+              >
+              <mat-icon
+                *ngIf="item.isChecked"
+                class="checked"
+                >check_box</mat-icon
+              >
+              {{ item.name }}
+            </button>
+          </mat-menu>
+        </div>
+
+        <div class="material-usage-item sub-header tooling-machine-row">
+          <div
+            class="main-con"
+            *ngFor="let item of checkedMachineKeys"
+          >
+            {{ item.name }}
+          </div>
+          <div class="btn-col"></div>
+        </div>
+        <div *ngIf="tooling && tooling.machines">
+          <div
+            class="material-usage-item tooling-machine-row"
+            *ngFor="let machine of tooling.machines"
+          >
+            <div
+              class="main-con"
+              *ngFor="let item of checkedMachineKeys"
+            >
+              <app-edit-input
+                *ngIf="item.isEditable && userHasEditorRole && !item.isSelect"
+                [(ngModel)]="machine[item.field]"
+                [showEditButtons]="true"
+                type="number|text"
+                (onaftersave)="onChangeMachineDetail($event, item.field, machine)"
+              >
+                {{ machine[item.field] }}
+              </app-edit-input>
+
+              <app-edit-select
+                *ngIf="item.isEditable && userHasEditorRole && item.isSelect"
+                class="machine-detail__content"
+                [(ngModel)]="machine[item.field]"
+                [valKey]="'value'"
+                [nameKey]="'text'"
+                [items]="statuses"
+                (onaftersave)="onChangeMachineDetail($event, item.field, machine)"
+              >
+                {{ machine[item.field] }}
+              </app-edit-select>
+
+              <div
+                *ngIf="!item.isEditable || !userHasEditorRole"
+                class="machine-detail__content"
+              >
+                {{ machine[item.field] }}
+              </div>
+              <mat-icon
+                matTooltip="It requires normalization."
+                aria-label="It requires normalization."
+                fontIcon="warnings"
+                *ngIf="item.isWarning"
+              >
+              </mat-icon>
+            </div>
+            <div class="btn-col">
+              <button
+                mat-icon-button
+                class="machine-deletebtn s-40-btn"
+                (click)="deleteMachine(machine)"
+                *ngIf="tooling.machines.length > 1 && userHasEditorRole"
+              >
+                <mat-icon fontIcon="delete"></mat-icon>
+                <div class="ripple"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

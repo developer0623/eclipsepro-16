@@ -1,0 +1,159 @@
+::ng-deep .tooling-accordian {
+  .mat-expansion-panel-header {
+    background: rgba(179, 179, 179, 0.7019607843) !important;
+    border-bottom-style: outset;
+    &.mat-expanded {
+      .mat-expansion-indicator {
+        transform: rotate(0deg) !important;
+      }
+    }
+    .mat-expansion-indicator {
+      transform: rotate(-90deg) !important;
+      transition: 0.3s ease-in-out !important;
+    }
+  }
+  .mat-expansion-panel-spacing {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+  .mat-expansion-panel-body {
+    padding: 0 !important;
+    .inline-input-container {
+      top: auto;
+    }
+  }
+}
+
+::ng-deep .mat-mdc-menu-content {
+  font-size: 1.3rem !important;
+}
+.addColumn {
+  text-align: center;
+}
+.btn-col {
+  position: relative;
+}
+.machine-deletebtn {
+  display: none;
+}
+.tooling-machine-container {
+  background-color: white;
+}
+.machine-deletebtn:hover {
+  background-color: rgba(158, 158, 158, 0);
+}
+
+.back-header {
+  height: 60px !important;
+  padding: 18px 24px 18px 8px !important;
+}
+
+.mat-menu-item {
+  .mat-icon.checked {
+    display: none;
+    pointer-events: none;
+  }
+  .mat-icon.empty {
+    pointer-events: none;
+  }
+}
+
+.mat-menu-item.selected {
+  .mat-icon.empty {
+    display: none;
+  }
+  .mat-icon.checked {
+    display: unset;
+  }
+}
+
+.empty {
+  color: rgba(0, 0, 0, 0.54) !important;
+}
+
+.checked {
+  color: rgba(236, 177, 0, 0.87) !important;
+}
+
+.checkbox-menu-header {
+  line-height: 30px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 210px;
+  span {
+    flex: 1;
+  }
+
+  mat-icon {
+    cursor: pointer;
+  }
+}
+
+.tooling-machine-row {
+  .btn-col {
+    width: 45px;
+  }
+  &:hover {
+    background-color: whitesmoke;
+    .machine-deletebtn {
+      display: block !important;
+    }
+  }
+
+  .machine-detail__content {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .editable-wrap .editable-controls {
+    .editable-input {
+      padding: 0 !important;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    label {
+      position: initial;
+      left: 0;
+      top: 0;
+      font-size: 1.5rem;
+      transform: initial;
+    }
+  }
+}
+
+.size-20 {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+}
+
+.machine-detail {
+  display: flex;
+  flex-wrap: wrap;
+  .machine-detail__item {
+    display: flex;
+    width: 33%;
+    min-height: 30px;
+    align-items: center;
+  }
+  .machine-detail__title {
+    width: 40%;
+    text-align: right;
+    color: gray;
+    font-size: 12px;
+  }
+  .machine-detail__content {
+    flex: 1;
+    padding-left: 10px;
+    font-size: 16px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+  }
+}

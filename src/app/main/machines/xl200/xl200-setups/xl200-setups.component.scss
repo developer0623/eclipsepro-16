@@ -1,0 +1,278 @@
+$gray1: #92a6ab;
+
+::ng-deep .main-list {
+  border-radius: 4px;
+  border: 1px solid #e9edee;
+  background-color: white;
+  position: relative;
+
+  .ng-scroll-content {
+    padding: 24px 20px 0 20px;
+  }
+}
+
+.snapshot-list {
+  height: calc(100vh - 340px);
+}
+
+.params-list {
+  height: calc(100vh - 404px);
+}
+
+.compare-list {
+  height: calc(100vh - 340px);
+  flex: 1;
+  .compare-name {
+    width: 30%;
+  }
+  .compare-val {
+    flex: 1;
+    text-align: right;
+  }
+
+  .compare-des {
+    flex: 1;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+  .compare-action {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+    .horiz-icon {
+      color: #92a6ab;
+      margin-top: 3px;
+      margin-left: 1px;
+    }
+    .close-icon {
+      color: #88bdbc;
+      margin-top: 3px;
+      margin-left: 1px;
+    }
+  }
+  .compare-title {
+    line-height: 16px;
+    font-size: 14px;
+    margin-top: 6px;
+    text-align: right;
+    padding-right: 3px;
+    color: #474747;
+    margin-left: auto;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .compare-lib {
+    text-align: right;
+    padding-top: 10px;
+    margin-top: auto;
+    span {
+      line-height: 21px;
+      border-radius: 15px;
+      background-color: #fb9f89;
+      color: white;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 500;
+      width: 109px;
+      text-align: center;
+      white-space: nowrap;
+    }
+  }
+}
+
+.compare-list-item-header {
+  height: auto !important;
+  padding-bottom: 8px;
+  align-items: flex-start !important;
+}
+
+.compare-list-item {
+  display: flex;
+  height: 47px;
+  align-items: center;
+  border-bottom: 1px solid #e5eaec;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.compare-none-container {
+  height: calc(100vh - 340px);
+  padding-top: 60px;
+  text-align: center;
+  flex: 1;
+}
+
+.compare-none-text {
+  font-size: 16px;
+  line-height: 24px;
+  color: #474747;
+}
+
+.snapshot-list-item {
+  display: flex;
+  height: 70px;
+  align-items: center;
+  border-bottom: 1px solid #e5eaec;
+  padding: 0 24px;
+  &:hover {
+    background-color: #f4f6f7;
+  }
+
+  .snapshot-item-icon {
+    margin-left: auto;
+    color: $gray1;
+  }
+
+  .item-title {
+    font-size: 13px;
+    line-height: 25px;
+    font-weight: 500;
+    color: #474747;
+  }
+  .item-des {
+    font-size: 13px;
+    line-height: 25px;
+    font-weight: 400;
+    color: $gray1;
+  }
+}
+
+.compare-snapshot-list-item {
+  padding: 0 !important;
+  &:hover {
+    background-color: #88bdbc;
+    .item-title {
+      color: white;
+    }
+    .item-des {
+      color: white;
+    }
+  }
+}
+.is-active {
+  background-color: #f4f6f7;
+}
+.is-com-active {
+  background-color: #88bdbc;
+  .item-title {
+    color: white;
+  }
+  .item-des {
+    color: white;
+  }
+}
+
+.main-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 20px 0 20px;
+}
+
+.compare-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+}
+
+.search-container {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e9edee;
+  border-radius: 6px;
+  background-color: #f9fbfb;
+  padding: 8px;
+  min-width: 280px;
+  flex: 1;
+  max-width: 446px;
+
+  mat-icon {
+    color: $gray1;
+  }
+}
+.param-search {
+  flex: 1;
+  font-size: 13px;
+  line-height: 16px;
+  background-color: #f9fbfb;
+  padding-left: 8px;
+  color: $gray1;
+}
+
+.history-checkbox {
+  width: 170px;
+  margin-left: 20px;
+}
+
+.param-table {
+  tr {
+    height: 40px;
+  }
+
+  .history-icon {
+    color: #88bdbc;
+  }
+}
+
+.saved-library-txt {
+  line-height: 21px;
+  border-radius: 15px;
+  background-color: #fb9f89;
+  color: white;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.is-red {
+  color: #db5461;
+}
+
+.none-searched-item {
+  text-align: center;
+  padding-top: 20px;
+}
+
+::ng-deep .history-icon-btn {
+  width: 40px !important;
+  height: 40px !important;
+  margin: auto 0 !important;
+  padding: 0 !important;
+  .mat-mdc-button-touch-target {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+.loading-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compare-list-container {
+  display: flex;
+}
+
+.more-container {
+  width: 50%;
+  text-align: center;
+  padding: 60px 24px;
+  font-size: 18px;
+}

@@ -1,0 +1,148 @@
+<div class="page-layout simple fullwidth white-bg red">
+  <div class="header">
+    <span class="h2">Tooling</span>
+    <div class="filters-div tooling-filter-container">
+      <i class="icon icon-filter-outline filter-icon gray-icon"></i>
+      <div class="search-input">
+        <input
+          class="report-search"
+          placeholder="Filter..."
+          [(ngModel)]="searchTxt"
+          (onEvent)="applyFilter($event)"
+          debounceKeyUp
+          [debounceTime]="200"
+        />
+      </div>
+    </div>
+    <div>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="colMenu"
+        class="main-dropdown-btn"
+      >
+        <i class="icon icon-cog menu-icon gray-icon"></i>
+      </button>
+      <mat-menu
+        #colMenu="matMenu"
+        xPosition="before"
+      >
+        <div class="checkbox-menu-header">
+          <span (click)="$event.stopPropagation(); $event.preventDefault()">Add/Remove Column</span>
+          <mat-icon>close</mat-icon>
+        </div>
+        <div class="scroll-menu-list">
+          <button
+            *ngFor="let item of columns"
+            mat-menu-item
+            aria-label="{{ item.displayName }}"
+            (click)="onChangeColumn(item, $event)"
+          >
+            <mat-icon
+              *ngIf="!item.isChecked"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="item.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            {{ item.displayName | translate }}
+          </button>
+        </div>
+      </mat-menu>
+    </div>
+  </div>
+
+  <div class="content p-24 md-background">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      [matSortActive]="sortState?.active"
+      [matSortDirection]="sortState?.direction"
+      (matSortChange)="announceSortChange($event)"
+      class="mat-elevation-z8 list-table"
+    >
+      <ng-container
+        *ngFor="let column of columns"
+        [matColumnDef]="column.columnDef"
+      >
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          [sortActionDescription]="column.sortDes"
+        >
+          {{ column.displayName | translate }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let row"
+        >
+          {{ column.cell(row) }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="hasUnassignedMachineTool">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+        ></th>
+        <td
+          mat-cell
+          *matCellDef="let row"
+        >
+          <ng-container *ngIf="row.hasUnassignedMachineTool">
+            <mat-icon
+              class="size-20"
+              aria-hidden="false"
+              fontIcon="warning"
+              matTooltip="This tooling is missing a required machine assignment."
+            >
+            </mat-icon>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="gotoDetail(row)"
+      ></tr>
+      <tr
+        class="mat-row"
+        *matNoDataRow
+      >
+        <td
+          class="mat-cell"
+          colspan="4"
+        >
+          No data matching the filter
+        </td>
+      </tr>
+    </table>
+    <mat-card>
+      <mat-paginator
+        (page)="handlePageEvent($event)"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        aria-label="Select page of toolings"
+        class="tooling-list-page"
+      ></mat-paginator>
+    </mat-card>
+    <button
+      mat-fab
+      color="success"
+      class="add-button"
+      (click)="addTooling()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,239 @@
+.content {
+  padding: 24px;
+  background-color: #f9f9f9;
+}
+.back-header {
+  padding-left: 8px !important;
+}
+
+.main-scroll-container {
+  overflow: auto;
+  height: calc(100vh - 64px);
+  position: relative;
+}
+
+.setting-container {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  max-width: 740px;
+
+  .setting-header {
+    display: flex;
+    font-weight: bold;
+    padding-right: 54px;
+    max-width: 740px;
+    justify-content: space-between;
+  }
+
+  .setting-body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      height: 35px;
+      padding: 0 30px 0 10px;
+
+      .setting-enabled,
+      .setting-locked {
+        margin: 0;
+      }
+
+      .setting-enabled {
+        margin-right: 10px;
+      }
+
+      .setting-label {
+        flex: 1;
+        font-size: 14px;
+        max-width: 400px;
+      }
+      .setting-value {
+        width: 100px;
+        margin-right: 10px;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-width: 1px;
+      }
+
+      .setting-select {
+        width: 160px;
+        margin-right: 10px;
+        font-size: 14px;
+      }
+
+      .setting-unit {
+        width: 60px;
+      }
+
+      .setting-locked {
+        margin-left: 16px;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 576) {
+    width: 100%;
+
+    &:nth-child(2) {
+      .setting-header {
+        display: none;
+      }
+    }
+  }
+}
+
+.xl200-detail-page {
+  overflow: visible !important;
+
+  app-xl200-tools,
+  app-xl200-patterns {
+    padding-top: 16px;
+    display: block;
+    width: 100%;
+  }
+
+  .xl-200-setup {
+    padding-top: 16px;
+    display: block;
+
+    .red-color {
+      color: red;
+    }
+
+    .italic-font {
+      font-style: italic;
+    }
+  }
+
+  .sort-icon {
+    position: relative;
+    top: 2px;
+    font-size: 17px !important;
+    width: 17px !important;
+    height: 17px !important;
+    line-height: 17px !important;
+  }
+}
+
+.setting-warning {
+  color: #664d03;
+  background-color: #fff3cd;
+  border-color: #ffecb5;
+  border-radius: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .setting-warning-text {
+    margin-top: 3px;
+    margin-left: 5px;
+  }
+}
+
+.lock-code-container {
+  width: 50%;
+  display: flex;
+  font-size: 13px;
+
+  .lock-down-container {
+    width: 100%;
+    min-width: 345px;
+  }
+
+  .overide-container {
+    flex: 1;
+  }
+
+  .lock-code-row {
+    display: flex;
+    height: 35px;
+  }
+
+  .lock-header {
+    font-weight: bold;
+    position: sticky;
+    top: 1px;
+    background-color: white;
+    z-index: 100;
+    padding-top: 2px;
+  }
+
+  .label-col {
+    width: 90%;
+    min-width: 180px;
+    max-width: 300px;
+  }
+
+  .check-col {
+    width: 45px;
+    height: 35px;
+    margin-left: 0px !important;
+  }
+
+  .mr-atuo {
+    margin-right: auto;
+  }
+
+  app-xl200-lockout-item {
+    width: 100%;
+  }
+
+  &.radio-container {
+    padding-right: 10px;
+
+    .label-col {
+      width: 60% !important;
+    }
+
+    .xl200-radio-col {
+      margin-right: 0 !important;
+
+      .md-container {
+        left: 22px !important;
+      }
+    }
+
+    .check-col {
+      width: 60px !important;
+      display: flex;
+      justify-content: center;
+    }
+
+    .help-icon-header {
+      width: 24px;
+    }
+  }
+
+  @media only screen and (max-width: 1280px) {
+    &.radio-container {
+      .label-col {
+        width: 48% !important;
+      }
+
+      .check-col {
+        font-size: 12px;
+        width: 54px !important;
+      }
+    }
+  }
+}
+
+.machine-detail {
+  padding-top: 16px;
+}

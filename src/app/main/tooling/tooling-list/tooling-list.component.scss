@@ -1,0 +1,152 @@
+.header {
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 76px !important;
+  min-height: 0 !important;
+  max-height: auto;
+  padding: 0 24px !important;
+  opacity: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tooling-filter-container {
+  margin-left: auto;
+  margin-right: 20px;
+  width: 50%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .search-input {
+    width: 100%;
+  }
+
+  .report-search {
+    width: 100%;
+  }
+}
+//filter menu
+
+.main-dropdown-btn {
+  width: 30px !important;
+  height: 30px !important;
+  margin: auto 0 !important;
+  padding: 0 !important;
+  .icon-chevron-down {
+    position: relative;
+    top: -1px;
+  }
+}
+
+.mat-menu-item {
+  .mat-icon.checked {
+    display: none;
+    pointer-events: none;
+  }
+  .mat-icon.empty {
+    pointer-events: none;
+  }
+}
+
+.mat-menu-item.selected {
+  .mat-icon.empty {
+    display: none;
+  }
+  .mat-icon.checked {
+    display: unset;
+  }
+}
+
+.empty {
+  color: rgba(0, 0, 0, 0.54) !important;
+}
+
+.checked {
+  color: rgba(236, 177, 0, 0.87) !important;
+}
+
+.checkbox-menu-header {
+  line-height: 30px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 210px;
+  span {
+    flex: 1;
+  }
+
+  mat-icon {
+    cursor: pointer;
+  }
+}
+
+.scroll-menu-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.print-btn {
+  width: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
+  margin-left: 20px;
+}
+
+.filter-items-div {
+  height: 48px;
+}
+
+.reset-btn {
+  background-color: rgb(71, 71, 71);
+  color: rgba(255, 255, 255, 0.87) !important;
+}
+
+.list-table {
+  tr {
+    height: 40px;
+  }
+  tr:hover {
+    cursor: pointer;
+    background-color: rgb(239, 239, 239);
+  }
+}
+
+.add-button {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+::ng-deep .tooling-list-page {
+  .mat-mdc-paginator-container {
+    padding-right: 40px !important;
+  }
+}
+:host ::ng-deep .mat-sort-header-container {
+  justify-content: center;
+}
+.mdc-data-table__cell {
+  text-align: center;
+  padding: 0 !important;
+}
+.mdc-data-table__cell:last-child {
+  width: 20px;
+}
+
+.tooling-filter-container {
+  margin-left: auto;
+  margin-right: 20px;
+  width: 50%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .report-search {
+    width: 100%;
+  }
+}

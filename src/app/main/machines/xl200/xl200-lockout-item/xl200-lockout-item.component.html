@@ -1,0 +1,34 @@
+<label
+  id="lockout-radio-group-label"
+  class="label-col"
+  translate="xl200.{{ label }}"
+></label>
+<mat-radio-group
+  aria-labelledby="lockout-radio-group-label"
+  class="lockout-radio-group"
+  [(ngModel)]="lockValue"
+  (change)="onGroupChange()"
+>
+  <mat-radio-button
+    class="check-col xl200-radio-col yellow-radio"
+    aria-label="{{ label }}:always"
+    value="Always"
+  >
+  </mat-radio-button>
+  <mat-radio-button
+    class="check-col xl200-radio-col yellow-radio"
+    aria-label="{{ label }}:with key"
+    value="WithKey"
+  >
+  </mat-radio-button>
+  <mat-radio-button
+    class="check-col xl200-radio-col yellow-radio"
+    aria-label="{{ label }}:never"
+    value="Never"
+  >
+  </mat-radio-button>
+</mat-radio-group>
+<app-help-icon
+  [header]="labelStr"
+  [help]="helpStr"
+></app-help-icon>

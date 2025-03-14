@@ -14,8 +14,9 @@ export class TransitionManageService {
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         )
-      .subscribe(() => {
+      .subscribe((aa) => {
         const params = this.activatedRoute.snapshot.paramMap
+        console.log('333333', aa)
         this.transitionObs$.next(params);
       });
   }

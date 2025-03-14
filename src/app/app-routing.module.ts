@@ -53,6 +53,14 @@ const routes: Routes = [
         path: 'production-explorer',
         loadChildren: () => import('./main/explorer/explorer.module').then(m => m.ExplorerModule),
       },
+      {
+        path: 'machines',
+        loadChildren: () => import('./main/machines/machines.module').then(m => m.MachinesModule),
+      },
+      {
+        path: 'tooling',
+        loadChildren: () => import('./main/tooling/tooling.module').then(m => m.ToolingModule),
+      },
     ]
   }
 ];

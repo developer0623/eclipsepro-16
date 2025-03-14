@@ -1,0 +1,797 @@
+<div
+  id="dashboard-report"
+  fxLayout="column"
+  class="page-layout simple fullwidth white-bg production-summary xl200-detail-page"
+>
+  <ng-scrollbar
+    visibility="hover"
+    class="main-scroll-container"
+  >
+    <div
+      class="header back-header"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <button
+        mat-icon-button
+        class="back-btn"
+        uiSref="app.machines_xl200"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+    <div class="content md-background md-hue-1 scroll-content">
+      <mat-tab-group
+        class="xl200-tabs"
+        mat-stretch-tabs="false"
+        dynamicHeight
+        [selectedIndex]="selectedTabIndex"
+        (selectedIndexChange)="onChangeTab($event)"
+      >
+        <mat-tab label="Details">
+          <div
+            class="machine-detail"
+            *ngIf="machine && machine.machineNumber"
+          >
+            <div
+              class="machine-detail__item"
+              *ngFor="let item of machineKeys"
+            >
+              <div class="machine-detail__title">{{ item.name }}:</div>
+              <app-edit-input-new
+                *ngIf="item.isEditable && userHasAdminRole"
+                class="machine-detail__content"
+                [(ngModel)]="machine[item.field]"
+                [showEditButtons]="true"
+                (onaftersave)="onChangeDetail($event, item.field)"
+              >
+                {{ machine[item.field] }}
+              </app-edit-input-new>
+              <div
+                *ngIf="!item.isEditable || !userHasAdminRole"
+                class="machine-detail__content"
+              >
+                {{ machine[item.field] }}
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Controller Settings">
+          <div
+            *ngIf="machine.eclipseEnforcedSetups"
+            fxLayout="column"
+          >
+            <div
+              class="setting-warning"
+              *ngIf="machine.eclipseEnforcedSetupsWarning"
+            >
+              <i class="mdi mdi-alert s20"></i>
+              <span class="setting-warning-text">
+                {{ machine.eclipseEnforcedSetupsWarning }}
+              </span>
+            </div>
+            <div
+              fxLayout="row"
+              class="setting-part"
+            >
+              <div class="setting-container">
+                <div class="setting-header">
+                  <div>Enabled</div>
+                </div>
+                <div class="setting-body">
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.haltDelayMinimum.isEnabled"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.haltDelayMinimum.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.HaltDelayMinimum
+                    </div>
+                    <input
+                      aria-label="input"
+                      class="setting-value"
+                      min="0"
+                      max="99"
+                      type="number"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.haltDelayMinimum.value"
+                      (change)="onChangeEnforcedSetups()"
+                      debounceKeyUp
+                      [debounceTime]="400"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.haltDelayMinimum.available &&
+                        !userHasAdminRole
+                      "
+                    />
+                    <div class="setting-unit">minutes</div>
+                    <app-help-icon
+                      header="xl200.HaltDelayMinimum"
+                      help="xl200.HaltDelayMinimum.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.useScrapCodes.isEnabled"
+                      [disabled]="!machine.eclipseEnforcedSetups.useScrapCodes.available"
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.UseScrapCodes
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.useScrapCodes.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.useScrapCodes.available && !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.UseScrapCodes"
+                      help="xl200.UseScrapCodes.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.manualShearScrapLengthIn.isEnabled"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.manualShearScrapLengthIn.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.ShearScrapLength
+                    </div>
+                    <input
+                      matInput
+                      aria-label="input"
+                      class="setting-value"
+                      min="0"
+                      max="1000"
+                      type="number"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.manualShearScrapLengthIn.value"
+                      (change)="onChangeEnforcedSetups()"
+                      debounceKeyUp
+                      [debounceTime]="400"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.manualShearScrapLengthIn.available &&
+                        !userHasAdminRole
+                      "
+                    />
+                    <div class="setting-unit">inches</div>
+                    <app-help-icon
+                      header="xl200.ShearScrapLength"
+                      help="xl200.ShearScrapLength.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.useCoilInventory.isEnabled"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.useCoilInventory.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.UseCoilInventory
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.useCoilInventory.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.useCoilInventory.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                      <mat-option [value]="2">Remote</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.UseCoilInventory"
+                      help="xl200.UseCoilInventory.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.allowCoilOverride.isEnabled"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.allowCoilOverride.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.AllowCoilOverride
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.allowCoilOverride.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.allowCoilOverride.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">Always</mat-option>
+                      <mat-option [value]="1">Only With Key</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.AllowCoilOverride"
+                      help="xl200.AllowCoilOverride.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="
+                        machine.eclipseEnforcedSetups.enforceEclipseCoilValidation.isEnabled
+                      "
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.enforceEclipseCoilValidation.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+                    <div class="setting-label">Enforce Eclipse Coil Validation</div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.enforceEclipseCoilValidation.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.enforceEclipseCoilValidation.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.EnforceEclipseCoilValidation"
+                      help="xl200.EnforceEclipseCoilValidation.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.enforceBundlingRules.isEnabled"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.enforceBundlingRules.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+                    <div class="setting-label">Enforce Bundling Rules</div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.enforceBundlingRules.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.enforceBundlingRules.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.EnforceBundlingRules"
+                      help="xl200.EnforceBundlingRules.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.autoRequestOrderFootage.isEnabled"
+                      (change)="onChangeEnforcedSetups()"
+                      aria-label="checkbox"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.autoRequestOrderFootage.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                    </mat-checkbox>
+                    <div class="setting-label">Auto-Request Order Footage</div>
+                    <input
+                      aria-label="input"
+                      class="setting-value"
+                      min="0"
+                      max="9999"
+                      type="number"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.autoRequestOrderFootage.value"
+                      (change)="onChangeEnforcedSetups()"
+                      debounceKeyUp
+                      [debounceTime]="400"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.autoRequestOrderFootage.available &&
+                        !userHasAdminRole
+                      "
+                    />
+                    <div class="setting-unit">Feet</div>
+                    <app-help-icon
+                      header="xl200.AutoRequestOrderFootage"
+                      help="xl200.AutoRequestOrder.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.displayBundleIdPrompts.isEnabled"
+                      (change)="onChangeEnforcedSetups()"
+                      aria-label="checkbox"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.displayBundleIdPrompts.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                    </mat-checkbox>
+                    <div class="setting-label">Display Bundle ID Prompts</div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.displayBundleIdPrompts.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.displayBundleIdPrompts.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.DisplayBundleIdPrompts"
+                      help="xl200.DisplayBundleIdPrompts.help"
+                    >
+                    </app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      [(ngModel)]="
+                        machine.eclipseEnforcedSetups.autoDeleteDoneOrdersAfter.isEnabled
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                      aria-label="checkbox"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.autoDeleteDoneOrdersAfter.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.AutoDeleteDoneOrdersAfter
+                    </div>
+                    <input
+                      aria-label="input"
+                      class="setting-value"
+                      min="0"
+                      max="28"
+                      type="number"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.autoDeleteDoneOrdersAfter.value"
+                      (change)="onChangeEnforcedSetups()"
+                      debounceKeyUp
+                      [debounceTime]="400"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.autoDeleteDoneOrdersAfter.available &&
+                        !userHasAdminRole
+                      "
+                    />
+                    <div class="setting-unit">days</div>
+                    <app-help-icon
+                      header="xl200.AutoDeleteDoneOrdersAfter"
+                      help="xl200.AutoDeleteDoneOrdersAfter.help"
+                    >
+                    </app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.showUserDataProgram.isEnabled"
+                      (change)="onChangeEnforcedSetups()"
+                      aria-label="checkbox"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.showUserDataProgram.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.ShowUserDataProgram
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.showUserDataProgram.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.showUserDataProgram.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">Disabled</mat-option>
+                      <mat-option [value]="1">One Line</mat-option>
+                      <mat-option [value]="2">Two Lines</mat-option>
+                      <mat-option [value]="3">Three Lines</mat-option>
+                      <mat-option [value]="4">Four Lines</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.ShowUserDataProgram"
+                      help="xl200.ShowUserDataProgram.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.showUserDataStatus.isEnabled"
+                      (change)="onChangeEnforcedSetups()"
+                      aria-label="checkbox"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.showUserDataStatus.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.ShowUserDataStatus
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.showUserDataStatus.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.showUserDataStatus.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">Disabled</mat-option>
+                      <mat-option [value]="1">One Line</mat-option>
+                      <mat-option [value]="2">Two Lines</mat-option>
+                      <mat-option [value]="3">Three Lines</mat-option>
+                      <mat-option [value]="4">Four Lines</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.ShowUserDataStatus"
+                      help="xl200.ShowUserDataStatus.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.staggerPanelField.isEnabled"
+                      (change)="onChangeEnforcedSetups()"
+                      aria-label="checkbox"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.staggerPanelField.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.StaggerPanelField
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.staggerPanelField.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.staggerPanelField.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">Disabled</mat-option>
+                      <mat-option [value]="1">Enabled</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.StaggerPanelField"
+                      help="xl200.StaggerPanelField.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.setDoneItemsToReady.isEnabled"
+                      (change)="onChangeEnforcedSetups()"
+                      aria-label="checkbox"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.setDoneItemsToReady.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.SetDoneItemsToReady
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.setDoneItemsToReady.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.setDoneItemsToReady.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.SetDoneItemsToReady"
+                      help="xl200.SetDoneItemsToReady.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="
+                        machine.eclipseEnforcedSetups.enableScrapCoilDuringUnload.isEnabled
+                      "
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.enableScrapCoilDuringUnload.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.EnableScrapCoilDuringUnload
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.enableScrapCoilDuringUnload.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.enableScrapCoilDuringUnload.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.EnableScrapCoilDuringUnload"
+                      help="xl200.EnableScrapCoilDuringUnload.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.validate900Bundles.isEnabled"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.validate900Bundles.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.Validate900Bundles
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.validate900Bundles.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.validate900Bundles.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.Validate900Bundles"
+                      help="xl200.Validate900Bundles.help"
+                    ></app-help-icon>
+                  </div>
+                  <div class="setting-item">
+                    <mat-checkbox
+                      class="yellow-checkbox setting-enabled"
+                      aria-label="checkbox"
+                      [(ngModel)]="
+                        machine.eclipseEnforcedSetups.showPreThreadUpScrapWindow.isEnabled
+                      "
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.showPreThreadUpScrapWindow.available &&
+                        !userHasAdminRole
+                      "
+                      (change)="onChangeEnforcedSetups()"
+                    >
+                    </mat-checkbox>
+                    <div
+                      class="setting-label"
+                      translate
+                    >
+                      xl200.ShowPreThreadUpScrapWindow
+                    </div>
+                    <mat-select
+                      aria-label="select"
+                      [(ngModel)]="machine.eclipseEnforcedSetups.showPreThreadUpScrapWindow.value"
+                      (selectionChange)="onChangeEnforcedSetups()"
+                      panelClass="yellow-select-panel"
+                      class="setting-select yellow-select"
+                      [disabled]="
+                        !machine.eclipseEnforcedSetups.showPreThreadUpScrapWindow.available &&
+                        !userHasAdminRole
+                      "
+                    >
+                      <mat-option [value]="0">No</mat-option>
+                      <mat-option [value]="1">Yes</mat-option>
+                    </mat-select>
+                    <app-help-icon
+                      header="xl200.ShowPreThreadUpScrapWindow"
+                      help="xl200.ShowPreThreadUpScrapWindow.help"
+                    ></app-help-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Controller Restrictions">
+          <div fxLayout="column">
+            <div
+              class="setting-warning"
+              *ngIf="machine.lockdownWarning"
+            >
+              <i lass="mdi mdi-alert s20"></i>
+              <span class="setting-warning-mdi">
+                {{ machine.lockdownWarning }}
+              </span>
+            </div>
+            <div
+              fxLayout="row"
+              class="lock-code-part"
+            >
+              <div class="lock-code-container radio-container">
+                <div class="lock-down-container">
+                  <div class="lock-code-row lock-header">
+                    <div class="label-col">Order Restrictions</div>
+                    <div class="check-col">Always</div>
+                    <div class="check-col">With Key</div>
+                    <div class="check-col">Never</div>
+                    <div class="help-icon-header"></div>
+                  </div>
+                  <div
+                    class="lock-code-row"
+                    *ngFor="let oItem of machine.orderLockdownModel"
+                  >
+                    <app-xl200-lockout-item
+                      [label]="oItem.label"
+                      [lockValue]="oItem.value"
+                      (onChange)="onOrderLockdownChange($event, oItem)"
+                    ></app-xl200-lockout-item>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lock-code-container radio-container">
+                <div class="lock-down-container">
+                  <div class="lock-code-row lock-header">
+                    <div class="label-col">Pattern Restrictions</div>
+                    <div class="check-col">Always</div>
+                    <div class="check-col">With Key</div>
+                    <div class="check-col">Never</div>
+                  </div>
+                  <div
+                    class="lock-code-row"
+                    *ngFor="let pItem of machine.patternLockdownModel"
+                  >
+                    <app-xl200-lockout-item
+                      [label]="pItem.label"
+                      [lockValue]="pItem.value"
+                      (onChange)="onPatternLockdownChange($event, pItem)"
+                    ></app-xl200-lockout-item>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Setups">
+          <app-xl200-setups
+            class="xl-200-setup"
+            [machineId]="machineId"
+          >
+          </app-xl200-setups>
+        </mat-tab>
+        <mat-tab label="Tools">
+          <app-xl200-tools [machineId]="machineId"></app-xl200-tools>
+        </mat-tab>
+        <mat-tab label="Patterns">
+          <app-xl200-patterns [machineId]="machineId"></app-xl200-patterns>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </ng-scrollbar>
+</div>

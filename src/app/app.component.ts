@@ -247,6 +247,30 @@ export class AppComponent {
           }, 
         ]
       },
+      {
+        name: 'machines',
+        icon: 'mdi-factory',
+        position: 80,
+        subItems: [
+          {
+            name: 'Pathfinder',
+            routeOrFunction: '/machines/pathfinder',
+            position: 10,
+            claims: 'pro.machine.dashboard',
+          },
+          {
+            name: 'XL200',
+            routeOrFunction: '/machines/xl200',
+            position: 20
+          },
+        ]
+      },
+      {
+        name: 'tooling',
+        routeOrFunction: '/tooling',
+        icon: 'mdi-hammer-wrench',
+        position: 90,
+      },
       // {
       //   name: 'Calendar',
       //   routeOrFunction: '/apps/calendar',

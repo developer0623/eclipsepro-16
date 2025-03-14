@@ -1,0 +1,349 @@
+<mat-tab-group
+  class="xl200-tabs"
+  mat-stretch-tabs="false"
+  dynamicHeight
+  [selectedIndex]="selectedTabIndex"
+  (selectedIndexChange)="onChangeTab($event)"
+>
+  <mat-tab label="Parameter History">
+    <div
+      fxLayout="row"
+      fxFlexFill
+      fxLayoutAlign="space-between"
+    >
+      <div fxFlex="49">
+        <h2>Available Snapshots & Libraries</h2>
+        <ng-scrollbar
+          visibility="hover"
+          class="main-list snapshot-list"
+        >
+          <div
+            class="snapshot-list-item"
+            [ngClass]="{ 'is-active': item.id == currentSetup.id }"
+            *ngFor="let item of machineSetups"
+            (click)="onChangeSnapshot(item)"
+          >
+            <div class="snapshot-list-item-left">
+              <div class="item-title">
+                {{ item.name }}
+                <span
+                  *ngIf="item.isSavedLibrary"
+                  class="saved-library-txt"
+                  >Saved Library</span
+                >
+              </div>
+              <div class="item-des">{{ item.changedParameters }} Changed Parameters</div>
+            </div>
+            <mat-icon class="snapshot-item-icon">more_horiz</mat-icon>
+          </div>
+        </ng-scrollbar>
+      </div>
+      <div fxFlex="49">
+        <h2>{{ currentSetup.name }}</h2>
+        <div class="main-list">
+          <div class="main-list-header">
+            <div class="search-container">
+              <mat-icon>search</mat-icon>
+              <input
+                type="text"
+                class="param-search"
+                placeholder="Search for a parameter name or value"
+                [(ngModel)]="filterObj.searchTxt"
+                (onEvent)="applyFilter()"
+                debounceKeyUp
+                [debounceTime]="200"
+              />
+            </div>
+            <mat-checkbox
+              class="primary-checkbox history-checkbox"
+              aria-label="checkbox"
+              labelPosition="before"
+              [(ngModel)]="filterObj.changedOnly"
+              (change)="applyFilter()"
+            >
+              Show changed only
+            </mat-checkbox>
+          </div>
+          <ng-scrollbar
+            visibility="hover"
+            class="params-list"
+          >
+            <table
+              mat-table
+              [dataSource]="dataSource"
+              matSort
+              (matSortChange)="announceSortChange($event)"
+              class="param-table"
+            >
+              <ng-container matColumnDef="paramGroupId">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                >
+                  ID
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                >
+                  {{ element.paramGroupId }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="setupName">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                >
+                  Name
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                >
+                  {{ element.setupName }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="setupValue">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                >
+                  Value
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                >
+                  <span [ngClass]="{ 'is-red': element.hasChanged }">{{ element.setupValue }}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  aria-label="row actions"
+                >
+                  &nbsp;
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                >
+                  <button
+                    mat-icon-button
+                    class="history-icon-btn"
+                    (click)="onOpenHistoryModal(element)"
+                  >
+                    <i class="mdi mdi-history history-icon"></i>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumns; sticky: true"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+              ></tr>
+              <tr
+                class="mat-row"
+                *matNoDataRow
+              >
+                <td
+                  class="mat-cell"
+                  colspan="4"
+                >
+                  No data matching the filter
+                </td>
+              </tr>
+            </table>
+          </ng-scrollbar>
+          <div
+            class="loading-container"
+            *ngIf="isLoading"
+          >
+            <mat-spinner
+              class="primary-loading"
+              diameter="40"
+            ></mat-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Compare snapshots">
+    <div
+      fxLayout="row"
+      fxFlexFill
+      fxLayoutAlign="space-between"
+    >
+      <div fxFlex="49">
+        <h2>Compare up to 5 snapshots</h2>
+        <ng-scrollbar
+          visibility="hover"
+          class="main-list snapshot-list"
+        >
+          <div
+            class="snapshot-list-item compare-snapshot-list-item"
+            [ngClass]="{ 'is-com-active': onGetCheckedState(item.id) }"
+            *ngFor="let item of machineSetups"
+            (click)="onCompareSnapshot(item)"
+          >
+            <mat-checkbox
+              class="primary-active-checkbox compare-checkbox"
+              aria-label="checkbox"
+              [checked]="onGetCheckedState(item.id)"
+            >
+            </mat-checkbox>
+            <div class="snapshot-list-item-left">
+              <div class="item-title">
+                {{ item.name }}
+                <span
+                  *ngIf="item.isSavedLibrary"
+                  class="saved-library-txt"
+                  >Saved Library</span
+                >
+              </div>
+              <div class="item-des">{{ item.changedParameters }} Changed Parameters</div>
+            </div>
+          </div>
+        </ng-scrollbar>
+      </div>
+      <div fxFlex="49">
+        <div class="compare-list-header">
+          <div class="search-container">
+            <mat-icon>search</mat-icon>
+            <input
+              type="text"
+              class="param-search"
+              placeholder="Search for a parameter name or value"
+              [(ngModel)]="compareFilterObj.searchTxt"
+              (onEvent)="applyCompareFilter()"
+              debounceKeyUp
+              [debounceTime]="200"
+            />
+          </div>
+          <mat-checkbox
+            class="primary-checkbox history-checkbox"
+            aria-label="checkbox"
+            labelPosition="before"
+            [(ngModel)]="compareFilterObj.changedOnly"
+            (change)="applyCompareFilter()"
+          >
+            Show changed only
+          </mat-checkbox>
+        </div>
+        <div class="main-list compare-list-container">
+          <ng-scrollbar
+            visibility="hover"
+            class="compare-list"
+            *ngIf="comparedData.length > 0"
+          >
+            <div class="compare-list-item compare-list-item-header">
+              <div
+                class="compare-name"
+                [ngStyle]="onGetWidth(selectedSnapShots.length)"
+              ></div>
+              <div
+                class="compare-des"
+                *ngFor="let item of selectedSnapShots; let i = index"
+              >
+                <div class="compare-action">
+                  <!-- It will be used later. -->
+                  <!-- <button
+                    mat-icon-button
+                    class="s-30-btn"
+                  >
+                    <mat-icon class="horiz-icon">more_horiz</mat-icon>
+                  </button> -->
+                  <button
+                    mat-icon-button
+                    class="s-30-btn"
+                    (click)="onRemoveSnapShot(i)"
+                  >
+                    <mat-icon class="close-icon">close</mat-icon>
+                  </button>
+                </div>
+                <div
+                  class="compare-title"
+                  *ngIf="item.isSavedLibrary"
+                  [matTooltip]="item.date | date : 'short'"
+                  (click)="gotoParam(item)"
+                >
+                  {{ item.name }}
+                </div>
+                <div
+                  class="compare-title"
+                  *ngIf="!item.isSavedLibrary"
+                  (click)="gotoParam(item)"
+                >
+                  {{ item.date | date : 'short' }}
+                </div>
+                <div class="compare-lib">
+                  <span
+                    *ngIf="item.isSavedLibrary"
+                    class="saved-library-txt"
+                    >SAVED LIBRARY</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="compare-list-item"
+              *ngFor="let item of filteredComparedData"
+            >
+              <div
+                class="compare-name"
+                [ngStyle]="onGetWidth(item.setupValues.length)"
+              >
+                {{ item.setupName }}
+              </div>
+              <div
+                class="compare-val"
+                [ngClass]="{ 'is-red': val.hasChanged }"
+                *ngFor="let val of item.setupValues"
+              >
+                {{ val.setupValue }}
+              </div>
+            </div>
+            <div
+              class="none-searched-item"
+              *ngIf="filteredComparedData.length === 0"
+            >
+              No data matching the filter
+            </div>
+          </ng-scrollbar>
+          <div
+            class="compare-none-container"
+            *ngIf="comparedData.length === 0"
+          >
+            <p class="compare-none-text">
+              Select up to 5 snapshots or libraries and <br />you’ll be able to compare them here.
+            </p>
+          </div>
+          <div
+            class="loading-container"
+            *ngIf="isLoading"
+          >
+            <mat-spinner
+              class="primary-loading"
+              diameter="40"
+            ></mat-spinner>
+          </div>
+          <div
+            class="more-container"
+            *ngIf="selectedIds.length === 1"
+          >
+            Select more snapshots to begin comparison.
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

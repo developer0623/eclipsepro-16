@@ -1,0 +1,57 @@
+<div
+  class="item-settings-dialog edit-property-modal-container"
+  aria-label="Edit Property"
+>
+  <div class="item-settings-dialog__wrapper">
+    <div class="item-settings-dialog__header">Select Machine</div>
+    <mat-dialog-content class="main-container">
+      <div class="list-container">
+        <div class="property-item-row property-item-header">
+          <div class="main-col">Machine Name</div>
+          <div class="main-col">Software Model</div>
+          <div class="main-col">Software Version</div>
+        </div>
+        <mat-radio-group [(ngModel)]="selectedMachine">
+          <div
+            *ngFor="let machine of machines"
+            class="demo-row"
+          >
+            <div>
+              <mat-card>
+                <mat-content class="main-col">
+                  <mat-radio-button
+                    [(value)]="machine.id"
+                    class="machine-radio"
+                    color="primary"
+                  >
+                    {{ machine.description }}
+                  </mat-radio-button>
+                </mat-content>
+                <mat-content class="main-col">{{ machine.softwareModel }}</mat-content>
+                <mat-content class="main-col">{{ machine.softwareVersion }}</mat-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-radio-group>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions
+      layout="row"
+      class="item-settings-dialog__footer"
+    >
+      <button
+        class="item-settings-dialog__button"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button
+        class="item-settings-dialog__button x--active"
+        (click)="save()"
+      >
+        Save
+      </button>
+    </mat-dialog-actions>
+  </div>
+</div>

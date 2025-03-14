@@ -1,0 +1,45 @@
+<div class="machine-detail">
+  <div class="machine-detail__item">
+    <div class="machine-detail__title">Instance:</div>
+    <div class="machine-detail__content">
+      {{ currentTools.libraryName }}
+    </div>
+  </div>
+  <div class="machine-detail__item">
+    <div class="machine-detail__title">Id:</div>
+    <div class="machine-detail__content">
+      {{ currentTools.libraryId }}
+    </div>
+  </div>
+  <div class="machine-detail__item">
+    <div class="machine-detail__title">Controller List:</div>
+    <div class="machine-detail__content">
+      {{ currentTools.controllerListId }}
+    </div>
+  </div>
+  <div class="machine-detail__item">
+    <div class="machine-detail__title">Date:</div>
+    <div class="machine-detail__content">
+      {{ currentTools.date | date : 'short' }}
+    </div>
+  </div>
+  <div class="machine-detail__item">
+    <div class="machine-detail__title">Model:</div>
+    <div class="machine-detail__content">
+      {{ currentTools.softwareModel }}
+    </div>
+  </div>
+  <div class="machine-detail__item">
+    <div class="machine-detail__title">Version:</div>
+    <div class="machine-detail__content">
+      {{ currentTools.softwareVersion }}
+    </div>
+  </div>
+</div>
+<ag-grid-angular
+  class="ag-theme-balham"
+  style="width: 100%"
+  [domLayout]="'autoHeight'"
+  [gridOptions]="agGridOptions"
+>
+</ag-grid-angular>

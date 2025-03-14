@@ -1,0 +1,24 @@
+.add-tooling-modal-container {
+  .main-container {
+    padding: 20px 20px 10px 20px;
+    min-height: 100px;
+    background-color: transparent;
+  }
+}
+
+.item-settings-dialog__header {
+  height: 60px;
+  font-size: 24px;
+  background: #555555;
+  color: #fff;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+.white-color {
+  color: white;
+}
+.yellow-input {
+  width: 100%;
+}

@@ -1,0 +1,51 @@
+:host {
+  padding: 40px 48px;
+  display: block;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  background-color: transparent;
+}
+
+mat-toolbar-row {
+  height: auto;
+  padding: 0;
+}
+
+::ng-deep .close-icon-btn {
+  width: 32px !important;
+  height: 32px !important;
+  margin: auto 0 !important;
+  padding: 0 !important;
+  .mat-mdc-button-touch-target {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .icon-close {
+    position: relative;
+    top: 4px;
+  }
+}
+
+.history-title {
+  font-weight: 500;
+  color: #264f58;
+}
+
+.history-des {
+  font-size: 13px;
+  font-weight: 400;
+  color: #92a6ab;
+}
+
+.history-list {
+  height: 500px;
+  border: 1px solid #e6e6e6;
+  margin-top: 28px;
+  tr {
+    height: 40px;
+  }
+}

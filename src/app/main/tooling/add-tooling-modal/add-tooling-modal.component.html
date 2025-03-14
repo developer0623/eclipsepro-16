@@ -1,0 +1,49 @@
+<mat-toolbar class="item-settings-dialog__header">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Add Tooling Code
+  </h2>
+</mat-toolbar>
+<form
+  [formGroup]="toolingForm"
+  (ngSubmit)="save()"
+>
+  <mat-dialog-content>
+    <mat-form-field
+      appearance="fill"
+      class="yellow-input"
+    >
+      <mat-label>Tooling Code</mat-label>
+      <input
+        matInput
+        formControlName="toolingCode"
+        placeholder="Tooling Code"
+        required
+      />
+      <mat-error *ngIf="toolingForm.get('toolingCode')?.hasError('required')">
+        Tooling Code is required
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <div
+    mat-dialog-actions
+    [align]="'end'"
+  >
+    <button
+      mat-button
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-button
+      color="success"
+      (click)="save()"
+    >
+      Save
+    </button>
+  </div>
+</form>
