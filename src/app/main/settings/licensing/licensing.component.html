@@ -1,0 +1,140 @@
+<div
+  class="page-layout simple fullwidth settings"
+  [ngClass]="{ 'no-scroll': panelIsOpen }"
+  ngsf-fullscreen
+>
+  <div
+    class="header"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <span class="h2 text-upper">LICENSING: LICENSE</span>
+    <div class="toolbar">
+      <button
+        mat-icon-button
+        aria-label="Send Installation Info"
+        matTooltip="Send Installation Info"
+        (click)="triggerSendInstallInfo()"
+      >
+        <i class="icon icon-cloud-upload"></i>
+      </button>
+      <button
+        mat-icon-button
+        aria-label="Request License Update"
+        matTooltip="Request License Update"
+        (click)="triggerLicenseUpdate()"
+      >
+        <i class="icon icon-sync"></i>
+      </button>
+      <button
+        mat-icon-button
+        aria-label="Add License"
+        matTooltip="Add License"
+        (click)="addLicenseFile()"
+      >
+        <i class="icon icon-plus"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="content md-background md-hue-1 p-24">
+    <div scroll-glue-right>
+      <div
+        fxLayout="column"
+        *ngIf="license"
+      >
+        <div></div>
+
+        <table
+          class="simple dataTable"
+          style="width: 100%"
+        >
+          <tbody>
+            <tr>
+              <td style="width: 25%">Server Id:</td>
+              <td>{{ license.serverId }}</td>
+            </tr>
+            <!-- tr>
+                 <td style="width: 25%;"> Creators: </td>
+                 <td> {{license.creators}} </td>
+              </tr -->
+            <tr>
+              <td style="width: 25%">Last Update:</td>
+              <td>
+                {{ license.lastUpdate | amsDateTime }} (<span style="font-style: italic"
+                  >{{ license.updateCount }} licenses issued</span
+                >)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="simple-table-container mat-elevation-z2 mb-24">
+          <div
+            layout="row"
+            class="table-title black-text"
+          >
+            Modules
+          </div>
+          <div class="ms-responsive-table-wrapper">
+            <table class="simple hover dataTable">
+              <thead>
+                <tr>
+                  <th>Module</th>
+                  <th>Expiry</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let m of license.modules | orderBy : 'name'">
+                  <td>{{ m.name }}</td>
+                  <td
+                    [ngClass]="{
+                      'error-cell': m.status == 'Expired',
+                      'warn-cell': m.status == 'Expiring'
+                    }"
+                  >
+                    {{ m.expiry | amsDateTime }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="simple-table-container mat-elevation-z2 mb-24">
+          <div
+            fxLayout="row"
+            class="table-title black-text"
+          >
+            Machines
+          </div>
+          <div class="ms-responsive-table-wrapper">
+            <table class="simple hover dataTable">
+              <thead>
+                <tr>
+                  <th>Machine</th>
+                  <th>Module</th>
+                  <th>Expiry</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let m of license.machines | orderBy : ['unitNum', 'name']">
+                  <td>{{ m.unitNum }}</td>
+                  <td>{{ m.name }}</td>
+                  <td
+                    [ngClass]="{
+                      'error-cell': m.status == 'Expired',
+                      'warn-cell': m.status == 'Expiring'
+                    }"
+                  >
+                    {{ m.expiry | amsDateTime }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

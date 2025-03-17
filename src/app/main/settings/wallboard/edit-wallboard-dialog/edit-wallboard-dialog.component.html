@@ -1,0 +1,371 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Edit Wallboard Device
+  </h2>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>Wallboard Name</mat-label>
+    <input
+      matInput
+      [(ngModel)]="selectedDevice.wallboardDeviceName"
+      required
+    />
+  </mat-form-field>
+  <mat-form-field class="yellow-input">
+    <mat-label>Display Type</mat-label>
+    <mat-select
+      [(ngModel)]="selectedType"
+      panelClass="yellow-select-panel"
+      class="yellow-select"
+      placeholder="Type Select"
+      required
+    >
+      <mat-option
+        *ngFor="let type of displayTypes"
+        [value]="type"
+      >
+        <span translate="wallboardLabel_{{ type }}"></span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div *ngIf="selectedType === 'Andon'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Machine</mat-label>
+      <mat-select
+        [(ngModel)]="selectedMachine"
+        panelClass="yellow-select-panel"
+        placeholder="Machine Select"
+        required
+      >
+        <mat-option
+          *ngFor="let machine of machines"
+          [value]="machine.machineNumber"
+        >
+          {{ machine.description }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="yellow-input">
+      <mat-label>Andon Sequence</mat-label>
+      <mat-select
+        [(ngModel)]="selectedSequence"
+        panelClass="yellow-select-panel"
+        placeholder="Sequence Select"
+        required
+        aria-label="Andon Sequence"
+      >
+        <mat-option
+          *ngFor="let sequence of sequences"
+          [value]="sequence.id"
+        >
+          {{ sequence.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-checkbox
+      class="yellow-checkbox"
+      aria-label="Show Schedule"
+      [(ngModel)]="showSchedule"
+    >
+      Show Schedule
+    </mat-checkbox>
+  </div>
+  <div *ngIf="selectedType === 'ExternalUrl'">
+    <mat-form-field class="yellow-input">
+      <mat-label>ExternalUrl</mat-label>
+      <input
+        matInput
+        [(ngModel)]="selectedExternalUrl"
+        required
+        pattern="https?://.+"
+      />
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="selectedType === 'Message'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Message</mat-label>
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="3"
+        required
+        placeholder="message"
+        [(ngModel)]="message"
+      ></textarea>
+    </mat-form-field>
+  </div>
+
+  <div
+    class="wallboard-select-container"
+    *ngIf="selectedType === 'Warehouse'"
+  >
+    <!-- todo: consider adding an "all machines" checkbox and disable the following if checked -->
+    <mat-form-field class="yellow-input">
+      <mat-label>Machines</mat-label>
+      <mat-select
+        [(ngModel)]="selectedMachines"
+        panelClass="yellow-select-panel"
+        placeholder="Machine Select"
+        required
+        multiple
+      >
+        <mat-option
+          *ngFor="let machine of machines"
+          [value]="machine.machineNumber"
+        >
+          {{ machine.description }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div
+    class="wallboard-select-container"
+    *ngIf="selectedType === 'ProductionSummary'"
+  >
+    <h1>Experimental 🧪</h1>
+    <mat-form-field class="yellow-input">
+      <mat-label>Machine</mat-label>
+      <mat-select
+        [(ngModel)]="selectedMachines"
+        panelClass="yellow-select-panel"
+        placeholder="Machine Select"
+        required
+        multiple
+      >
+        <mat-option
+          *ngFor="let machine of machines"
+          [value]="machine.machineNumber"
+        >
+          {{ machine.description }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <div class="pop-label">
+        Metrics:
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="metricmenu"
+          aria-label="metric menu"
+        >
+          <i class="icon icon-plus-box menu-icon"></i>
+        </button>
+        <mat-menu
+          #metricmenu="matMenu"
+          xPosition="before"
+          class="metric-menu"
+        >
+          <div class="checkbox-menu-header">
+            <span (click)="$event.stopPropagation(); $event.preventDefault()">SHOW METRICS:</span>
+            <mat-icon>close</mat-icon>
+          </div>
+          <button
+            mat-menu-item
+            (click)="onClickMetricMenuItem(allMetricsItem, $event)"
+          >
+            <mat-icon
+              *ngIf="!allMetricsItem.isChecked && !isAllMetricsIndeterminate()"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="allMetricsItem.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            <mat-icon
+              *ngIf="isAllMetricsIndeterminate()"
+              class="checked"
+              >indeterminate_check_box</mat-icon
+            >
+            All
+          </button>
+          <button
+            *ngFor="let item of metrics"
+            mat-menu-item
+            (click)="onClickMetricMenuItem(item, $event)"
+          >
+            <mat-icon
+              *ngIf="!item.isChecked"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="item.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            {{ item.title }}
+          </button>
+        </mat-menu>
+      </div>
+      <div
+        class="metrics-container"
+        cdkDropList
+        (cdkDropListDropped)="dropMetric($event)"
+      >
+        <div
+          *ngFor="let item of selectedMetrics"
+          class="metric-list-item"
+          cdkDrag
+        >
+          <i class="icon icon-dots-vertical menu-icon metric-first-icon"></i>
+          <div class="metric-list-item-content">
+            {{ item.title }}
+            <button
+              mat-icon-button
+              aria-label="Remove Metric"
+              class="metric-delete-btn"
+              (click)="onRemoveMetricItem(item)"
+            >
+              <i class="icon icon-delete menu-icon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wallboard-select-container">
+      <div class="pop-label">
+        Ranges:
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="rangemenu"
+          aria-label="range menu"
+        >
+          <i class="icon icon-plus-box menu-icon"></i>
+        </button>
+        <mat-menu
+          #rangemenu="matMenu"
+          xPosition="before"
+          class="metric-menu"
+        >
+          <div class="checkbox-menu-header">
+            <span (click)="$event.stopPropagation(); $event.preventDefault()">SHOW RANGES:</span>
+            <mat-icon>close</mat-icon>
+          </div>
+          <button
+            mat-menu-item
+            (click)="onClickRangeMenuItem(allRangesItem, $event)"
+          >
+            <mat-icon
+              *ngIf="!allRangesItem.isChecked && !isAllRangesIndeterminate()"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="allRangesItem.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            <mat-icon
+              *ngIf="isAllRangesIndeterminate()"
+              class="checked"
+              >indeterminate_check_box</mat-icon
+            >
+            All
+          </button>
+          <button
+            *ngFor="let item of ranges"
+            mat-menu-item
+            (click)="onClickRangeMenuItem(item, $event)"
+          >
+            <mat-icon
+              *ngIf="!item.isChecked"
+              class="empty"
+              >check_box_outline_blank</mat-icon
+            >
+            <mat-icon
+              *ngIf="item.isChecked"
+              class="checked"
+              >check_box</mat-icon
+            >
+            {{ item.title }}
+          </button>
+        </mat-menu>
+      </div>
+      <div
+        class="metrics-container"
+        cdkDropList
+        (cdkDropListDropped)="dropRange($event)"
+      >
+        <div
+          *ngFor="let item of selectedRanges"
+          class="metric-list-item"
+          cdkDrag
+        >
+          <i class="icon icon-dots-vertical menu-icon metric-first-icon"></i>
+          <div class="metric-list-item-content">
+            {{ item.title }}
+            <button
+              mat-icon-button
+              aria-label="Remove Range"
+              class="i-button metric-delete-btn"
+              (click)="onRemoveRangeItem(item)"
+            >
+              <i class="icon icon-delete menu-icon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field class="yellow-input mt-22">
+      <mat-label>Cycle Seconds:</mat-label>
+      <input
+        matInput
+        [(ngModel)]="deviceParams.cycleSec"
+        type="number"
+        min="1"
+      />
+    </mat-form-field>
+  </div>
+  <div
+    *ngIf="
+      selectedType === 'Andon' || selectedType === 'Message' || selectedType === 'ProductionSummary'
+    "
+  >
+    <mat-form-field class="yellow-input">
+      <mat-label>Theme</mat-label>
+      <mat-select
+        [(ngModel)]="selectedTheme"
+        panelClass="yellow-select-panel"
+        placeholder="Theme Select"
+        required
+        aria-label="Theme select"
+      >
+        <mat-option
+          *ngFor="let theme of themes"
+          [value]="theme.value"
+        >
+          {{ theme.displayName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="saveWallboard()"
+  >
+    SAVE
+  </button>
+</div>

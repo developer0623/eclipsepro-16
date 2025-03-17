@@ -1,0 +1,26 @@
+<div
+  class="performance-item"
+  [ngClass]="{ is_focus: isFocus }"
+>
+  <input
+    type="number"
+    [(ngModel)]="item.lengthIn"
+    (focus)="focus()"
+    (blur)="blur()"
+    *ngIf="islength"
+  />
+  <input
+    type="number"
+    [(ngModel)]="item.fpm"
+    (focus)="focus()"
+    (blur)="blur()"
+  />
+  <button
+    aria-label="Select Category"
+    mat-icon-button
+    *ngIf="isFocus && islength"
+    (click)="onRemoveItem()"
+  >
+    <i class="icon-trash icon"></i>
+  </button>
+</div>

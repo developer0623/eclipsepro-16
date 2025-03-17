@@ -1,0 +1,73 @@
+<div mat-dialog-content>
+  <div *ngIf="editKey === 'message'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Panel Title</mat-label>
+      <input
+        matInput
+        [(ngModel)]="panel.title"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field class="yellow-input">
+      <mat-label>Panel Message</mat-label>
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="6"
+        cdkAutosizeMaxRows="6"
+        required
+        placeholder="message"
+        [(ngModel)]="panel.message"
+      ></textarea>
+    </mat-form-field>
+  </div>
+  <div *ngIf="editKey === 'shiftRun'">
+    <mat-form-field class="yellow-input">
+      <mat-label>Run Time Unit</mat-label>
+      <mat-select
+        [(ngModel)]="panel.shiftRun_RunTimeUnit"
+        panelClass="yellow-select-panel"
+      >
+        <mat-option
+          *ngFor="let choice of timeUnitChoices"
+          [value]="choice.key"
+        >
+          {{ choice.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="yellow-input">
+      <mat-label>Throughput Time Unit</mat-label>
+      <mat-select
+        [(ngModel)]="panel.ShiftRun_throughputTimeUnit"
+        panelClass="yellow-select-panel"
+      >
+        <mat-option
+          *ngFor="let choice of timeUnitChoices"
+          [value]="choice.key"
+        >
+          {{ choice.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="savePanel()"
+  >
+    SAVE
+  </button>
+</div>

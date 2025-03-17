@@ -1,0 +1,700 @@
+<div
+  id="wallboard-view"
+  class="page-layout simple fullwidth dashboard"
+>
+  <!-- HEADER -->
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span
+        class="h2"
+        translate="Printing"
+      ></span>
+    </div>
+  </div>
+  <div class="content md-background md-hue-1">
+    <mat-tab-group
+      class="main-color-tab"
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+      [selectedIndex]="this.selectedTabIndex"
+      (selectedIndexChange)="onChangeTab($event)"
+    >
+      <mat-tab label="Bundle Tags">
+        <div class="task-content">
+          <div class="task-list active-task-list">
+            <div layout="column">
+              <div class="simple-table-container mat-elevation-z2 mb-24">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Bundle Printing Status:
+                  <i
+                    class="icon s24 icon-no"
+                    *ngIf="!bundlePrintConfig.isConfigured"
+                  ></i>
+                  <i
+                    class="icon s24 icon-check-circle"
+                    *ngIf="bundlePrintConfig.isConfigured"
+                  ></i>
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <div
+                    class="mat-elevation-z1"
+                    flex="100"
+                  >
+                    <div layout="column">
+                      <div
+                        class="printing-item-row printing-item-header"
+                        translate="settings"
+                      ></div>
+                      <div class="printing-item-row">
+                        <div class="title-col">Enable bundle printing</div>
+                        <div class="main-col">
+                          <mat-checkbox
+                            class="yellow-checkbox"
+                            aria-label="Enable bundle tag printing"
+                            [(ngModel)]="bundlePrintConfig.bundleTagEnabled"
+                            (change)="saveBundleTagEnabled()"
+                          >
+                          </mat-checkbox>
+                        </div>
+                        <div class="main-col">
+                          <div
+                            style="color: red"
+                            *ngFor="let msg of bundlePrintConfig.messages"
+                          >
+                            {{ msg }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="printing-item-row">
+                        <div class="title-col">Bundle Source</div>
+                        <div class="main-col source-col">
+                          <span class="iso">
+                            {{ bundlePrintConfig.source }}
+                          </span>
+                          <button
+                            mat-icon-button
+                            [matMenuTriggerFor]="customMenu"
+                            class="main-dropdown-btn perform-dialog-menu-btn"
+                            *ngIf="bundlePrintConfig.source === 'None'"
+                            aria-label="Language"
+                          >
+                            <i class="icon icon-chevron-down menu-icon"></i>
+                          </button>
+                          <mat-menu
+                            #customMenu="matMenu"
+                            class="main-menu"
+                            xPosition="before"
+                          >
+                            <button
+                              mat-menu-item
+                              class="main-menu-item"
+                              *ngFor="let algorithm of bundleCompletionAlgorithms"
+                              (click)="setBundleCompletionAlgorithm(algorithm)"
+                              aria-label="{{ algorithm.title }}"
+                            >
+                              <span class="menu-item-content">{{ algorithm.title }}</span>
+                            </button>
+                          </mat-menu>
+                        </div>
+                        <div class="main-col"></div>
+                      </div>
+                      <div class="printing-item-row">
+                        <div class="title-col">Start date</div>
+                        <div class="main-col source-col">
+                          {{ bundlePrintConfig.bundleTagStartingDate | date : 'MM/dd/yyyy' }}
+                          <input
+                            class="hide-date-picker"
+                            matInput
+                            [matDatepicker]="picker"
+                            [(ngModel)]="bundlePrintConfig.bundleTagStartingDate"
+                            (dateChange)="saveBundlePrintStartDate()"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="picker"
+                            class="s-40-btn"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </div>
+                        <div class="main-col">
+                          Bundle tags older than this date will not be printed automatically.
+                        </div>
+                      </div>
+                      <div class="printing-item-row">
+                        <div class="title-col">Properties</div>
+                        <div
+                          class="main-col property-table"
+                          (click)="editProperty('bundle')"
+                        >
+                          <div class="print-property-item-row property-table-header">
+                            <div class="key-col">Key</div>
+                            <div class="value-col">Value</div>
+                          </div>
+                          <div
+                            class="print-property-item-row"
+                            *ngFor="let pr of bundlePrintConfig.bundleTagProperties | objectToArray"
+                          >
+                            <div class="key-col">{{ pr.key }}</div>
+                            <div class="value-col">{{ pr.value }}</div>
+                          </div>
+                          <div
+                            class="print-property-item-row empty-row"
+                            *ngIf="isObjectEmpty(bundlePrintConfig.bundleTagProperties)"
+                          >
+                            none
+                          </div>
+                        </div>
+                        <div class="main-col"></div>
+                      </div>
+                      <div class="ms-responsive-table-wrapper">
+                        <table class="simple hover dataTable main-table">
+                          <thead>
+                            <tr>
+                              <th>Machine</th>
+                              <th>Bundle Template</th>
+                              <th>Bundle Printer</th>
+                              <th>Bundle Copies</th>
+                              <th class="message-col">Messages</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let config of machinePrintConfigs | orderBy : 'id'">
+                              <td>{{ config.machineName }} [{{ config.id }}]</td>
+                              <td>
+                                <mat-select
+                                  [(ngModel)]="config.defaultBundleTemplate"
+                                  class="template-selector"
+                                  panelClass="yellow-select-panel"
+                                  (ngModelChange)="updateMachineConfig(config)"
+                                  aria-label="Default bundle template"
+                                >
+                                  <mat-option
+                                    *ngFor="
+                                      let template of printTemplates
+                                        | filterByKey : 'type' : 'Bundle'
+                                    "
+                                    [value]="template.name"
+                                  >
+                                    {{ template.name }}
+                                  </mat-option>
+                                </mat-select>
+                              </td>
+                              <td>
+                                <mat-select
+                                  [(ngModel)]="config.bundlePrinterName"
+                                  class="template-selector"
+                                  panelClass="yellow-select-panel"
+                                  (ngModelChange)="updateMachineConfig(config)"
+                                  aria-label="Bundle printer name"
+                                >
+                                  <mat-option
+                                    *ngFor="let printer of allPrinters"
+                                    [value]="printer.fullName"
+                                  >
+                                    {{ printer.name }}
+                                  </mat-option>
+                                </mat-select>
+                              </td>
+                              <td>
+                                <mat-form-field class="print-count-input">
+                                  <input
+                                    matInput
+                                    [(ngModel)]="config.bundlePrintCount"
+                                    (onEvent)="updateMachineConfig(config)"
+                                    type="number"
+                                    aria-label="Bundle print count"
+                                    debounceKeyUp
+                                    [debounceTime]="750"
+                                  />
+                                </mat-form-field>
+                              </td>
+                              <td class="message-col">
+                                <div *ngIf="!config.bundlePrinterName">No Printer Defined</div>
+                                <div *ngIf="!config.defaultBundleTemplate">No Template Defined</div>
+                                <div *ngIf="!config.bundlePrintCount > 0">
+                                  Print count must be &gt; 0
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Coil Tags">
+        <div class="task-content">
+          <div class="task-list active-task-list">
+            <div
+              fxLayout="column"
+              fxFlex="100"
+            >
+              <div class="simple-table-container mat-elevation-z2 mb-24">
+                <div
+                  fxLayout="row"
+                  fxFlex="100"
+                >
+                  <div
+                    fxLayout="column"
+                    fxFlex="100"
+                  >
+                    <div
+                      fxLayout="row"
+                      class="table-title black-text"
+                      fxLayoutAlign="start center"
+                    >
+                      Coil Printing Status:
+                      <i
+                        class="icon s24 icon-no"
+                        *ngIf="!coilPrintConfig.isConfigured"
+                      ></i>
+                      <i
+                        class="icon s24 icon-check-circle"
+                        *ngIf="coilPrintConfig.isConfigured"
+                      ></i>
+                    </div>
+                    <div class="ms-responsive-table-wrapper">
+                      <div
+                        class="mat-elevation-z1"
+                        fxFlex="100"
+                      >
+                        <div fxLayout="column">
+                          <div
+                            class="printing-item-row printing-item-header"
+                            translate="settings"
+                          ></div>
+                          <div class="printing-item-row">
+                            <div class="title-col">Enable coil tag printing</div>
+                            <div class="main-col">
+                              <mat-checkbox
+                                class="yellow-checkbox"
+                                aria-label="Enable coil tag printing"
+                                [(ngModel)]="coilPrintConfig.coilTagEnabled"
+                                (change)="saveCoilTagEnabled()"
+                              >
+                              </mat-checkbox>
+                            </div>
+                            <div class="main-col">
+                              <div
+                                style="color: red"
+                                *ngFor="let msg of coilPrintConfig.messages"
+                              >
+                                {{ msg }}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="printing-item-row">
+                            <div class="title-col">Start date</div>
+                            <div class="main-col source-col">
+                              {{ coilPrintConfig.coilTagStartingDate | date : 'MM/dd/yyyy' }}
+                              <input
+                                class="hide-date-picker"
+                                matInput
+                                [matDatepicker]="coilpicker"
+                                [(ngModel)]="coilPrintConfig.coilTagStartingDate"
+                                (dateChange)="saveCoilPrintStartDate()"
+                              />
+                              <mat-datepicker-toggle
+                                matSuffix
+                                [for]="coilpicker"
+                                class="s-40-btn"
+                              ></mat-datepicker-toggle>
+                              <mat-datepicker #coilpicker></mat-datepicker>
+                            </div>
+
+                            <div class="main-col">
+                              Coil tags older than this date will not be printed automatically.
+                            </div>
+                          </div>
+                          <div class="printing-item-row">
+                            <div class="title-col">Default Coil Template</div>
+                            <div class="main-col">
+                              <mat-select
+                                [(ngModel)]="coilPrintConfig.defaultTemplate"
+                                class="template-selector"
+                                panelClass="yellow-select-panel"
+                                (ngModelChange)="saveCoilDefaultTemplate()"
+                                aria-label="Default bundle template"
+                              >
+                                <mat-option
+                                  *ngFor="
+                                    let template of printTemplates | filterByKey : 'type' : 'Coil'
+                                  "
+                                  [value]="template.name"
+                                >
+                                  {{ template.name }}
+                                </mat-option>
+                              </mat-select>
+                            </div>
+                            <div class="main-col"></div>
+                          </div>
+                          <div class="printing-item-row">
+                            <div class="title-col">Properties</div>
+                            <div
+                              class="main-col property-table"
+                              (click)="editProperty('coil')"
+                            >
+                              <div class="print-property-item-row">
+                                <div class="key-col">Key</div>
+                                <div class="value-col">Value</div>
+                              </div>
+                              <div
+                                class="print-property-item-row"
+                                *ngFor="
+                                  let tag of coilPrintConfig.coilTagProperties | objectToArray
+                                "
+                              >
+                                <div class="key-col">{{ tag.key }}</div>
+                                <div class="value-col">{{ tag.value }}</div>
+                              </div>
+                              <div
+                                class="print-property-item-row empty-row"
+                                *ngIf="isObjectEmpty(coilPrintConfig.coilTagProperties)"
+                              >
+                                none
+                              </div>
+                            </div>
+
+                            <div class="main-col"></div>
+                          </div>
+                          <div class="ms-responsive-table-wrapper">
+                            <table class="simple hover dataTable main-table">
+                              <thead>
+                                <tr>
+                                  <th>Machine</th>
+                                  <th>Coil Template</th>
+                                  <th>Coil Printer</th>
+                                  <th>Coil Copies</th>
+                                  <th class="message-col">Messages</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let config of machinePrintConfigs | orderBy : 'id'">
+                                  <td>{{ config.machineName }} [{{ config.id }}]</td>
+
+                                  <td>
+                                    <mat-select
+                                      [(ngModel)]="config.coilTagTemplate"
+                                      class="template-selector"
+                                      panelClass="yellow-select-panel"
+                                      (ngModelChange)="updateMachineConfig(config)"
+                                    >
+                                      <mat-option
+                                        *ngFor="
+                                          let template of printTemplates
+                                            | filterByKey : 'type' : 'Coil'
+                                        "
+                                        [value]="template.name"
+                                      >
+                                        {{ template.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </td>
+                                  <td>
+                                    <mat-select
+                                      [(ngModel)]="config.coilTagPrinterName"
+                                      class="template-selector"
+                                      panelClass="yellow-select-panel"
+                                      (ngModelChange)="updateMachineConfig(config)"
+                                      aria-label="Coil Tag Printer Name"
+                                    >
+                                      <mat-option
+                                        *ngFor="let printer of allPrinters"
+                                        [value]="printer.fullName"
+                                      >
+                                        {{ printer.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </td>
+                                  <td>
+                                    <mat-form-field class="print-count-input">
+                                      <input
+                                        matInput
+                                        [(ngModel)]="config.coilTagPrintCount"
+                                        (onEvent)="updateMachineConfig(config)"
+                                        type="number"
+                                        aria-label="Coil tag print count"
+                                        debounceKeyUp
+                                        [debounceTime]="750"
+                                      />
+                                    </mat-form-field>
+                                  </td>
+                                  <td class="message-col">
+                                    <div *ngIf="!config.bundlePrinterName">No Printer Defined</div>
+                                    <div *ngIf="!config.defaultBundleTemplate">
+                                      No Template Defined
+                                    </div>
+                                    <div *ngIf="!config.bundlePrintCount > 0">
+                                      Print count must be &gt; 0
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Templates">
+        <div class="task-content">
+          <div class="task-list active-task-list">
+            <div fxLayout="column">
+              <div class="simple-table-container mat-elevation-z2 mb-24">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Print Templates
+                  <button
+                    class="file-upload-btn"
+                    (click)="fileUpload.click()"
+                  >
+                    <i class="icon icon-plus"></i>
+                  </button>
+                  <input
+                    #fileUpload
+                    id="template-upload"
+                    class="file-input"
+                    type="file"
+                    [(ngModel)]="files"
+                    (change)="onTemplateUpload($event)"
+                  />
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Download</th>
+                        <th>Preview</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let template of printTemplates">
+                        <td>{{ template.name }}</td>
+                        <td>{{ template.type }}</td>
+                        <td>{{ template.pageHeightIn }}h x {{ template.pageWidthIn }}w</td>
+                        <td>
+                          <a
+                            mat-icon-button
+                            class="download-btn"
+                            href="/_api/printing/printTemplates/{{ template.name }}/download"
+                            target="_blank"
+                          >
+                            <i class="icon icon-download"></i>
+                          </a>
+                          <button
+                            class="download-btn"
+                            mat-icon-button
+                            uiSref="app.printing-preview"
+                            [uiParams]="{ template: template.name }"
+                          >
+                            <i class="icon icon-eye"></i>
+                          </button>
+                        </td>
+                        <td>
+                          <img
+                            class="template-preview"
+                            [src]="template.previewUrl"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Printers">
+        <div class="task-content">
+          <div class="task-list active-task-list">
+            <div fxLayout="column">
+              <div class="simple-table-container mat-elevation-z2 mb-24">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Installed Printers
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Full Name</th>
+                        <th>Status</th>
+                        <th>Job Count</th>
+                        <th>Server</th>
+                        <th>Port</th>
+                        <th>Driver</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let printer of installedPrinters.printers">
+                        <td>{{ printer.name }}</td>
+                        <td>{{ printer.fullName }}</td>
+                        <td>{{ printer.queueStatus }}</td>
+                        <td>{{ printer.numberOfJobs }}</td>
+                        <td>{{ printer.hostingPrintServer }}</td>
+                        <td>{{ printer.queuePortName }}</td>
+                        <td>{{ printer.queueDriverName }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- <div layout="column">
+              <div class="simple-table-container mat-elevation-z2 mb-24">
+                <div layout="row" class="table-title black-text" layout-align="center start">
+                  Print Events
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable">
+                    <thead>
+                      <tr>
+                        <th>Channel</th>
+                        <th>Item</th>
+                        <th>Complete</th>
+                        <th>Stage</th>
+                        <th>Received</th>
+                        <th>Messages</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="exportEvent in coilValidationEvents | orderBy:'-receivedTime'">
+                        <td>{{exportEvent.channel}}</td>
+                        <td>{{exportEvent.itemId}}</td>
+                        <td>{{exportEvent.complete}}</td>
+                        <td>{{exportEvent.stage}}</td>
+                        <td>{{exportEvent.receivedTime | date : 'short'}}</td>
+                        <td>
+                          <div ng-repeat="l in exportEvent.activityLog track by $index">
+                            <div>{{l}}</div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>-->
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Recently Produced Bundles">
+        <div class="task-content">
+          <div class="task-list active-task-list">
+            <div fxLayout="column">
+              <div class="simple-table-container mat-elevation-z2 mb-24">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Recently Produced Bundles
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table
+                    id="job-imports"
+                    class="simple hover dataTable bundle-table"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>Order</th>
+                        <th>Material</th>
+                        <th>Tooling</th>
+                        <th>Bundle</th>
+                        <th>Total ft</th>
+                        <th>Total Qty</th>
+                        <th>Scrap Ft</th>
+                        <th>Longest ft</th>
+                        <th>Machine</th>
+                        <th>Completed</th>
+                        <th>Printed?</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let bundle of recentBundles">
+                        <tr *ngIf="!bundle.hide || showHidden">
+                          <td>{{ bundle.bundleCode }}</td>
+                          <td>
+                            <a
+                              uiSref="app.orders.detail"
+                              [uiParams]="{ id: bundle.ordId }"
+                              >{{ bundle.orderCode }}</a
+                            >
+                          </td>
+                          <td>{{ bundle.materialCode }}</td>
+                          <td>{{ bundle.toolingCode }}</td>
+                          <td>{{ bundle.bundleNumber }}</td>
+                          <td>{{ bundle.producedLengthIn / 12 | number : '1.3-3' }}</td>
+                          <td>{{ bundle.totalQty }}</td>
+                          <td>{{ bundle.scrapIn / 12 | number : '1.3-3' }}</td>
+                          <td>{{ bundle.longestLengthIn / 12 | number : '1.3-3' }}</td>
+                          <td>{{ bundle.finalMachineNumber }}</td>
+                          <td *ngIf="bundle.complete">{{ bundle.endTime | amsDateTime }}</td>
+                          <td *ngIf="!bundle.complete">not complete</td>
+                          <td>{{ bundle.isTagPrinted ? 'Yes' : 'No' }}</td>
+                          <td>
+                            <a
+                              href="/_api/bundle/{{ bundle.bundleCode }}/tag"
+                              class="icon"
+                              target="_blank"
+                            >
+                              <i
+                                class="icon-file-pdf"
+                                matTooltip="View the bundle tag"
+                                matTooltipPosition="above"
+                              >
+                              </i>
+                            </a>
+                            <button
+                              mat-icon-button
+                              (click)="printBundle(bundle.bundleCode)"
+                              matTooltip="Print the bundle tag"
+                              matTooltipPosition="above"
+                            >
+                              <i class="icon-printer"> </i>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

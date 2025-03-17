@@ -1,0 +1,90 @@
+<div
+  id="settings"
+  class="agent-settings page-layout simple fullwidth"
+>
+  <!-- HEADER -->
+  <div class="header md-accent-bg">
+    <span class="h2 black-text">Eclipse Agent Status</span>
+  </div>
+  <!-- / HEADER -->
+
+  <!-- CONTENT -->
+  <div
+    class="content p-24"
+    md-background-bg
+  >
+    <div
+      class="form-wrapper mat-elevation-z1"
+      fxFlex.gt-md="50"
+      fxFlex="100"
+    >
+      <div
+        class="form-title"
+        fxLayout="column"
+        fxFlexFill
+        *ngIf="systemInfoService.agentStatus.status"
+      >
+        <div class="agent-id font-size-14">
+          <span class="text-inline w-120">Agent ID:</span>
+          <span
+            class="secondary-text ml-8"
+            [ngClass]="{ 'font-size-13': media.isActive('xs') }"
+            >{{ systemInfoService.agentStatus.status.agentId }}</span
+          >
+        </div>
+        <div class="agent-status font-size-14">
+          <span class="text-inline w-120">Status:</span>
+          <span
+            *ngIf="systemInfoService.agentStatus.isAgentReachable"
+            class="connected ml-8"
+            style="text-transform: uppercase"
+            >connected</span
+          >
+          <span
+            *ngIf="!systemInfoService.agentStatus.isAgentReachable"
+            class="hint-text ml-8"
+            style="text-transform: uppercase"
+            >disconnected
+            <span class="secondary-text">(showing last known configuration)</span></span
+          >
+        </div>
+        <div class="agent-status font-size-14">
+          <span class="text-inline w-120">Eclipse Version:</span>
+          <span
+            *ngIf="systemInfoService.agentStatus.isAgentReachable"
+            class="connected ml-8"
+            style="text-transform: uppercase"
+            >{{ systemInfoService.agentStatus.status.eclipseVersion }}</span
+          >
+          <span
+            *ngIf="!systemInfoService.agentStatus.isAgentReachable"
+            class="hint-text ml-8"
+            style="text-transform: uppercase"
+            >{{ systemInfoService.agentStatus.status.eclipseVersion }}
+            <span class="secondary-text">(showing last known configuration)</span></span
+          >
+        </div>
+        <div class="agent-status font-size-14">
+          <span class="text-inline w-120">Agent URL:</span>
+          <a
+            *ngIf="systemInfoService.agentStatus.isAgentReachable"
+            href="{{ systemInfoService.agentStatus.agentUrl }}"
+            class="connected ml-8"
+            target="_blank"
+            style="text-decoration: underline"
+            >{{ systemInfoService.agentStatus.agentUrl }}</a
+          >
+          <a
+            *ngIf="!systemInfoService.agentStatus.isAgentReachable"
+            href="{{ systemInfoService.agentStatus.agentUrl }}"
+            class="secondary-text ml-8"
+            target="_blank"
+            style="text-decoration: underline"
+            >{{ systemInfoService.agentStatus.agentUrl }}</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / CONTENT -->
+</div>

@@ -1,0 +1,25 @@
+<div class="simple-table-container mat-elevation-z2 mb-24">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    class="table-title black-text"
+  >
+    System Alerts
+  </div>
+  <div class="ms-responsive-table-wrapper">
+    <table class="simple hover dataTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alert of alerts">
+          <td>{{ alert.title }}</td>
+          <td>{{ alert.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,123 @@
+<ul
+  *ngIf="alerts"
+  style="background-color: yellow"
+>
+  <li *ngFor="let alert of alerts">
+    {{ alert }}
+  </li>
+</ul>
+
+<div
+  class="downtime-settings-dialog downtime-settings-container"
+  aria-label="config-dialog"
+>
+  <div
+    class="main-container mat-elevation-z8"
+    tabindex="0"
+  >
+    <table
+      matSort
+      (matSortChange)="sortData($event)"
+      matSortActive="code"
+      matSortDirection="asc"
+      matSortDisableClear
+    >
+      <tr class="table-header table-row">
+        <th
+          class="code-cell main-cell"
+          mat-sort-header="code"
+        >
+          Code
+        </th>
+        <th
+          class="main-cell"
+          mat-sort-header="description"
+        >
+          Description
+        </th>
+        <th
+          class="main-cell"
+          mat-sort-header="exempt"
+        >
+          Exempt
+        </th>
+        <th
+          class="main-cell"
+          mat-sort-header="group"
+        >
+          Scrap Group
+        </th>
+        <th
+          class="main-cell"
+          mat-sort-header="responsibility"
+        >
+          Responsibility
+        </th>
+        <th
+          class="main-cell"
+          mat-sort-header="workGroup"
+        >
+          Machine Group
+        </th>
+        <th
+          class="main-cell"
+          mat-sort-header="category"
+        >
+          Category
+        </th>
+        <th class="main-cell del-cell"></th>
+      </tr>
+
+      <tr
+        *ngFor="let dc of sortedCodes; let i = index"
+        class="main-row table-row"
+      >
+        <td class="code-cell main-cell">
+          {{ dc.code }}
+        </td>
+        <td class="main-cell">
+          {{ dc.description }}
+        </td>
+        <td class="main-cell">
+          <mat-checkbox
+            class="pref-checkbox"
+            aria-label="exempt"
+            [checked]="dc.exempt"
+            [disabled]="true"
+          >
+          </mat-checkbox>
+        </td>
+        <td class="main-cell">
+          {{ dc.group }}
+        </td>
+        <td class="main-cell">
+          {{ dc.responsibility }}
+        </td>
+        <td class="main-cell">
+          {{ dc.workGroup }}
+        </td>
+        <td class="main-cell">
+          {{ dc.category }}
+        </td>
+        <td class="main-cell del-cell">
+          <button
+            class="gray-col del-btn"
+            mat-icon-button
+            aria-label="Edit Code"
+            (click)="editCode(dc, i)"
+          >
+            <i class="icon-pencil"></i>
+          </button>
+          <button
+            class="gray-col del-btn"
+            mat-icon-button
+            aria-label="Delete Code"
+            (click)="deleteCode(dc.id, i)"
+          >
+            <i class="icon-delete"></i>
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

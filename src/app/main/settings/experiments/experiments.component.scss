@@ -1,0 +1,28 @@
+#settings {
+  .simple-table-container {
+    //max-width: 1200px;
+
+    .table-title {
+      padding: 0;
+      margin: 24px;
+      display: inline-block;
+    }
+  }
+
+  .setting-experiments {
+    //max-width: 1200px;
+
+    td {
+      position: relative;
+      padding: 0px 10px;
+
+      &:not(:last-child) {
+        width: 100px;
+      }
+    }
+
+    th {
+      min-width: 0;
+    }
+  }
+}

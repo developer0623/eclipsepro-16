@@ -1,0 +1,170 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <!-- HEADER -->
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span
+        class="h2"
+        translate="metricConfiguration"
+      ></span>
+    </div>
+  </div>
+  <!-- / HEADER -->
+
+  <!-- CONTENT -->
+  <div
+    class="content settings-metric-config"
+    md-background-bg
+  >
+    <div
+      class="simple-table-container mat-elevation-z2 mb-24"
+      *ngFor="let machine of machines | orderBy : 'description'"
+    >
+      <a
+        uiSref="app.dashboards_machines_machine"
+        [uiParams]="{ id: machine.machineNumber }"
+        class="table-title black-text"
+      >
+        {{ machine.description }}
+      </a>
+
+      <div class="ms-responsive-table-wrapper">
+        <table
+          id="metric-config"
+          class="simple hover dataTable"
+        >
+          <thead>
+            <tr>
+              <th
+                translate="show"
+                class="text-align-center pl-0"
+              ></th>
+              <th
+                translate="showInMini"
+                class="text-align-center"
+              ></th>
+              <th translate="metric"></th>
+              <th></th>
+              <th translate="okLower"></th>
+              <th translate="okUpper"></th>
+              <th translate="target"></th>
+              <th translate="max"></th>
+              <th translate="preview"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let metric of machine.settings; trackBy: trackByKey">
+              <td class="text-align-center">
+                <!-- For now, showCharts is a placeholder for being available on the single machine dashboard -->
+                <mat-checkbox
+                  class="pref-checkbox"
+                  aria-label="Show"
+                  [(ngModel)]="metric.showInLarge"
+                  (change)="updateMetric(machine, metric.metricId, 'showInLarge')"
+                >
+                </mat-checkbox>
+              </td>
+              <td class="text-align-center">
+                <mat-checkbox
+                  class="pref-checkbox"
+                  aria-label="Show in Mini"
+                  [(ngModel)]="metric.showInMini"
+                  (change)="updateMetric(machine, metric.metricId, 'showInMini')"
+                >
+                </mat-checkbox>
+              </td>
+              <td>{{ metric.metricId | translate }}</td>
+              <td>
+                <app-help-icon
+                  [header]="metric.metricId"
+                  [help]="metric.definition.nameToolTip"
+                ></app-help-icon>
+              </td>
+              <td class="td-numeric">
+                <app-edit-input
+                  *ngIf="metric.definition.showCharts"
+                  [(ngModel)]="metric.okRangeStartUser"
+                  (onaftersave)="
+                    updateMetric(
+                      machine,
+                      metric.metricId,
+                      'okRangeStart',
+                      'okRangeStartUser',
+                      $event
+                    )
+                  "
+                >
+                  {{
+                    metric.okRangeStart
+                      | unitsFormat : metric.definition.primaryUnits : 1 : false : false
+                  }}
+                </app-edit-input>
+              </td>
+              <td class="td-numeric">
+                <app-edit-input
+                  *ngIf="metric.definition.showCharts"
+                  [(ngModel)]="metric.okRangeEndUser"
+                  (onaftersave)="
+                    updateMetric(machine, metric.metricId, 'okRangeEnd', 'okRangeEndUser', $event)
+                  "
+                >
+                  {{
+                    metric.okRangeEnd
+                      | unitsFormat : metric.definition.primaryUnits : 1 : false : false
+                  }}
+                </app-edit-input>
+              </td>
+              <td class="td-numeric">
+                <app-edit-input
+                  *ngIf="metric.definition.showCharts"
+                  [(ngModel)]="metric.targetValueUser"
+                  (onaftersave)="
+                    updateMetric(machine, metric.metricId, 'targetValue', 'targetValueUser', $event)
+                  "
+                >
+                  {{
+                    metric.targetValue
+                      | unitsFormat : metric.definition.primaryUnits : 1 : false : false
+                  }}
+                </app-edit-input>
+              </td>
+              <td class="td-numeric">
+                <app-edit-input
+                  *ngIf="metric.definition.showCharts"
+                  [(ngModel)]="metric.maxValueUser"
+                  (onaftersave)="
+                    updateMetric(machine, metric.metricId, 'maxValue', 'maxValueUser', $event)
+                  "
+                >
+                  {{
+                    metric.maxValue
+                      | unitsFormat : metric.definition.primaryUnits : 1 : false : false
+                  }}
+                </app-edit-input>
+              </td>
+              <td>
+                <app-bullet-chart-preview
+                  *ngIf="metric.definition.showCharts"
+                  [current]="metric.targetValue * 0.95"
+                  [minValue]="metric.minValue"
+                  [okLower]="metric.okRangeStart"
+                  [okUpper]="metric.okRangeEnd"
+                  [target]="metric.targetValue"
+                  [maxValue]="metric.maxValue"
+                  [lowerIsBetter]="metric.lowerIsBetter"
+                  [height]="17"
+                ></app-bullet-chart-preview>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- / CONTENT -->
+</div>

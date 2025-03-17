@@ -1,0 +1,81 @@
+<div
+  fxLayout="row"
+  [ngClass]="{ 'sub-header': isSub }"
+>
+  <div
+    class="flex-145"
+    fxLayoutAlign="end end"
+    fxLayout="row"
+  >
+    <div
+      class="header-first-item"
+      fxFlex
+      *ngIf="!status"
+    >
+      Machine Name<br /><span>Specific Tooling Status</span>
+    </div>
+
+    <div
+      class="header-first-item sub-item"
+      fxFlex="40"
+      *ngIf="status"
+    >
+      Override<br />Machine
+    </div>
+  </div>
+
+  <div
+    [ngClass]="{ 'flex-18': index == 3 }"
+    class="flex-225"
+    *ngFor="let header of headers; let index = index"
+    fxLayout="row"
+  >
+    <div
+      fxFlex
+      fxLayout="column"
+    >
+      <div
+        fxFlex
+        class="main-header"
+      >
+        {{ header.title }}
+      </div>
+      <div
+        fxFlex
+        class="low-header"
+        *ngIf="!status"
+      >
+        {{ header.lowTitle }}
+      </div>
+      <div
+        fxFlex
+        fxLayout="row"
+        class="header-content"
+      >
+        <!-- <div flex ng-repeat="content in header.content">{{content}}</div> -->
+        <div
+          fxFlex
+          class="item-his-color"
+        >
+          Historical
+        </div>
+        <div
+          fxFlex
+          class="item-plan-color"
+        >
+          Planning
+        </div>
+        <div
+          fxFlex
+          class="item-target-color"
+        >
+          Target
+        </div>
+      </div>
+    </div>
+    <div
+      fxFlex="20"
+      *ngIf="index !== 3"
+    ></div>
+  </div>
+</div>

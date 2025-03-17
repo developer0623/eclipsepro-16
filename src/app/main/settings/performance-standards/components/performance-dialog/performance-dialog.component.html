@@ -1,0 +1,221 @@
+<!-- <mat-toolbar color="success"> -->
+<div class="performance-dialog__header">
+  <div class="performance-dialog__title1">
+    {{ unitsService.getUserUnitDef('fpm').title }}
+  </div>
+  <div class="performance-dialog__title2">
+    <div class="category-title">
+      {{ origin.description }}:
+      <span>{{ selectedCategory.title }}</span>
+    </div>
+
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="customMenu"
+      class="main-dropdown-btn perform-dialog-menu-btn"
+    >
+      <i class="icon icon-chevron-down menu-icon"></i>
+    </button>
+    <mat-menu
+      #customMenu="matMenu"
+      class="main-menu"
+      xPosition="before"
+    >
+      <button
+        mat-menu-item
+        class="main-menu-item"
+        [ngClass]="{
+          'selected-menu-item': item.value === selectedCategory.value
+        }"
+        *ngFor="let item of categories"
+        (click)="onClickCategoryItem(item)"
+      >
+        <span class="menu-item-content">{{ item.title }}</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>
+<!-- </mat-toolbar> -->
+<div
+  mat-dialog-content
+  class="performance-dialog-content"
+>
+  <mat-tab-group
+    class="xl200-tabs"
+    mat-stretch-tabs="true"
+    dynamicHeight
+    [preserveContent]="true"
+    [selectedIndex]="selectedTabIndex"
+    (selectedIndexChange)="onTabSelected($event)"
+  >
+    <mat-tab label="MACHINE DEFAULT">
+      <div class="performance-dialog__tab">
+        <div class="performance-dialog__config">
+          <div></div>
+          <div class="performance-dialog__select">
+            <mat-radio-group
+              aria-labelledby="lockout-radio-group-label"
+              class="lockout-radio-group"
+              [(ngModel)]="selectedStyle"
+              (change)="changeStyle()"
+            >
+              <mat-radio-button
+                class="yellow-radio"
+                [value]="item.id"
+                [disabled]="!ii && !isShowSingle"
+                *ngFor="let item of styles; let ii = index"
+              >
+                {{ item.value }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <app-performance-chart
+          *ngIf="!selectedTabIndex"
+          [value]="value"
+          class="click-performance"
+        ></app-performance-chart>
+        <div class="performance-dialog__content">
+          <div class="performance-dialog__content-header">
+            <div
+              class="header-item"
+              *ngIf="selectedStyle"
+            >
+              <div class="header-itemfont-bold">PART LENGTH</div>
+              <div class="header-item--normal">
+                {{ unitsService.getUserUnitDef('in').title }}
+              </div>
+            </div>
+            <div class="header-item">
+              <div class="header-itemfont-bold">SPEED</div>
+              <div class="header-item--normal">
+                {{ unitsService.getUserUnitDef('fpm').title }}
+              </div>
+            </div>
+          </div>
+          <app-performance-item
+            [islength]="selectedStyle"
+            [item]="item"
+            *ngFor="let item of value; let ii = index"
+            (onRemove)="onRemoveItem(ii)"
+            (onChanged)="onValueChanged()"
+          ></app-performance-item>
+
+          <div
+            class="performance-dialog__content-add"
+            *ngIf="selectedStyle"
+          >
+            <button
+              mat-icon-button
+              class="s-30-btn"
+              (click)="addValue()"
+            >
+              <i class="icon icon-plus-circle add-icon"> </i>
+            </button>
+
+            <div>Add Part Length/Speed</div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="TOOL SPECIFIC">
+      <div class="performance-dialog__tab">
+        <div class="performance-dialog__config">
+          <div class="performance-dialog__toolmenu">
+            <div class="tool-title">
+              <span>{{ origin.toolings[index].toolingCode }}</span>
+            </div>
+
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="toolMenu"
+              class="main-dropdown-btn"
+            >
+              <i class="icon icon-chevron-down menu-icon"></i>
+            </button>
+            <mat-menu
+              #toolMenu="matMenu"
+              class="main-menu"
+              xPosition="before"
+            >
+              <div class="main-menu-container">
+                <button
+                  mat-menu-item
+                  class="main-menu-item"
+                  [ngClass]="{
+                    'selected-menu-item': index === iii
+                  }"
+                  *ngFor="let item of origin.toolings; let iii = index"
+                  (click)="onClickToolItem(item, iii)"
+                >
+                  <span class="menu-item-content">TOOL {{ item.toolingCode }}</span>
+                </button>
+              </div>
+            </mat-menu>
+          </div>
+          <div class="performance-dialog__select">
+            <mat-radio-group
+              [(ngModel)]="selectedStyle"
+              (change)="changeStyle()"
+            >
+              <mat-radio-button
+                class="yellow-radio"
+                [value]="item.id"
+                [disabled]="!index && !isShowSingle"
+                *ngFor="let item of styles; let index = index"
+              >
+                {{ item.value }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <app-performance-chart
+          *ngIf="selectedTabIndex"
+          [value]="value"
+          class="click-performance"
+        ></app-performance-chart>
+        <div class="performance-dialog__content">
+          <div class="performance-dialog__content-header">
+            <div
+              class="header-item"
+              *ngIf="selectedStyle"
+            >
+              <div class="header-itemfont-bold">PART LENGTH</div>
+              <div class="header-item--normal">
+                {{ unitsService.getUserUnitDef('in').title }}
+              </div>
+            </div>
+            <div class="header-item">
+              <div class="header-itemfont-bold">SPEED</div>
+              <div class="header-item--normal">
+                {{ unitsService.getUserUnitDef('fpm').title }}
+              </div>
+            </div>
+          </div>
+          <app-performance-item
+            [islength]="selectedStyle"
+            [item]="item"
+            *ngFor="let item of value; let ii = index"
+            (onRemove)="onRemoveItem(ii)"
+            (onChanged)="onValueChanged()"
+          ></app-performance-item>
+
+          <div
+            class="performance-dialog__content-add"
+            *ngIf="selectedStyle"
+          >
+            <button
+              mat-icon-button
+              class="s-30-btn"
+              (click)="addValue()"
+            >
+              <i class="icon icon-plus-circle add-icon"> </i>
+            </button>
+
+            <div>Add Part Length/Speed</div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

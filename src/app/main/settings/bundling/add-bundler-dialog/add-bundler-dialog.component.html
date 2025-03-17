@@ -1,0 +1,42 @@
+<div mat-dialog-content>
+  <mat-form-field
+    *ngIf="type == 'customer' || type == 'customerTooling'"
+    class="add-bundle-input yellow-input"
+  >
+    <mat-label>Customer</mat-label>
+    <input
+      matInput
+      [(ngModel)]="result.customer"
+    />
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="type == 'materialTooling'"
+    class="add-bundle-input yellow-input"
+  >
+    <mat-label>Material</mat-label>
+    <input
+      matInput
+      [(ngModel)]="result.material"
+    />
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="type == 'toolingDef' || type == 'customerTooling' || type == 'materialTooling'"
+    class="add-bundle-input yellow-input"
+  >
+    <mat-label>Tooling</mat-label>
+    <input
+      matInput
+      [(ngModel)]="result.tooling"
+    />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button
+    mat-button
+    (click)="add()"
+    class="add-btn"
+    color="success"
+  >
+    ADD
+  </button>
+</div>

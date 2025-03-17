@@ -1,0 +1,49 @@
+<div>
+  <button
+    class="config-add-btn"
+    (click)="onNewKey()"
+    aria-label="Create Key"
+    matTooltip="Add"
+    *ifRole="'administrator'"
+  >
+    <i class="icon icon-plus"></i>
+  </button>
+  <table class="simple hover dataTable config-table">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th class="config-table-settings">Key</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let keyrec of apiKeys">
+        <td>{{ keyrec.description }}</td>
+        <td>
+          <pre>{{ keyrec.key }}</pre>
+        </td>
+        <td>
+          <button
+            id="copy-to-clipboard-button"
+            mat-icon-button
+            (click)="onCopyKeyString(keyrec)"
+            aria-label="Copy Key To Clipboard"
+            matTooltip="Copy Key To Clipboard"
+            *ifRole="'administrator'"
+          >
+            <mat-icon>content_paste</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            (click)="onDeleteKey(keyrec)"
+            aria-label="Delete Key"
+            matTooltip="Delete"
+            *ifRole="'administrator'"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

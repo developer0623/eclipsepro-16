@@ -1,0 +1,117 @@
+:host {
+  display: block;
+  padding: 16px;
+}
+.downtime-settings-dialog {
+  width: 100%;
+  min-height: 500px;
+  text-align: center;
+  font-size: 14px;
+  .md-dialog-content {
+    padding-top: 5px;
+  }
+
+  md-toolbar {
+    background-color: rgba(236, 177, 0, 0.9) !important;
+  }
+}
+
+.mat-column-code {
+  width: 10%;
+}
+
+.downtime-settings-container {
+  .main-container {
+    width: 100%;
+    border: 1px solid #d4d4d4;
+    height: calc(100vh - 220px);
+    overflow: auto;
+    position: relative;
+    table {
+      width: 100%;
+    }
+  }
+  .table-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 100;
+    border-bottom-color: var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
+    border-bottom-width: var(--mat-table-row-item-outline-width, 1px);
+    border-bottom-style: solid;
+  }
+  .table-row {
+    border-bottom-color: var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
+    border-bottom-width: var(--mat-table-row-item-outline-width, 1px);
+    border-bottom-style: solid;
+  }
+  .main-cell {
+    box-sizing: border-box;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    padding: 0 16px 0 16px;
+
+    letter-spacing: var(--mat-table-row-item-label-text-tracking);
+    line-height: inherit;
+    height: 52px;
+  }
+  .code-cell {
+    width: 10%;
+  }
+
+  .work-cell {
+    min-width: 200px;
+    width: 20%;
+  }
+
+  .black-fg {
+    font-weight: 400 !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 52px;
+  }
+
+  .cat-cell {
+    padding-right: 0px !important;
+  }
+
+  ::ng-deep .resp-cell {
+    width: 15%;
+    .mat-sort-header-container {
+      justify-content: end !important;
+    }
+  }
+
+  .resp-btn {
+    margin-left: auto;
+  }
+
+  .del-cell {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+  }
+
+  .del-btn {
+    display: none;
+  }
+
+  .main-row:hover {
+    .del-btn {
+      display: block;
+    }
+  }
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}

@@ -1,0 +1,25 @@
+<div class="simple-table-container mat-elevation-z2 mb-24">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    class="table-title black-text"
+  >
+    Pending Actions to Agent
+  </div>
+  <div class="ms-responsive-table-wrapper">
+    <table class="simple hover dataTable">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Pending</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let actionInfo of pendingAgentActions">
+          <td>{{ actionInfo.type }}</td>
+          <td>{{ actionInfo.count }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<!-- <div class="item-circle" ng-style="compareHistorical(item.fpmPlan, item.fpmHist)"></div> -->
+<!-- <div class="editable-div">
+	<input ng-model="item.fpmPlan" ng-focus="focusSelect($event)" ng-blur="destroyFocus($event)" [ngClass]="{'focused':focused, 'diffval':compareParent('fpmPlan')}">
+</div> -->
+
+<div class="performance-standard-cell">
+  <div
+    class="cell-default"
+    performanceTooltip
+    [contentTemplate]="template"
+    (dblclick)="onEdit(true)"
+    (click)="openDialog()"
+    *ngIf="!isEdit && !state"
+  >
+    <span>{{ value.length ? minValue : 0 }}</span>
+    <span
+      class="second-span"
+      *ngIf="minValue !== maxValue"
+    >
+      - {{ maxValue }}
+    </span>
+  </div>
+  <div
+    class="cell-edit"
+    *ngIf="!isEdit && state"
+    performanceTooltip
+    [contentTemplate]="template"
+    [ngClass]="{ is_focus: state }"
+  >
+    <span *ngIf="value.length">{{ minValue }}</span>
+    <span
+      class="second-span"
+      *ngIf="minValue !== maxValue"
+    >
+      - {{ maxValue }}</span
+    >
+    <button
+      mat-icon-button
+      aria-label="Select Category"
+      class="edit-button"
+      *ngIf="isFocus"
+      (click)="openDialog()"
+    >
+      <i class="icon-pencil icon edit-icon"></i>
+    </button>
+  </div>
+  <div
+    class="cell-edit"
+    performanceTooltip
+    [contentTemplate]="template"
+    [hideTooltip]="isFocus"
+    *ngIf="isEdit"
+    [ngClass]="{ is_focus: state }"
+  >
+    <input
+      type="number"
+      [(ngModel)]="value[0].fpm"
+      (focus)="focus(true)"
+      (blur)="focus(false)"
+    />
+    <button
+      aria-label="Select Category"
+      mat-icon-button
+      class="edit-button"
+      *ngIf="isFocus"
+      (click)="openDialog()"
+    >
+      <i
+        class="icon-pencil icon edit-icon"
+        md-font-icon
+      ></i>
+    </button>
+  </div>
+</div>
+
+<ng-template #template>
+  <div class="performance-tooltip-container">
+    <div class="title">Machine Planning Default</div>
+    <app-performance-chart
+      [value]="value"
+      class="hover-performance"
+    ></app-performance-chart>
+    <div class="tooltip-content">
+      <div class="tooltip-content__header">
+        <div class="header-item">
+          <div class="header-itemfont-bold">PART LENGTH</div>
+          <div class="header-item--normal">{{ unitsService.getUserUnits('in') }}</div>
+        </div>
+        <div class="header-item">
+          <div class="header-itemfont-bold">SPEED</div>
+          <div class="header-item--normal">{{ unitsService.getUserUnits('fpm') }}</div>
+        </div>
+      </div>
+      <div
+        class="tooltip-content__item"
+        *ngFor="let item of value"
+      >
+        <div>{{ item.lengthIn }}</div>
+        <div>{{ item.fpm }}</div>
+      </div>
+    </div>
+  </div>
+</ng-template>

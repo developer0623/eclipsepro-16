@@ -1,0 +1,52 @@
+<div
+  id="settings"
+  class="performace-standard page-layout simple fullwidth"
+>
+  <div class="header md-accent-bg">
+    <span class="h2 black-text">Machine Performance Standards</span>
+  </div>
+  <!-- <div class="main-header">
+    <h2 class="text-upper">Machine Performance Standards</h2>
+  </div> -->
+
+  <div
+    class="content"
+    md-background-bg
+  >
+    <div
+      class="performanceData-table"
+      layout="column"
+    >
+      <app-table-header [status]="false"></app-table-header>
+      <div
+        *ngFor="let item of performanceData.data; let index = index"
+        class="border-gray"
+      >
+        <app-table-row
+          [item]="item.default"
+          [origin]="item"
+          [istool]="false"
+          [index]="index"
+          [machinenum]="item.machineNumber"
+          (onFocused)="focused($event)"
+        ></app-table-row>
+        <app-table-header
+          [status]="true"
+          [isSub]="true"
+          *ngIf="performanceData.status[index]"
+        >
+        </app-table-header>
+        <div *ngIf="performanceData.status[index]">
+          <app-table-row
+            [item]="tool"
+            [origin]="item"
+            [istool]="true"
+            [index]="ii"
+            *ngFor="let tool of item.toolings; let ii = index"
+            [parentval]="item.default"
+          ></app-table-row>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

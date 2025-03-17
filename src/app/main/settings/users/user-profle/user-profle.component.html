@@ -1,0 +1,39 @@
+<div
+  fxLayout="column"
+  *ngIf="user"
+>
+  <div>
+    <label>Username</label>
+    <div>{{ username }}</div>
+  </div>
+  <div>
+    <label>First name</label>
+    <div>
+      <app-edit-input
+        [(ngModel)]="user.firstName"
+        [showEditButtons]="true"
+        type="text"
+        (onaftersave)="onSaveUserField(user.firstName, 'firstName')"
+      >
+        {{ user.firstName || '&laquo;none&raquo;' }}
+      </app-edit-input>
+    </div>
+  </div>
+  <div>
+    <label>Last name</label>
+    <div>
+      <app-edit-input
+        [(ngModel)]="user.lastName"
+        [showEditButtons]="true"
+        type="text"
+        (onaftersave)="onSaveUserField(user.lastName, 'lastName')"
+      >
+        {{ user.lastName || '&laquo;none&raquo;' }}
+      </app-edit-input>
+    </div>
+  </div>
+  <div>
+    <label>Email</label>
+    <div>{{ user.email }}</div>
+  </div>
+</div>

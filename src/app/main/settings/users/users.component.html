@@ -1,0 +1,29 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span class="h2">Eclipse Users</span>
+    </div>
+  </div>
+  <div class="content">
+    <mat-tab-group
+      class="main-color-tab"
+      dynamicHeight
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+    >
+      <mat-tab label="Eclipse Pro">
+        <eclipse-users-grid></eclipse-users-grid>
+      </mat-tab>
+
+      <mat-tab label="Pathfinder">
+        <app-pathfinder-users-grid></app-pathfinder-users-grid>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

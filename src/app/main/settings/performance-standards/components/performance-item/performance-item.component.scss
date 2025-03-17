@@ -1,0 +1,38 @@
+.performance-item {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  input {
+    text-align: center;
+    width: 50px;
+    line-height: 15px;
+    font-size: 13px;
+    border: none;
+
+    &:focus {
+      border-bottom: 1px solid rgb(44, 159, 226) !important;
+    }
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+
+  button {
+    position: absolute;
+    right: -70px;
+    top: 0px;
+  }
+  &.is_focus {
+    input {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+    }
+  }
+}

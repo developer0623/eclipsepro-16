@@ -1,0 +1,45 @@
+<div
+  class="downtime-settings-dialog downtime-settings-container"
+  aria-label="config-dialog"
+>
+  <div class="main-container md-elevation-z8">
+    <table>
+      <tr class="table-header table-row">
+        <th class="code-cell main-cell">Code</th>
+        <th class="main-cell">Description</th>
+        <th class="main-cell del-cel"></th>
+      </tr>
+      <tr
+        class="main-row table-row"
+        *ngFor="let workgroup of workgroups; let i = index"
+      >
+        <td class="main-cell code-cell">
+          {{ workgroup.code }}
+        </td>
+        <td class="main-cell">
+          {{ workgroup.description }}
+        </td>
+        <td class="main-cell del-cell">
+          <button
+            class="gray-col del-btn"
+            mat-icon-button
+            aria-label="Edit Workgroup"
+            matTooltip="Edit Workgroup"
+            (click)="editWorkgroup(workgroup)"
+          >
+            <i class="icon-pencil"></i>
+          </button>
+          <button
+            class="gray-col del-btn"
+            mat-icon-button
+            aria-label="Delete Workgroup"
+            matTooltip="Delete Workgroup"
+            (click)="deleteWorkgroup(workgroup)"
+          >
+            <i class="icon-delete"></i>
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

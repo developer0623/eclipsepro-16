@@ -1,0 +1,38 @@
+<div mat-dialog-content>
+  <mat-form-field class="add-bundle-input yellow-input">
+    <mat-label>Code</mat-label>
+    <input
+      type="text"
+      placeholder="Code"
+      matInput
+      [(ngModel)]="workgroup.code"
+    />
+  </mat-form-field>
+  <mat-form-field class="add-bundle-input yellow-input">
+    <mat-label>Description</mat-label>
+    <input
+      matInput
+      [(ngModel)]="workgroup.description"
+    />
+  </mat-form-field>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'center'"
+>
+  <button
+    mat-button
+    (click)="onCancel()"
+    class="cancel-btn"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    (click)="onSave()"
+    class="add-btn"
+    color="success"
+  >
+    {{ editBtnText }}
+  </button>
+</div>

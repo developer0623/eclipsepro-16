@@ -1,0 +1,73 @@
+<div>
+  <h2>Test an import file 🧪</h2>
+</div>
+
+<div>
+  <!-- For reasons I can't explain, putting this inside a md-input-container makes it stop accepting clicks. -->
+  <div>
+    <input
+      class="ng-hide"
+      id="input-file-id"
+      type="file"
+    />
+    <label
+      for="input-file-id"
+      class="md-button md-raised md-primary"
+    >
+      Choose File
+    </label>
+  </div>
+
+  <mat-form-field class="yellow-input">
+    <mat-label>Import file type</mat-label>
+    <mat-select
+      [(ngModel)]="selectedParser"
+      panelClass="yellow-select-panel"
+      placeholder="Import file type"
+      aria-label="Import file type"
+    >
+      <mat-option
+        *ngFor="let parser of availableParsers"
+        [value]="parser"
+      >
+        {{ parser }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div>
+  <button
+    mat-raised-button
+    aria-label="Save"
+    (click)="onTest()"
+  >
+    Test
+  </button>
+</div>
+
+<div
+  fxLayout="column"
+  class="message-container"
+>
+  <div *ngFor="let message of messages; trackBy: trackByKey">
+    {{ message }}
+  </div>
+</div>
+
+<div
+  fxLayout="column"
+  *ngIf="testResult"
+>
+  <h3>Test results</h3>
+  <div *ngIf="testResult.errors">
+    <h4>There were errors</h4>
+    <div *ngFor="let err of testResult.errors; trackBy: trackByKey">
+      {{ err }}
+    </div>
+  </div>
+  <div *ngIf="!testResult.errors">
+    <h3>File import was successful</h3>
+    <div>{{ testResult.success }} records imported</div>
+    <div>{{ testResult.fails }} records failed</div>
+  </div>
+</div>

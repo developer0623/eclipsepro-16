@@ -1,0 +1,84 @@
+<mat-toolbar color="success">
+  <h2
+    mat-dialog-title
+    class="white-color"
+  >
+    Edit Property
+  </h2>
+</mat-toolbar>
+<div
+  mat-dialog-content
+  class="main-container"
+>
+  <button
+    mat-icon-button
+    (click)="addProperty()"
+  >
+    <i class="icon icon-plus"></i>
+  </button>
+  <div class="list-container">
+    <div class="property-item-row property-item-header">
+      <div class="key-col">Key</div>
+      <div class="value-col">Value</div>
+      <div class="btn-col"></div>
+    </div>
+    <div
+      class="property-item-row"
+      *ngFor="let item of properties"
+    >
+      <!-- <mat-form-field class="input-container key-col">
+        <input
+          matInput
+          [(ngModel)]="item.key"
+        />
+      </mat-form-field> -->
+      <app-edit-input
+        class="input-container key-col"
+        [(ngModel)]="item.key"
+        [showEditButtons]="false"
+      >
+        {{ item.key }}
+      </app-edit-input>
+      <app-edit-input
+        class="input-container value-col"
+        [(ngModel)]="item.value"
+        [showEditButtons]="false"
+      >
+        {{ item.value }}
+      </app-edit-input>
+      <!-- <mat-form-field class="input-container value-col">
+        <input
+          matInput
+          [(ngModel)]="item.value"
+        />
+      </mat-form-field> -->
+      <div class="btn-col">
+        <button
+          mat-icon-button
+          class="property-deletebtn s-40-btn"
+          (click)="deletePorpery($index)"
+        >
+          <i class="icon icon-delete"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="cancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+</div>

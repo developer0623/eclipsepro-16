@@ -1,0 +1,106 @@
+<div class="simple-table-container mat-elevation-z2 mb-24">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    class="table-title black-text"
+  >
+    Express Status 🧪
+  </div>
+  <div>COMM: {{ commState.connectionState }}</div>
+  <div class="ms-responsive-table-wrapper express-table">
+    <div
+      class="material-usage-item sub-header"
+      fxLayout="row"
+    >
+      <div
+        class="unit-col"
+        fxFlex="7%"
+      >
+        Unit
+      </div>
+      <div
+        class="unit-col"
+        fxFlex="7%"
+      >
+        Name
+      </div>
+      <div
+        class="ip-col"
+        fxFlex="15%"
+      >
+        IP Address
+      </div>
+      <div
+        class="status-col"
+        fxFlex="15%"
+      >
+        Status
+      </div>
+      <div
+        class="count-col"
+        fxFlex="15%"
+      >
+        Tx Count
+      </div>
+      <div class="main-con">Tx Received</div>
+    </div>
+    <div class="material-usage-content">
+      <div *ngFor="let state of ctrlStates">
+        <div
+          class="material-usage-item"
+          fxLayout="row"
+        >
+          <div
+            class="unit-col"
+            fxFlex="7%"
+          >
+            {{ state.id }}
+          </div>
+          <div
+            class="unit-col"
+            fxFlex="7%"
+          >
+            {{ state.machine?.description ?? 'unknown' }}
+          </div>
+          <div
+            class="ip-col"
+            fxFlex="15%"
+          >
+            {{ state.address }}
+          </div>
+          <div
+            class="status-col"
+            fxFlex="15%"
+          >
+            {{ state.connectionState }}
+          </div>
+          <div
+            class="count-col"
+            fxFlex="15%"
+          >
+            {{ state.txCount }}
+          </div>
+          <div class="main-con">
+            <ng-container *ngIf="state.last.responseReceived">
+              {{ state.last.responseReceived | timeAgo : 'MM/dd/yyyy' }}
+            </ng-container>
+          </div>
+        </div>
+        <div class="chart-row">
+          <app-express-sparkline [datas]="state.sparkData"></app-express-sparkline>
+          <div class="express-cmd-response">
+            <div class="cmd-response-row">
+              <div class="cmd-response-title">Command:</div>
+              <div class="cmd-response-content">{{ state.last.command }}</div>
+            </div>
+            <div class="cmd-response-row">
+              <div class="cmd-response-title">Response:</div>
+              <div class="cmd-response-content">{{ state.last.response }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!ctrlStates">No controllers</div>
+  </div>
+</div>

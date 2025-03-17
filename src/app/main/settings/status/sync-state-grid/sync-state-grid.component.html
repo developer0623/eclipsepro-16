@@ -1,0 +1,43 @@
+<div class="simple-table-container mat-elevation-z2 mb-24">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    class="table-title black-text"
+  >
+    Sync State
+  </div>
+  <div class="ms-responsive-table-wrapper">
+    <table class="simple hover dataTable">
+      <thead>
+        <tr>
+          <th>Table</th>
+          <th>Updates</th>
+          <th>Deletes</th>
+          <th>Last Sync</th>
+          <th>Changes/minute</th>
+          <th>Deletes/minute</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let syncState of syncState">
+          <td>{{ syncState.id }}</td>
+          <td>{{ syncState.updatesCount }}</td>
+          <td>{{ syncState.deletesCount }}</td>
+          <td>{{ syncState.lastSyncTime | amsDateTime }}</td>
+          <td>{{ syncState.updatesPerMin | number : '1.2-2' }}</td>
+          <td>{{ syncState.deletesPerMin | number : '1.2-2' }}</td>
+          <td>
+            <button
+              mat-icon-button
+              (click)="triggerSync(syncState.id)"
+              matTooltip="Reload the documents from Agent"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

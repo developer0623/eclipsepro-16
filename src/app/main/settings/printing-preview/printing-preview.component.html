@@ -1,0 +1,136 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <div class="content">
+    <div class="task-content">
+      <div class="task-list active-task-list">
+        <div fxLayout="column">
+          <div class="simple-table-container mat-elevation-z2 mb-24">
+            <div
+              fxLayout="row"
+              class="table-title black-text"
+              fxLayoutAlign="start center"
+            >
+              <button
+                mat-icon-button
+                class="s-40-btn"
+                [routerLink]="'/settings/printing'"
+                [queryParams]="{ tab: 2 }"
+              >
+                <i class="icon icon-arrow-left back-icon"></i>
+              </button>
+
+              Print Templates
+              <button
+                class="file-upload-btn"
+                (click)="fileUpload.click()"
+              >
+                <i class="icon icon-plus"></i>
+              </button>
+              <input
+                #fileUpload
+                id="template-upload"
+                class="file-input"
+                type="file"
+                [(ngModel)]="files"
+                (change)="onTemplateUpload($event)"
+              />
+              <mat-select
+                [(ngModel)]="selectedTemplate.name"
+                class="template-selector"
+                panelClass="yellow-select-panel"
+                aria-label="Default bundle template"
+              >
+                <mat-option
+                  *ngFor="let template of printTemplates | filterByKey : 'type' : 'Bundle'"
+                  [value]="template.name"
+                >
+                  {{ template.name }}
+                </mat-option>
+              </mat-select>
+
+              <mat-select
+                [(ngModel)]="selectedBundleCode"
+                class="template-selector"
+                panelClass="yellow-select-panel"
+                (ngModelChange)="onUpdatePreview()"
+              >
+                <mat-option
+                  *ngFor="let bundle of recentBundles"
+                  [value]="bundle.bundleCode"
+                >
+                  {{ bundle.bundleCode }}
+                </mat-option>
+              </mat-select>
+            </div>
+
+            <div class="ms-responsive-table-wrapper">
+              <table class="simple hover dataTable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Size</th>
+                    <th>Download</th>
+                    <th>Preview</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ selectedTemplate.name }}</td>
+                    <td>{{ selectedTemplate.type }}</td>
+                    <td>
+                      {{ selectedTemplate.pageHeightIn }}h x {{ selectedTemplate.pageWidthIn }}w
+                    </td>
+                    <td>
+                      <a
+                        mat-icon-button
+                        class="download-btn"
+                        href="/_api/printing/printTemplates/{{ selectedTemplate.name }}/download"
+                        target="_blank"
+                      >
+                        <i class="icon icon-download"></i>
+                      </a>
+                      <a
+                        mat-icon-button
+                        href="/_api/printing/printTemplates/{{
+                          selectedTemplate.name
+                        }}/metadata?bundleCode={{ selectedBundleCode }}"
+                        target="_blank"
+                      >
+                        <i class="mdi mdi-code-json"></i>
+                      </a>
+                      <a
+                        mat-icon-button
+                        href="/_api/printing/printTemplates/{{
+                          selectedTemplate.name
+                        }}/preview?output=html&bundleCode={{ selectedBundleCode }}"
+                        target="_blank"
+                      >
+                        <i class="mdi mdi-file-code-outline"></i>
+                      </a>
+                      <a
+                        mat-icon-button
+                        class="md-icon-button"
+                        href="/_api/printing/printTemplates/{{
+                          selectedTemplate.name
+                        }}/preview?output=pdf&bundleCode={{ selectedBundleCode }}"
+                        target="_blank"
+                      >
+                        <i class="mdi mdi-file-pdf-box"></i>
+                      </a>
+                    </td>
+                    <td>
+                      <img [src]="selectedTemplate.previewUrl" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,22 +4,6 @@ import { LayoutComponent } from './layout/layout.component';
 
 const routes: Routes = [
   {
-    path: 'login',
-    loadChildren: () => import('./pages/authentication/login/login.module').then(m => m.LoginModule),
-  },
-  {
-    path: 'register',
-    loadChildren: () => import('./pages/authentication/register/register.module').then(m => m.RegisterModule),
-  },
-  {
-    path: 'forgot-password',
-    loadChildren: () => import('./pages/authentication/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
-  },
-  {
-    path: 'coming-soon',
-    loadChildren: () => import('./pages/coming-soon/coming-soon.module').then(m => m.ComingSoonModule),
-  },
-  {
     path: '',
     component: LayoutComponent,
     children: [
@@ -60,6 +44,10 @@ const routes: Routes = [
       {
         path: 'tooling',
         loadChildren: () => import('./main/tooling/tooling.module').then(m => m.ToolingModule),
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('./main/settings/settings.module').then(m => m.SettingsModule),
       },
     ]
   }

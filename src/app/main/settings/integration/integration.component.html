@@ -1,0 +1,386 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <!-- HEADER -->
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span
+        class="h2"
+        translate="Integration"
+      ></span>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <!-- CONTENT -->
+  <div
+    class="content md-background md-hue-1 settings-integration"
+    md-background-bg
+  >
+    <mat-tab-group
+      class="main-color-tab"
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+      [selectedIndex]="this.selectedTabIndex"
+      (selectedIndexChange)="onChangeTab($event)"
+    >
+      <mat-tab
+        *ngFor="let tab of integrationTabs"
+        label="{{ tab.label }}"
+      >
+        <button
+          class="config-add-btn"
+          (click)="onAddConfig(tab.key, tab.label)"
+          aria-label="Config Add"
+          *ngIf="tab.key !== 'coilValidation' && userHasAdminRole"
+          matTooltip="Add"
+        >
+          <i class="icon icon-plus"></i>
+        </button>
+        <table class="simple hover dataTable config-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th class="config-table-settings">Settings</th>
+              <th>Enable</th>
+              <th class="config-table-actions">Actions</th>
+              <th>Messages</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let config of tab.items">
+              <td>{{ config.type | configType : tab.key }}</td>
+              <td>
+                <div
+                  class="integration-setting-item"
+                  *ngFor="let val of getKeys(config.settings)"
+                >
+                  <span translate="{{ val }}">{{ val }}</span
+                  >: {{ config.settings[val] }}
+                </div>
+              </td>
+              <td>
+                <mat-checkbox
+                  class="yellow-checkbox"
+                  aria-label="Disabled"
+                  [(ngModel)]="config.enabled"
+                  (change)="onChangeEnable(config, tab.key, config.enabled)"
+                  [disabled]="!userHasAdminRole"
+                >
+                </mat-checkbox>
+              </td>
+              <td class="width-120">
+                <button
+                  mat-icon-button
+                  (click)="onEditConfig(config, tab.key, tab.label)"
+                  aria-label="Config Edit"
+                  [hidden]="!userHasAdminRole"
+                  matTooltip="Edit"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  *ngIf="config.enabled && tab.enableRun"
+                  (click)="onRunConfig(config.id)"
+                  aria-label="Config Run"
+                  matTooltip="Run"
+                >
+                  <i class="icon icon-send"></i>
+                </button>
+              </td>
+              <td>
+                <div *ngFor="let message of config.messages">
+                  <div>{{ message }}</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          fxLayout="row"
+          class="table-title black-text"
+          fxLayoutAlign="space-between center"
+        >
+          {{ tab.label }} Events
+          <mat-checkbox
+            class="yellow-checkbox"
+            *ngIf="tab.key === 'coilValidation' || tab.key === 'export'"
+            aria-label="Show/Hide Complete"
+            [(ngModel)]="hideComplete"
+          >
+            Hide Complete
+          </mat-checkbox>
+        </div>
+        <div class="ms-responsive-table-wrapper">
+          <table
+            class="simple hover dataTable event-table"
+            *ngIf="tab.key === 'orderImport'"
+          >
+            <thead>
+              <tr>
+                <th>Settings</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Imported</th>
+                <th>Rejected</th>
+                <th>Messages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let importEvent of orderImportEvents">
+                <td>
+                  <a href="#{{ importEvent.settingsId }}">
+                    <i class="icon icon-cog"></i>
+                  </a>
+                </td>
+                <td>{{ importEvent.start | date : 'short' }}</td>
+                <td>{{ importEvent.state }}</td>
+                <td>{{ importEvent.importedCount }}/{{ importEvent.recordCount }}</td>
+                <td>{{ importEvent.rejectedCount }}/{{ importEvent.recordCount }}</td>
+                <td>
+                  <div *ngFor="let reject of importEvent.rejects">
+                    <div>
+                      Rejected: {{ reject.recordTitle }}
+                      <span *ngIf="reject.externalSystemRecordId"
+                        >({{ reject.externalSystemRecordId }})</span
+                      >
+                    </div>
+                    <ul>
+                      <li *ngFor="let msg of reject.failureMessages; trackBy: trackByKey">
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </div>
+                  <div *ngFor="let imported of importEvent.successUpserts">
+                    <div>
+                      {{ imported.recordTitle }}
+                      <span *ngIf="imported.externalSystemRecordId"
+                        >({{ imported.externalSystemRecordId }})</span
+                      >
+                    </div>
+                    <ul *ngIf="imported.notificationFailures">
+                      <li *ngFor="let msg of imported.notificationFailures; trackBy: trackByKey">
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table
+            class="simple hover dataTable event-table"
+            *ngIf="tab.key === 'coilImport'"
+          >
+            <thead>
+              <tr>
+                <th>Settings</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Imported</th>
+                <th>Rejected</th>
+                <th>Messages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let importEvent of coilImportEvents">
+                <td>
+                  <a href="#{{ importEvent.settingsId }}">
+                    <i
+                      md-font-icon="icon-cog"
+                      class="icon"
+                    ></i>
+                  </a>
+                </td>
+                <td>{{ importEvent.start | date : 'short' }}</td>
+                <td>{{ importEvent.state }}</td>
+                <td>{{ importEvent.importedCount }}/{{ importEvent.recordCount }}</td>
+                <td>{{ importEvent.rejectedCount }}/{{ importEvent.recordCount }}</td>
+                <td>
+                  <ul *ngIf="importEvent.errors">
+                    <li *ngFor="let msg of importEvent.errors">
+                      {{ msg }}
+                    </li>
+                  </ul>
+                  <div *ngFor="let reject of importEvent.rejects">
+                    <div>{{ reject.externalSystemRecordId }}</div>
+                    <ul>
+                      <li *ngFor="let msg of reject.failureMessages; trackBy: trackByKey">
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <app-integration-export-events
+            *ngIf="tab.key === 'export'"
+            [hideComplete]="hideComplete"
+          ></app-integration-export-events>
+
+          <table
+            class="simple hover dataTable event-table"
+            *ngIf="tab.key === 'materialImport'"
+          >
+            <thead>
+              <tr>
+                <th>Settings</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Imported</th>
+                <th>Rejected</th>
+                <th>Messages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let importEvent of materialImportEvents">
+                <td>
+                  <a href="#{{ importEvent.settingsId }}">
+                    <i class="icon icon-cog"></i>
+                  </a>
+                </td>
+                <td>{{ importEvent.start | date : 'short' }}</td>
+                <td>{{ importEvent.state }}</td>
+                <td>{{ importEvent.importedCount }}/{{ importEvent.recordCount }}</td>
+                <td>{{ importEvent.rejectedCount }}/{{ importEvent.recordCount }}</td>
+                <td>
+                  <div *ngFor="let reject of importEvent.rejects">
+                    <div>{{ reject.externalSystemRecordId }}</div>
+                    <ul>
+                      <li *ngFor="let msg of reject.failureMessages; trackBy: trackByKey">
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table
+            class="simple hover dataTable event-table"
+            *ngIf="tab.key === 'scheduleSync'"
+          >
+            <thead>
+              <tr>
+                <th>Settings</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Imported</th>
+                <th>Rejected</th>
+                <th>Messages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let importEvent of scheduleSyncEvents">
+                <td>
+                  <a href="#{{ importEvent.settingsId }}">
+                    <i class="icon icon-cog"></i>
+                  </a>
+                </td>
+                <td>{{ importEvent.start | date : 'short' }}</td>
+                <td>{{ importEvent.state }}</td>
+                <td>{{ importEvent.importedCount }}/{{ importEvent.recordCount }}</td>
+                <td>{{ importEvent.rejectedCount }}/{{ importEvent.recordCount }}</td>
+                <td>
+                  <div *ngIf="importEvent.error">{{ importEvent.error }}</div>
+                  <div *ngFor="let reject of importEvent.rejects">
+                    <div>{{ reject.externalSystemRecordId }}</div>
+                    <ul>
+                      <li *ngFor="let msg of reject.failureMessages; trackBy: trackByKey">
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table
+            class="simple hover dataTable event-table"
+            *ngIf="tab.key === 'coilValidation'"
+          >
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Item</th>
+                <th>Complete</th>
+                <th>Stage</th>
+                <th>Received</th>
+                <th>Duration</th>
+                <th>Messages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let exportEvent of coilValidationEvents | hideComplete : hideComplete">
+                <td>{{ exportEvent.channel }}</td>
+                <td>{{ exportEvent.itemId }}</td>
+                <td>{{ exportEvent.complete }}</td>
+                <td>{{ exportEvent.stage }}</td>
+                <td>{{ exportEvent.receivedTime | date : 'short' }}</td>
+                <td>{{ exportEvent.executionDuration | timeSpan : 'secondsWithMs' || '0' }}s</td>
+                <td>
+                  <div *ngFor="let l of exportEvent.activityLog; trackBy: trackByKey">
+                    <div>{{ l }}</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table
+            class="simple hover dataTable event-table"
+            *ngIf="tab.key === 'webhook'"
+          >
+            <thead>
+              <tr>
+                <th>Event Id</th>
+                <th>Settings</th>
+                <th>Date</th>
+                <th>Messages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let event of webhookEvents">
+                <td>{{ event.id }}</td>
+                <td>
+                  <a href="#{{ event.settingsId }}">
+                    <i class="icon icon-cog"></i>
+                  </a>
+                </td>
+                <td>{{ event.start | date : 'short' }}</td>
+                <td>
+                  <pre>{{ event.request }}</pre>
+                  <pre>{{ event.response }}</pre>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-tab>
+      <mat-tab
+        label="Test import file 🧪"
+        md-on-select="selectTab()"
+        feature-flag="experimental"
+      >
+        <app-import-file-test-form></app-import-file-test-form>
+      </mat-tab>
+      <mat-tab
+        label="Api Keys 🧪"
+        md-on-select="selectTab()"
+        feature-flag="experimental"
+      >
+        <app-api-key-management-form></app-api-key-management-form>
+
+        <div>Public api documentation is <a href="/api-docs/index.html">here</a>.</div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

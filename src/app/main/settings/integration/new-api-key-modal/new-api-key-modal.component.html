@@ -1,0 +1,41 @@
+<mat-toolbar color="success">
+  <span>New Api Key</span>
+  <span class="example-spacer"></span>
+  <button
+    mat-icon-button
+    aria-label="Close"
+    (click)="cancel()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-form-field class="yellow-input">
+    <mat-label>Description</mat-label>
+    <input
+      matInput
+      [(ngModel)]="description"
+    />
+  </mat-form-field>
+  <div class="btn-container">
+    <button
+      class="add-bt"
+      aria-label="Save"
+      (click)="onSave()"
+    >
+      Save
+    </button>
+  </div>
+  <div
+    class="message-container"
+    *ngIf="messages.length > 0"
+  >
+    <div *ngFor="let message of messages">
+      {{ message }}
+    </div>
+  </div>
+  <div
+    class="message-container"
+    *ngIf="messages.length === 0"
+  ></div>
+</div>

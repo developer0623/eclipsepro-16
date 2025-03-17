@@ -1,0 +1,13 @@
+<div class="performance-standard-cell">
+  <div
+    class="cell-edit"
+    [ngClass]="{ is_focus: state }"
+  >
+    <input
+      type="text"
+      [(ngModel)]="value"
+      (focus)="focus(true)"
+      (blur)="focus(false)"
+    />
+  </div>
+</div>

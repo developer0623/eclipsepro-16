@@ -1,0 +1,165 @@
+<mat-toolbar color="success">
+  <span>{{ title }} Configuration</span>
+  <span class="example-spacer"></span>
+  <button
+    mat-icon-button
+    aria-label="Close"
+    (click)="cancel()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<div mat-dialog-content>
+  <div class="config-row">
+    <div class="config-label">Type:</div>
+    <div class="config-content yellow-input">
+      <mat-select
+        [(ngModel)]="selectedConfig"
+        panelClass="yellow-select-panel"
+        (ngModelChange)="onChangeConfig(selectedConfig)"
+        aria-label="config-select"
+      >
+        <mat-option
+          *ngFor="let val of getKeys(configList)"
+          [value]="val"
+        >
+          {{ configList[val].name }}
+        </mat-option>
+      </mat-select>
+    </div>
+  </div>
+  <div class="config-row">
+    <div class="config-label"></div>
+    <div class="config-content">
+      <mat-checkbox
+        class="config-enable yellow-checkbox"
+        [(ngModel)]="configEnabled"
+        aria-label="Config Enabled"
+      >
+        Enabled
+      </mat-checkbox>
+    </div>
+  </div>
+  <div
+    class="config-row"
+    *ngFor="let valKey of getKeys(itemsList)"
+  >
+    <div class="config-label">
+      {{ itemsList[valKey].name }}:
+
+      <a
+        *ngIf="itemsList[valKey].kbLink"
+        href="{{ itemsList[valKey].kbLink }}"
+        target="_blank"
+        matTooltip="Help"
+        matTooltipPosition="above"
+      >
+        <i class="icon s20 secondary-text icon-help-circle"></i>
+      </a>
+    </div>
+    <div
+      class="config-content"
+      *ngIf="settings"
+    >
+      <input
+        *ngIf="itemsList[valKey].type === 'string'"
+        class="config-input"
+        [(ngModel)]="settings[valKey]"
+      />
+      <input
+        *ngIf="itemsList[valKey].type === 'integer'"
+        class="config-input"
+        [(ngModel)]="settings[valKey]"
+      />
+      <div
+        class="time-container"
+        *ngIf="itemsList[valKey].type === 'interval'"
+      >
+        <app-time-input
+          [isHour]="true"
+          [value]="settings[valKey][0]"
+          (onChange)="onUpdateSettings(valKey, 0, $event)"
+        ></app-time-input>
+        :
+        <app-time-input
+          [isHour]="false"
+          [value]="settings[valKey][1]"
+          (onChange)="onUpdateSettings(valKey, 1, $event)"
+        ></app-time-input>
+        :
+        <app-time-input
+          [isHour]="false"
+          [value]="settings[valKey][2]"
+          (onChange)="onUpdateSettings(valKey, 2, $event)"
+        ></app-time-input>
+      </div>
+      <mat-checkbox
+        *ngIf="itemsList[valKey].type === 'bool'"
+        class="config-enable yellow-check"
+        [(ngModel)]="settings[valKey]"
+      ></mat-checkbox>
+      <mat-select
+        *ngIf="itemsList[valKey].type === 'option'"
+        panelClass="yellow-select-panel"
+        [(ngModel)]="settings[valKey]"
+        aria-label="config-select"
+      >
+        <mat-option
+          *ngFor="let opt of itemsList[valKey].options"
+          [value]="opt.key"
+        >
+          {{ opt.value }}
+        </mat-option>
+      </mat-select>
+      <mat-select
+        *ngIf="itemsList[valKey].type === 'externalConnection'"
+        panelClass="yellow-select-panel"
+        [(ngModel)]="settings[valKey]"
+        aria-label="config-select"
+      >
+        <!-- ng-change="onChangeConfig(selectedConfig)" -->
+        <mat-option
+          *ngFor="let conn of externalConnections"
+          [value]="conn.id"
+        >
+          {{ conn.settings.name }}
+        </mat-option>
+      </mat-select>
+    </div>
+  </div>
+
+  <div class="btn-container">
+    <button
+      class="add-bt"
+      aria-label="Test"
+      (click)="onTest()"
+    >
+      Test
+    </button>
+
+    <button
+      class="add-bt"
+      aria-label="Save"
+      (click)="onSave()"
+    >
+      Save
+    </button>
+  </div>
+
+  <div
+    class="message-container"
+    *ngIf="messages.length > 0"
+  >
+    <div *ngFor="let message of messages; trackBy: trackByKey">
+      {{ message }}
+    </div>
+  </div>
+  <div
+    class="message-container"
+    *ngIf="messages.length === 0"
+  ></div>
+</div>
+<!-- <div mat-dialog-actions [align]="'end'">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-button color="success" (click)="saveWallboard()">SAVE</button>
+</div> -->

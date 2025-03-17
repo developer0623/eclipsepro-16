@@ -1,0 +1,167 @@
+<div
+  fxLayout="row"
+  class="table-item-row"
+  [ngClass]="{ 'border-white': istool }"
+>
+  <div
+    class="flex-145 col-field"
+    fxLayout="column"
+    *ngIf="!istool"
+  >
+    <div fxLayout="column">
+      <div fxFlex>{{ origin.description }}</div>
+      <div
+        fxFlex
+        (click)="onExpand()"
+        class="tool-count"
+      >
+        {{ getCount() }}
+        <i
+          class="icon icon-chevron-down"
+          *ngIf="!getChecked()"
+        ></i>
+        <i
+          class="icon icon-chevron-up"
+          *ngIf="getChecked()"
+        ></i>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex-145 sub-item-first col-field"
+    *ngIf="istool"
+  >
+    <span>{{ item.toolingCode }}</span>
+    <div class="sub-item-first-checkbox">
+      <mat-checkbox
+        aria-label="Select Tool"
+        color="primary"
+        [checked]="item.overrideMachine"
+        (change)="saveOverride($event, item)"
+      >
+      </mat-checkbox>
+    </div>
+  </div>
+  <!-- FPM -->
+  <div class="flex-6 col-field item-his-color">{{ item.fpmHist }}</div>
+  <div class="flex-6 col-field item-plan-color">
+    <app-table-cell
+      [value]="item.fpmPlan"
+      [origin]="origin"
+      [prefix]="'fpm'"
+      [suffix]="'Plan'"
+      [unit]="'ft'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-cell>
+  </div>
+  <div class="flex-6 col-field item-target-color">
+    <app-table-default-cell
+      *ngIf="!istool"
+      [value]="item.fpmTarget"
+      [origin]="origin"
+      [prefix]="'fpm'"
+      [suffix]="'Target'"
+      [unit]="'ft'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-default-cell>
+    <app-table-cell
+      *ngIf="istool"
+      [value]="item.fpmTarget"
+      [origin]="origin"
+      [prefix]="'fpm'"
+      [suffix]="'Target'"
+      [unit]="'ft'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-cell>
+  </div>
+  <!-- Tool Change -->
+  <div class="flex-045"></div>
+  <div class="flex-6 col-field item-his-color">{{ item.toolChangeHist }}</div>
+  <div class="flex-6 col-field item-plan-color">
+    <app-table-default-cell
+      [value]="item.toolChangePlan"
+      [origin]="origin"
+      [prefix]="'toolChange'"
+      [suffix]="'Plan'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-default-cell>
+  </div>
+  <div class="flex-6 col-field item-target-color">
+    <app-table-default-cell
+      [value]="item.toolChangeTarget"
+      [origin]="origin"
+      [prefix]="'toolChange'"
+      [suffix]="'Target'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-default-cell>
+  </div>
+  <!-- Coil Change -->
+  <div class="flex-045"></div>
+  <div class="flex-6 col-field item-his-color">{{ item.coilChangeHist }}</div>
+  <div class="flex-6 col-field item-plan-color">
+    <app-table-default-cell
+      [value]="item.coilChangePlan"
+      [origin]="origin"
+      [prefix]="'coilChange'"
+      [suffix]="'Plan'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-default-cell>
+  </div>
+  <div class="flex-6 col-field item-target-color">
+    <app-table-default-cell
+      [value]="item.coilChangeTarget"
+      [origin]="origin"
+      [prefix]="'coilChange'"
+      [suffix]="'Target'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-default-cell>
+  </div>
+  <!-- Bundle Change -->
+  <div class="flex-045"></div>
+  <div class="flex-6 col-field item-his-color">{{ item.bundleChangeHist }}</div>
+  <div class="flex-6 col-field item-plan-color">
+    <app-table-default-cell
+      [value]="item.bundleChangePlan"
+      [origin]="origin"
+      [prefix]="'bundleChange'"
+      [suffix]="'Plan'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-default-cell>
+  </div>
+  <div class="flex-6 col-field item-target-color">
+    <app-table-default-cell
+      [value]="item.bundleChangeTarget"
+      [origin]="origin"
+      [prefix]="'bundleChange'"
+      [suffix]="'Target'"
+      [index]="index"
+      [istool]="istool"
+      [state]="isEdit"
+      (onFocus)="onFocus($event)"
+    ></app-table-default-cell>
+  </div>
+</div>

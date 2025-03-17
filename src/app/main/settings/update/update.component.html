@@ -1,0 +1,64 @@
+<div
+  id="settings"
+  class="agent-settings page-layout simple fullwidth"
+>
+  <div class="header md-accent-bg">
+    <span class="h2 black-text">Eclipse Pro Update</span>
+  </div>
+  <mat-card class="update-card">
+    <mat-card-content>
+      <h3>An update is available to install.</h3>
+      <div
+        class="form-title"
+        fxLayout="column"
+        fxLayoutFill
+      >
+        <div class="agent-id font-size-14">
+          <span class="text-inline w-120">Current Version:</span>
+          <span class="secondary-text ml-8"> {{ updateInfo?.installedVersion?.version }}</span>
+          <span class="secondary-text ml-60">
+            {{ updateInfo?.installedVersion?.published | amsDateTime }}</span
+          >
+        </div>
+        <div class="agent-id font-size-14">
+          <span class="text-inline w-120">Latest Version:</span>
+          <span class="secondary-text ml-8"> {{ updateInfo?.latestReleaseVersion?.version }}</span>
+          <span class="secondary-text ml-60"
+            ><a
+              href="https://www.amscontrols.com/kb/eclipse-pro-release-notes/"
+              target="_blank"
+              >Release Notes</a
+            ></span
+          >
+          <span class="secondary-text ml-60">
+            {{ updateInfo?.latestReleaseVersion?.published | amsDateTime }}</span
+          >
+        </div>
+      </div>
+      <br />
+      <p></p>
+      <h3>Install and update using the Eclipse-Toolbox (recommended)</h3>
+      <p>
+        The Eclipse-Toolbox is a tool that will install and update Eclipse Pro for you. It will also
+        update Eclipse Classic. It is the recommended way to install Eclipse Pro. Eclipse Classic
+        must be installed before running the Eclipse-Toolbox.
+      </p>
+      <p>
+        <a
+          href="https://amscontrolsportal.blob.core.windows.net/software-releases/Releases/AMS.Eclipse.Toolbox-win-Setup.exe"
+          >Download Here</a
+        >
+      </p>
+      <p>Note: this requires an administrative account on the Eclipse Pro server computer.</p>
+      <p>Please contact AMS Support for assistance.</p>
+      <p>
+        <a
+          href="http://www.amscontrols.com/support"
+          target="_blank"
+          >www.amscontrols.com/support</a
+        >
+      </p>
+      <br />
+    </mat-card-content>
+  </mat-card>
+</div>

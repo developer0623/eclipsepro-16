@@ -1,0 +1,53 @@
+.list-container {
+  border: 1px solid #d4d4d4;
+  border-radius: 3px;
+}
+
+.main-container {
+  min-height: 300px;
+}
+
+.property-item-row {
+  display: flex;
+  border-bottom: 1px solid #d4d4d4;
+  min-height: 40px;
+  padding-left: 12px;
+  align-items: center;
+  font-size: 13px;
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background-color: whitesmoke;
+    .property-deletebtn {
+      display: block !important;
+    }
+  }
+}
+.property-deletebtn {
+  display: none;
+}
+
+.property-item-header {
+  font-weight: bold;
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.key-col {
+  width: 35%;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+.value-col {
+  flex: 1;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.white-color {
+  color: white;
+}

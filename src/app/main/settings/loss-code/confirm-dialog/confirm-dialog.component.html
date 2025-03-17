@@ -1,0 +1,32 @@
+<div mat-dialog-content>
+  <p class="content-txt">
+    This code is already in use. Do you want to update all existing production history, or create a
+    new code?
+  </p>
+</div>
+
+<div
+  mat-dialog-actions
+  [align]="'end'"
+>
+  <button
+    mat-button
+    (click)="onDismiss()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    (click)="onUpdate()"
+    class="cancel-btn"
+  >
+    Update History
+  </button>
+  <button
+    mat-button
+    color="success"
+    (click)="onAddNew()"
+  >
+    New Code
+  </button>
+</div>

@@ -1,0 +1,415 @@
+<div
+  id="wallboard-view"
+  class="page-layout simple fullwidth dashboard"
+>
+  <!-- HEADER -->
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span class="h2">Wallboard</span>
+      <!-- <a class="toolbar" href="/app/wallboard/index.html" target="_blank">
+          <i class="icon s24 icon-launch"></i>
+          <span class="h2">Launch Wallboard App</span>
+        </a> -->
+    </div>
+  </div>
+  <div class="content md-background md-hue-1">
+    <mat-tab-group
+      class="main-color-tab"
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+      [selectedIndex]="this.selectedTabIndex"
+      (selectedIndexChange)="onChangeTab($event)"
+    >
+      <mat-tab label="Wallboard devices">
+        <div class="task-content">
+          <div>
+            <p>
+              To create a new device registration, open a browser on the
+              <span style="font-style: italic; font-weight: bold">target device</span>
+              at this address: {{ serverHost }}/app/wallboard/
+            </p>
+            <p>
+              The same address should be used for each Wallboard device. More details about
+              Wallboard devices is available
+              <a
+                href="https://www.amscontrols.com/kb/eclipse-pro-wallboard-andon-app-setup/"
+                target="_blank"
+                >here</a
+              >.
+            </p>
+          </div>
+          <div class="simple-table-container mat-elevation-z2 mb-24">
+            <div class="ms-responsive-table-wrapper">
+              <table class="simple hover wallboard-device-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Details</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let device of wallboardDevices"
+                    class="hover"
+                  >
+                    <td>{{ device.wallboardDeviceKey }}</td>
+                    <td>{{ device.wallboardDeviceName }}</td>
+                    <td>{{ device.contentType }}</td>
+                    <td
+                      class="detail-td"
+                      *ngIf="device.contentType !== 'Message'"
+                    >
+                      {{ device.displayDetail }}
+                    </td>
+                    <td
+                      class="detail-td"
+                      *ngIf="device.contentType === 'Message'"
+                    >
+                      <div btf-markdown="device.displayDetail"></div>
+                    </td>
+                    <td>
+                      <!-- todo: convert these actions to icon buttons -->
+                      <span
+                        class="edit-btn"
+                        (click)="showEditModal(device)"
+                        >Edit</span
+                      >
+                      <span
+                        class="edit-btn"
+                        (click)="deleteDevice(device)"
+                        >Delete</span
+                      >
+                      <a
+                        class="delete-btn"
+                        href="/app/wallboard/?deviceKey={{ device.wallboardDeviceKey }}"
+                        target="_blank"
+                      >
+                        <span>Preview</span>
+                        <i class="icon s14 icon-launch"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Andon Config">
+        <div
+          class="andon-cards content md-background md-hue-1"
+          fxLayout="column"
+        >
+          <div
+            fxLayout="row"
+            class="add-sequence"
+          >
+            <button
+              class="add-sequence-btn"
+              (click)="addNewSequence()"
+              aria-label="New Sequence"
+            >
+              <span translate="addSequence"></span>
+              <i class="icon icon-plus"></i>
+            </button>
+          </div>
+          <div
+            fxFlex
+            fxFlexFill
+            fxLayout="column"
+            fxLayout.gt-xs="row"
+            fxLayoutAlign="space-between"
+          >
+            <div fxFlex.gt-xs="55">
+              <!-- ANDON SEQUENCE -->
+              <div
+                class="pb-40 mb-24"
+                [ngClass]="{ 'border-bottom': !last, 'mr-24': media.isActive('gt-xs') }"
+                fxLayout="column"
+                *ngFor="
+                  let sequence of andonSequences;
+                  let last = last;
+                  let parentIndex = index;
+                  trackBy: trackByKey
+                "
+              >
+                <!-- EDITABLE ANDON SEQUENCE NAME -->
+                <div
+                  [ngClass]="{ 'p-8': media.isActive('gt-xs') }"
+                  class="sequence-title"
+                >
+                  <app-edit-input
+                    [(ngModel)]="sequence.name"
+                    [showEditButtons]="true"
+                    (onaftersave)="updateSequence(sequence, 'name', $event)"
+                  >
+                    {{ sequence.name
+                    }}<i class="icon icon-pencil s16 ml-5 mb-5 hint-text icon-pencil"></i>
+                  </app-edit-input>
+                  <button
+                    mat-icon-button
+                    class="s-30-btn sequence-del-btn"
+                    [disabled]="sequence.count > 0"
+                    (click)="deletePanelSequence(sequence, parentIndex)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+
+                  <!-- <span
+                    *ngIf="!!sequence.isShowed"
+                    class="delete-andon"
+                    [ngClass]="{ 'disable-delete': sequence.count > 0 }"
+                    (click)="deletePanelSequence(sequence, parentIndex)"
+                  >
+                    <span
+                      *ngIf="sequence.count > 0"
+                      class="disable-badge"
+                      >{{ sequence.count }}</span
+                    >
+                    delete
+                  </span> -->
+                </div>
+                <!-- END EDITABLE ANDON SEQUENCE NAME -->
+
+                <!-- ANDON PANEL THUMBNAILS -->
+                <div
+                  fxLayout="row wrap"
+                  fxFlex="100"
+                  dndDropzone
+                  dndEffectAllowed="move"
+                  (dndDrop)="onDrop($event, sequence.panels, parentIndex)"
+                >
+                  <div
+                    class="dndPlaceholder"
+                    dndPlaceholderRef
+                  ></div>
+                  <div
+                    fxLayout="column"
+                    fxLayoutAlign="center"
+                    class="mat-elevation-z1 andon-card"
+                    *ngFor="let panel of sequence.panels; trackBy: trackByKey; let index = index"
+                    (click)="restartSequence(sequence, index)"
+                    (focus)="restartSequence(sequence, index)"
+                    [ngClass]="{
+                      'current-panel': currentPanel(sequence, panel) && sequence === sequence
+                    }"
+                    tabindex="-1"
+                    [dndDraggable]="panel"
+                    dndEffectAllowed="move"
+                    (dndMoved)="onDragged(panel, sequence.panels)"
+                  >
+                    <div class="andon-name font-size-14 text-upper">
+                      <span *ngIf="panel.viewKey !== 'message' || !panel.title">
+                        <span [translate]="panel.viewKey"></span>
+                        <span *ngIf="panel.chart"><br /><span translate="chart">Chart</span></span>
+                      </span>
+                      <span *ngIf="panel.viewKey === 'message' && panel.title">{{
+                        panel.title
+                      }}</span>
+                    </div>
+                    <div class="andon-card-controls">
+                      <div class="andon-panel-duration">
+                        <app-edit-input
+                          [(ngModel)]="panel.duration"
+                          (onaftersave)="
+                            updatePanelSequenceInput(sequence, 'duration', index, $event)
+                          "
+                        >
+                          {{ panel.duration || 0 }}s
+                        </app-edit-input>
+                      </div>
+                      <button
+                        mat-icon-button
+                        *ngIf="andonViews[panel.viewKey]?.hasChart === 'true'"
+                        class="andon-panel-option"
+                        md-no-ink
+                        (click)="togglePanelChart(sequence, panel)"
+                        aria-label="Edit Panel Chart"
+                      >
+                        <i
+                          class="icon icon-chart-line s16"
+                          [ngClass]="{ 'blue-500-fg': panel.chart, 'hint-text': !panel.chart }"
+                        ></i>
+                      </button>
+                      <button
+                        mat-icon-button
+                        *ngIf="andonViews[panel.viewKey]?.editKey"
+                        class="andon-panel-option"
+                        md-no-ink
+                        (click)="
+                          editPanelDetail(
+                            parentIndex,
+                            index,
+                            sequence,
+                            andonViews[panel.viewKey].editKey
+                          )
+                        "
+                        aria-label="Custom Message"
+                      >
+                        <i class="icon icon-pencil s16 hint-text"></i>
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="remove-andon-panel"
+                        md-no-ink
+                        (click)="sequence.panels.splice(index, 1); updatePanelSequence(sequence)"
+                        aria-label="Remove Panel"
+                      >
+                        <i class="icon icon-delete s16 hint-text"></i>
+                      </button>
+                    </div>
+
+                    <!-- END ANDON PANEL CONTROLS -->
+                  </div>
+                  <!-- END ANDON DRAG AND DROP PANEL THUMBNAIL -->
+                  <!-- ADD ANDON PANEL THUMBNAIL BUTTON -->
+                  <button
+                    mat-icon-button
+                    [cdkMenuTriggerFor]="wallboardMenu"
+                    [matTooltip]="'addAndonView' | translate"
+                    aria-label="Andon View"
+                    class="add-andon-panel andon-card"
+                  >
+                    <i class="icon icon-plus"></i>
+                  </button>
+                  <ng-template #wallboardMenu>
+                    <div
+                      class="main-menu scroll-menu-list"
+                      cdkMenu
+                    >
+                      <button
+                        *ngFor="let view of andonViews"
+                        (click)="addNewPanel($event, parentIndex, view.viewKey)"
+                        class="main-menu-item"
+                        cdkMenuItem
+                        aria-label="Add Andon View"
+                      >
+                        <span [translate]="view.viewKey"></span>
+                      </button>
+                    </div>
+                  </ng-template>
+                  <!-- END ADD ANDON PANEL THUMBNAIL BUTTON -->
+                </div>
+                <!-- END ANDON PANEL THUMBNAILS -->
+              </div>
+              <!-- END ANDON SEQUENCE -->
+            </div>
+
+            <div
+              fxFlex="45"
+              fxHide.xs
+            >
+              <!-- ANDON DISPLAY PREVIEW -->
+              <div
+                id="andon-preview"
+                class="grey-50-bg mat-elevation-z2"
+              >
+                <!-- ANDON DISPLAY FRAME -->
+                <div class="andon-frame">
+                  <app-andon-display
+                    *ngIf="selectedDashboardMachine?.machineNumber"
+                    [display]="'preview'"
+                    [machine]="selectedDashboardMachine"
+                    [sequence]="sequence"
+                    [currTask]="readyTask"
+                    [currentJob]="currentJob"
+                    [currentItem]="currentItem"
+                    [metricDefinitions]="metricDefinitions"
+                    [viewKey]="viewKey"
+                    [playKey]="playKey"
+                    [theme]="sequence?.theme"
+                  >
+                  </app-andon-display>
+                </div>
+                <!-- END ANDON DISPLAY FRAME -->
+
+                <div class="andon-preview-footer">
+                  <div
+                    class="h-40 pl-16"
+                    fxLayout="row"
+                    fxLayoutAlign="space-between center"
+                  >
+                    <div
+                      class="text-upper hint-text line-height-40"
+                      translate="previewDisplay"
+                    ></div>
+                    <div *ngIf="andonSequences.length && sequence?.panels?.length">
+                      <button
+                        class="i-button"
+                        mat-icon-button
+                        [matTooltip]="'launchDisplay' | translate"
+                        uiSref="app.andon_wallboard"
+                        [uiParams]="{
+                          machineNumber: selectedMachine.machineNumber,
+                          andonId: sequence.id
+                        }"
+                        target="_blank"
+                      >
+                        <i class="icon icon-launch"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- SELECT MACHINE DATA AND SEQUENCE TO LOAD INTO PREVIEW FRAME -->
+                  <div
+                    class="grey-50-bg pl-16 pr-8 pb-16 black-text font-size-14"
+                    fxLayout="row wrap"
+                    fxLayoutAlign="center"
+                  >
+                    <mat-form-field
+                      fxFlex="51"
+                      class="yellow-input"
+                    >
+                      <mat-select
+                        (selectionChange)="machineChange(selectedMachine)"
+                        [(ngModel)]="selectedMachine"
+                        placeholder="Machine"
+                        panelClass="yellow-select-panel"
+                      >
+                        <mat-option
+                          *ngFor="
+                            let machine of objectToArray(machineData.machines);
+                            trackBy: trackByKey
+                          "
+                          [value]="machineData.machines[machine.key]"
+                        >
+                          {{ machine.description }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field
+                      fxFlex="51"
+                      class="yellow-input"
+                    >
+                      <mat-select
+                        (selectionChange)="restartSequence(selectedSequence, 0)"
+                        [(ngModel)]="selectedSequence"
+                        placeholder="Sequence"
+                        panelClass="yellow-select-panel"
+                      >
+                        <mat-option
+                          *ngFor="let sequence of andonSequences; trackBy: trackByKey"
+                          [value]="sequence"
+                        >
+                          {{ sequence.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <!-- END ANDON DISPLAY PREVIEW -->
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

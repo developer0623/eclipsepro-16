@@ -1,0 +1,608 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <!-- HEADER -->
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span class="h2">Bundling</span>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <!-- CONTENT -->
+  <div
+    class="content md-background md-hue-1 settings-bundling p-24"
+    md-background-bg
+  >
+    <mat-tab-group
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+      class="main-color-tab"
+    >
+      <mat-tab label="Bundler Rules">
+        <div class="task-content">
+          <div
+            id="bundlerRules"
+            class="task-list active-task-list"
+          >
+            <div fxLayout="column">
+              <div class="mat-elevation-z2">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  System Default
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable event-table">
+                    <thead>
+                      <tr>
+                        <th>Max Lbs</th>
+                        <th>Max Pieces</th>
+                        <th>Min % of Max</th>
+                        <th>Sorting</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="bundlerRules.systemLevel.maxWeightLbs"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'system',
+                                '',
+                                '',
+                                '',
+                                bundlerRules.systemLevel,
+                                'maxWeightLbs',
+                                $event
+                              )
+                            "
+                          >
+                            {{ bundlerRules.systemLevel.maxWeightLbs }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="bundlerRules.systemLevel.maxPieceCount"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'system',
+                                '',
+                                '',
+                                '',
+                                bundlerRules.systemLevel,
+                                'maxPieceCount',
+                                $event
+                              )
+                            "
+                          >
+                            {{ bundlerRules.systemLevel.maxPieceCount }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="bundlerRules.systemLevel.minPctOfMaxLength"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'system',
+                                '',
+                                '',
+                                '',
+                                bundlerRules.systemLevel,
+                                'minPctOfMaxLength',
+                                $event
+                              )
+                            "
+                          >
+                            {{ bundlerRules.systemLevel.minPctOfMaxLength | unitsFormat : '%' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-select
+                            [(ngModel)]="bundlerRules.systemLevel.itemSort"
+                            [valKey]="'value'"
+                            [nameKey]="'text'"
+                            [items]="systemSortOptions"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'system',
+                                '',
+                                '',
+                                '',
+                                bundlerRules.systemLevel,
+                                'itemSort',
+                                $event
+                              )
+                            "
+                          >
+                            {{ bundlerRules.systemLevel.itemSort }}
+                          </app-edit-select>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="column">
+              <div class="mat-elevation-z2">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Customer
+                  <button
+                    class="gray-col"
+                    [hidden]="!userHasAdminRole"
+                    mat-icon-button
+                    aria-label="addBundlerRuleDialog"
+                    (click)="addBundlerRuleDialog('customer')"
+                  >
+                    <i class="icon-plus-box"></i>
+                  </button>
+                </div>
+                <div *ifClaim="'custom.metalsales'">
+                  Metal Sales: The customer internal Id from NetSuite should be used here. This is
+                  the id from the URL.
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable event-table">
+                    <thead>
+                      <tr>
+                        <th>Customer</th>
+                        <th>Max Lbs</th>
+                        <th>Max Pieces</th>
+                        <th>Sorting</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let rule of objectToArray(bundlerRules.customerRules);
+                          trackBy: trackByKey
+                        "
+                      >
+                        <td>{{ rule.key }}</td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="rule.maxWeightLbs"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'customer',
+                                rule.key,
+                                '',
+                                '',
+                                rule,
+                                'maxWeightLbs',
+                                $event
+                              )
+                            "
+                          >
+                            {{ rule.maxWeightLbs || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="rule.maxPieceCount"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'customer',
+                                rule.key,
+                                '',
+                                '',
+                                rule,
+                                'maxPieceCount',
+                                $event
+                              )
+                            "
+                          >
+                            {{ rule.maxPieceCount || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-select
+                            [(ngModel)]="rule.itemSort"
+                            [valKey]="'value'"
+                            [nameKey]="'text'"
+                            [items]="sortOptions"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'customer',
+                                rule.key,
+                                '',
+                                '',
+                                rule,
+                                'itemSort',
+                                $event
+                              )
+                            "
+                          >
+                            {{ rule.itemSort || 'n/a' | translate }}
+                          </app-edit-select>
+                        </td>
+                        <td>
+                          <button
+                            class="gray-col"
+                            [hidden]="!userHasAdminRole"
+                            mat-icon-button
+                            aria-label="deleteBundlerRule"
+                            (click)="deleteBundlerRule('customer', rule.key, '')"
+                          >
+                            <i class="icon-delete"></i>
+                          </button>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="column">
+              <div class="mat-elevation-z2">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Tooling
+                  <button
+                    class="gray-col"
+                    [hidden]="!userHasAdminRole"
+                    mat-icon-button
+                    aria-label="addBundlerRuleDialog"
+                    (click)="addBundlerRuleDialog('toolingDef')"
+                  >
+                    <i class="icon-plus-box"></i>
+                  </button>
+                </div>
+                <div *ifClaim="'custom.metalsales'">
+                  Metal Sales: The Shop Floor Category from the Assembly Item in NetSuite should be
+                  used here.
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable event-table">
+                    <thead>
+                      <tr>
+                        <th>Tooling</th>
+                        <th>Max Lbs</th>
+                        <th>Max Pieces</th>
+                        <th>Sorting</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let toolRule of objectToArray(bundlerRules.toolingDefRules);
+                          trackBy: trackByKey
+                        "
+                      >
+                        <td>{{ toolRule.key }}</td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="toolRule.maxWeightLbs"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'toolingDef',
+                                '',
+                                toolRule.key,
+                                '',
+                                toolRule,
+                                'maxWeightLbs',
+                                $event
+                              )
+                            "
+                          >
+                            {{ toolRule.maxWeightLbs || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="toolRule.maxPieceCount"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'toolingDef',
+                                '',
+                                toolRule.key,
+                                '',
+                                toolRule,
+                                'maxPieceCount',
+                                $event
+                              )
+                            "
+                          >
+                            {{ toolRule.maxPieceCount || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-select
+                            [(ngModel)]="toolRule.itemSort"
+                            [valKey]="'value'"
+                            [nameKey]="'text'"
+                            [items]="sortOptions"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'toolingDef',
+                                '',
+                                toolRule.key,
+                                '',
+                                toolRule,
+                                'itemSort',
+                                $event
+                              )
+                            "
+                          >
+                            {{ toolRule.itemSort || 'n/a' | translate }}
+                          </app-edit-select>
+                        </td>
+                        <td>
+                          <button
+                            class="gray-col"
+                            [hidden]="!userHasAdminRole"
+                            mat-icon-button
+                            aria-label="deleteBundlerRule"
+                            (click)="deleteBundlerRule('toolingDef', '', toolRule.key, '')"
+                          >
+                            <i class="icon-delete"></i>
+                          </button>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="column">
+              <div class="mat-elevation-z2">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Material/Tooling
+                  <button
+                    class="gray-col"
+                    [hidden]="!userHasAdminRole"
+                    mat-icon-button
+                    aria-label="addBundlerRuleDialog"
+                    (click)="addBundlerRuleDialog('materialTooling')"
+                  >
+                    <i class="icon-plus-box"></i>
+                  </button>
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable event-table">
+                    <thead>
+                      <tr>
+                        <th>Material</th>
+                        <th>Tooling</th>
+                        <th>Max Lbs</th>
+                        <th>Max Pieces</th>
+                        <th>Sorting</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let materialToolRule of bundlerRules.materialToolingRules">
+                        <td>{{ materialToolRule.material }}</td>
+                        <td>{{ materialToolRule.tooling }}</td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="materialToolRule.maxWeightLbs"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'materialTooling',
+                                '',
+                                materialToolRule.tooling,
+                                materialToolRule.material,
+                                materialToolRule,
+                                'maxWeightLbs',
+                                $event
+                              )
+                            "
+                          >
+                            {{ materialToolRule.maxWeightLbs || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="materialToolRule.maxPieceCount"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'materialTooling',
+                                '',
+                                materialToolRule.tooling,
+                                materialToolRule.material,
+                                materialToolRule,
+                                'maxPieceCount',
+                                $event
+                              )
+                            "
+                          >
+                            {{ materialToolRule.maxPieceCount || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-select
+                            [(ngModel)]="materialToolRule.itemSort"
+                            [valKey]="'value'"
+                            [nameKey]="'text'"
+                            [items]="sortOptions"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'materialTooling',
+                                '',
+                                materialToolRule.tooling,
+                                materialToolRule.material,
+                                materialToolRule,
+                                'itemSort',
+                                $event
+                              )
+                            "
+                          >
+                            {{ materialToolRule.itemSort || 'n/a' | translate }}
+                          </app-edit-select>
+                        </td>
+                        <td></td>
+                        <td>
+                          <button
+                            class="gray-col"
+                            [hidden]="!userHasAdminRole"
+                            mat-icon-button
+                            aria-label="deleteBundlerRule"
+                            (click)="
+                              deleteBundlerRule(
+                                'materialTooling',
+                                '',
+                                materialToolRule.tooling,
+                                materialToolRule.material
+                              )
+                            "
+                          >
+                            <i class="icon-delete"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="column">
+              <div class="mat-elevation-z2">
+                <div
+                  fxLayout="row"
+                  class="table-title black-text"
+                  fxLayoutAlign="start center"
+                >
+                  Customer/Tooling
+                  <button
+                    class="gray-col"
+                    [hidden]="!userHasAdminRole"
+                    mat-icon-button
+                    aria-label="addBundlerRuleDialog"
+                    (click)="addBundlerRuleDialog('customerTooling')"
+                  >
+                    <i class="icon-plus-box"></i>
+                  </button>
+                </div>
+                <div class="ms-responsive-table-wrapper">
+                  <table class="simple hover dataTable event-table">
+                    <thead>
+                      <tr>
+                        <th>Customer</th>
+                        <th>Tooling</th>
+                        <th>Max Lbs</th>
+                        <th>Max Pieces</th>
+                        <th>Sorting</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let custToolRule of bundlerRules.customerToolingRules">
+                        <td>{{ custToolRule.customer }}</td>
+                        <td>{{ custToolRule.tooling }}</td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="custToolRule.maxWeightLbs"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'customerTooling',
+                                custToolRule.customer,
+                                custToolRule.tooling,
+                                '',
+                                custToolRule,
+                                'maxWeightLbs',
+                                $event
+                              )
+                            "
+                          >
+                            {{ custToolRule.maxWeightLbs || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-input
+                            [(ngModel)]="custToolRule.maxPieceCount"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'customerTooling',
+                                custToolRule.customer,
+                                custToolRule.tooling,
+                                '',
+                                custToolRule,
+                                'maxPieceCount',
+                                $event
+                              )
+                            "
+                          >
+                            {{ custToolRule.maxPieceCount || 'n/a' }}
+                          </app-edit-input>
+                        </td>
+                        <td>
+                          <app-edit-select
+                            [(ngModel)]="custToolRule.itemSort"
+                            [valKey]="'value'"
+                            [nameKey]="'text'"
+                            [items]="sortOptions"
+                            (onaftersave)="
+                              updateBundlerRule(
+                                'customerTooling',
+                                custToolRule.customer,
+                                custToolRule.tooling,
+                                '',
+                                custToolRule,
+                                'itemSort',
+                                $event
+                              )
+                            "
+                          >
+                            {{ custToolRule.itemSort || 'n/a' | translate }}
+                          </app-edit-select>
+                        </td>
+                        <td></td>
+                        <td>
+                          <button
+                            class="gray-col"
+                            [hidden]="!userHasAdminRole"
+                            mat-icon-button
+                            aria-label="deleteBundlerRule"
+                            (click)="
+                              deleteBundlerRule(
+                                'customerTooling',
+                                custToolRule.customer,
+                                custToolRule.tooling,
+                                ''
+                              )
+                            "
+                          >
+                            <i class="icon-delete"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

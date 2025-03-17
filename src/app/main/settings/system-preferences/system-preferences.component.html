@@ -1,0 +1,173 @@
+<div
+  id="settings"
+  class="system-preferences page-layout simple fullwidth"
+>
+  <!-- HEADER -->
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span
+        class="h2"
+        translate="systemPreferences"
+      ></span>
+    </div>
+  </div>
+  <!-- / HEADER -->
+
+  <!-- CONTENT -->
+  <div
+    class="content p-24"
+    md-background-bg
+  >
+    <div
+      class="form-wrapper mat-elevation-z1"
+      fxFlex="100"
+    >
+      <div fxLayout="column">
+        <table
+          class="simple dataTable row-border"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th><span translate="settings"></span></th>
+              <th><span translate="globalSettings"></span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 25%"><span translate="language"></span>:</td>
+              <td colspan="2">
+                <button
+                  class="language-button black-fg menu-btn"
+                  [cdkMenuTriggerFor]="languagemenu"
+                  aria-label="language menu"
+                >
+                  <span>{{ selectedLanguage?.title }}</span>
+
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <ng-template #languagemenu>
+                  <div
+                    class="main-menu"
+                    cdkMenu
+                  >
+                    <button
+                      class="main-menu-item"
+                      *ngFor="let lang of languages"
+                      cdkMenuItem
+                      aria-label="{{ lang.title }}"
+                      (click)="changeLanguage(lang)"
+                    >
+                      <span
+                        class="menu-item-content"
+                        translate="{{ lang.translation }}"
+                        >{{ lang.title }}</span
+                      >
+                    </button>
+                  </div>
+                </ng-template>
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 25%"><span translate="displayUnits"></span>:</td>
+              <td colspan="2">
+                <button
+                  class="language-button black-fg menu-btn"
+                  [cdkMenuTriggerFor]="unitsmenu"
+                  aria-label="units menu"
+                >
+                  {{ selectedUnit?.title }}
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <ng-template #unitsmenu>
+                  <div
+                    class="main-menu"
+                    cdkMenu
+                  >
+                    <button
+                      class="main-menu-item"
+                      *ngFor="let unit of units"
+                      cdkMenuItem
+                      aria-label="{{ unit.title }}"
+                      (click)="changeUnit(unit)"
+                    >
+                      <span
+                        class="menu-item-content"
+                        translate="{{ unit.title }}"
+                        >{{ unit.title }}</span
+                      >
+                    </button>
+                  </div>
+                </ng-template>
+              </td>
+            </tr>
+            <tr>
+              <td><span translate="experimentalFeatures"></span></td>
+              <td>
+                <mat-checkbox
+                  class="pref-checkbox"
+                  aria-label="Experimental"
+                  [(ngModel)]="experimentalFeatures"
+                  (change)="setExperimentalFeatures()"
+                  matTooltip="Changing this value will refresh your browser."
+                  matTooltipPosition="above"
+                >
+                </mat-checkbox>
+              </td>
+              <td><span translate="experimentalFeaturesDescription"></span> 🧪.</td>
+            </tr>
+            <tr>
+              <td><span translate="redirectToIntranetUrl"></span></td>
+              <td>
+                <mat-checkbox
+                  class="pref-checkbox"
+                  aria-label="Redirect to intranet URL"
+                  [(ngModel)]="systemPreferences.redirectFromLocalhost"
+                  (change)="update('redirectFromLocalhost')"
+                >
+                </mat-checkbox>
+              </td>
+              <td>
+                <span translate="redirectToIntranetUrlDescription"></span>
+                <br />
+                <a [href]="systemPreferences.intranetUrl">{{ systemPreferences?.intranetUrl }}</a
+                >.
+              </td>
+            </tr>
+            <tr>
+              <td><span translate="showMaterialShortageAlerts"></span></td>
+              <td>
+                <mat-checkbox
+                  class="pref-checkbox"
+                  aria-label="Show Material Shortage Alerts"
+                  [(ngModel)]="systemPreferences.showMaterialShortageAlerts"
+                  (change)="update('showMaterialShortageAlerts')"
+                >
+                </mat-checkbox>
+              </td>
+              <td><span translate="showMaterialShortageAlertsDescription"></span></td>
+            </tr>
+
+            <tr>
+              <td><span translate="enableMaterialTasks"></span></td>
+              <td>
+                <mat-checkbox
+                  class="pref-checkbox"
+                  aria-label="Enable Material Tasks"
+                  [(ngModel)]="systemPreferences.enableMaterialTasks"
+                  (change)="update('enableMaterialTasks')"
+                >
+                </mat-checkbox>
+              </td>
+              <td><span translate="enableMaterialTasksDescription"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

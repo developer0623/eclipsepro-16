@@ -1,0 +1,68 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <!-- HEADER -->
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span class="h2">Status 🧪</span>
+      <div class="toolbar">
+        <div>
+          Uptime:
+          <app-duration-display
+            [date]="systemInfo.serverStartTime"
+            *ngIf="systemInfo.isSignalRConnected"
+          ></app-duration-display>
+          <span *ngIf="!systemInfo.isSignalRConnected">*Disconnected*</span>
+          <br />Last start: {{ systemInfo.serverStartTime | amsDateTime }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / HEADER -->
+  <!-- CONTENT -->
+  <div class="content setting-experiments">
+    <div class="task-content">
+      <div class="task-list active-task-list">
+        <div fxLayout="column">
+          <div class="simple-table-container mat-elevation-z2 mb-24">
+            <div
+              fxLayout="row"
+              class="table-title black-text"
+              fxLayoutAlign="start center"
+            >
+              Machine States
+            </div>
+            <div class="ms-responsive-table-wrapper">
+              <table class="simple hover dataTable">
+                <thead>
+                  <tr>
+                    <th>Machine</th>
+                    <th>State</th>
+                    <th>Change Date</th>
+                    <th>Order</th>
+                    <th>Length</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let mach of machines; trackBy: trackByIndex">
+                    <td>{{ mach.machineNumber }}</td>
+                    <td>{{ mach.runState }}</td>
+                    <td>
+                      <app-duration-display [date]="mach.lastRunStateChange"></app-duration-display>
+                    </td>
+                    <td>{{ mach.orderCode }}</td>
+                    <td>{{ mach.currentItemLength | number : 2 }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

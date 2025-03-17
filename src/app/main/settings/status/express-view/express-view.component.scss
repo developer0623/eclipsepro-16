@@ -1,0 +1,41 @@
+.express-table {
+  .unit-col {
+    width: 7%;
+  }
+  .ip-col {
+    width: 15%;
+  }
+  .status-col {
+    width: 15%;
+  }
+  .count-col {
+    width: 15%;
+  }
+
+  .material-usage-item {
+    text-align: left;
+  }
+}
+
+.chart-row {
+  display: flex;
+  padding: 10px 0 10px 30px;
+  border-bottom: 1px solid #d4d4d4;
+  .express-cmd-response {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    justify-content: center;
+  }
+  .cmd-response-row {
+    // flex: 1;
+  }
+  .cmd-response-title {
+    font-style: italic;
+  }
+  .cmd-response-content {
+    color: #1f77b4;
+    padding-left: 25px;
+  }
+}

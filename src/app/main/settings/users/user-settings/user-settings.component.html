@@ -1,0 +1,19 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <div class="header">
+    <div
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <span class="h2">User: {{ userName }}</span>
+    </div>
+  </div>
+  <div
+    class="content"
+    md-background-bg
+  >
+    <user-profile [username]="userName"></user-profile>
+  </div>
+</div>

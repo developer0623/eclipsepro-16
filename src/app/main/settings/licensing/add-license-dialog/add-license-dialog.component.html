@@ -1,0 +1,44 @@
+<mat-toolbar color="success">
+  <span>Add License</span>
+  <span class="example-spacer"></span>
+  <button
+    mat-icon-button
+    aria-label="Close"
+    (click)="cancel()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<div mat-dialog-content>
+  <div
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <mat-form-field class="license-text yellow-input">
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="1"
+        placeholder="paste license here..."
+        [(ngModel)]="licenseText"
+      ></textarea>
+    </mat-form-field>
+    <button
+      mat-button
+      (click)="add()"
+      class="add-btn"
+    >
+      ADD
+    </button>
+  </div>
+
+  <mat-list role="list">
+    <mat-list-item
+      role="listitem"
+      *ngFor="let error of licenseErrors"
+      >{{ error }}</mat-list-item
+    >
+  </mat-list>
+</div>

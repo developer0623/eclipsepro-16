@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+}
+.header-first-item {
+  line-height: 1.5rem;
+  text-align: center;
+  padding-bottom: 5px;
+  font-weight: normal;
+  font-size: 2rem;
+
+  span {
+    font-size: 1.3rem;
+  }
+
+  &.sub-item {
+    font-size: 1.3rem;
+    font-weight: 100;
+  }
+}
+
+.main-header {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.low-header {
+  font-size: 1.5rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+.header-content {
+  font-size: 1.3rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.sub-header {
+  opacity: 0.7;
+  border-bottom: none;
+  .main-header {
+    border-bottom: none;
+    font-size: 1.7rem;
+  }
+  .low-header {
+    font-size: 1.3rem;
+  }
+  .header-content {
+    font-size: 1.2rem;
+    div {
+      background-color: transparent;
+    }
+  }
+}

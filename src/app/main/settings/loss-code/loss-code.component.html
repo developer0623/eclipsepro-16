@@ -1,0 +1,41 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+  ngsf-fullscreen
+>
+  <div class="header">
+    <div
+      layout="row"
+      layout-align="space-between"
+    >
+      <span class="h2 text-upper">Delay/Scrap Settings</span>
+    </div>
+  </div>
+
+  <mat-tab-group
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+    class="main-color-tab"
+    [selectedIndex]="this.selectedTabIndex"
+    (selectedIndexChange)="onChangeTab($event)"
+  >
+    <mat-tab label="DELAY CODES">
+      <app-delay-code></app-delay-code>
+    </mat-tab>
+    <mat-tab label="SCRAP CODES">
+      <app-scrap-code></app-scrap-code>
+    </mat-tab>
+    <mat-tab label="MACHINE GROUPS">
+      <app-workgroups class="p-16"></app-workgroups>
+    </mat-tab>
+  </mat-tab-group>
+  <button
+    class="gray-col add-btn-code"
+    mat-icon-button
+    aria-label="Add Code"
+    matTooltip="Add new code"
+    (click)="addCode()"
+  >
+    <i class="icon icon-plus-box"></i>
+  </button>
+</div>

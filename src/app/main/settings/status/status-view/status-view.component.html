@@ -1,0 +1,227 @@
+<div
+  id="settings"
+  class="page-layout simple fullwidth"
+>
+  <div
+    class="header"
+    fxLayout="row"
+    fxLayoutAlign="space-between"
+  >
+    <span class="h2">System Health</span>
+    <div
+      fxLayout="row"
+      class="toolbar"
+    >
+      <button
+        mat-icon-button
+        class="s-40-btn"
+        (click)="doDiagnosticUpload()"
+        matTooltip="Upload Diagnostics Package To AMS"
+        matTooltipPosition="below"
+      >
+        <i class="icon icon-folder-upload"></i>
+      </button>
+      <button
+        class="s-40-btn"
+        mat-icon-button
+        (click)="toastDiagnosticDownload()"
+        href="/api/system/diagnostics"
+        target="_self"
+        matTooltip="Download Diagnostics Package"
+        matTooltipPosition="below"
+      >
+        <i class="icon icon-folder-download"></i>
+      </button>
+      <button
+        class="s-40-btn"
+        mat-icon-button
+        (click)="triggerHistorySync()"
+        matTooltip="Start History Sync"
+        matTooltipPosition="below"
+      >
+        <i class="icon icon-refresh"></i>
+      </button>
+      <div>
+        Uptime:
+        <app-duration-display
+          [date]="systemInfo.serverStartTime"
+          *ngIf="systemInfo.isSignalRConnected"
+        ></app-duration-display>
+        <span *ngIf="!systemInfo.isSignalRConnected">*Disconnected*</span>
+        <br />Last start: {{ systemInfo.serverStartTime | amsDateTime }}
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <mat-tab-group
+      mat-stretch-tabs="false"
+      mat-align-tabs="start"
+      class="xl200-tabs"
+      [(selectedIndex)]="selectedTabIndex"
+      (selectedIndexChange)="selectTab($event)"
+    >
+      <mat-tab label="Alerts">
+        <system-alerts-grid [alerts]="alerts"></system-alerts-grid>
+      </mat-tab>
+      <mat-tab label="Services">
+        <service-health-grid
+          [healths]="healths"
+          [healthSummary]="healthSummary"
+        ></service-health-grid>
+      </mat-tab>
+      <mat-tab label="Agent">
+        <div fxLayout="column">
+          <div class="simple-table-container mat-elevation-z2 mb-24">
+            <div
+              class="form-title"
+              fxLayout="column"
+              fxLayoutFill
+            >
+              <div class="agent-id font-size-14">
+                <span class="text-inline w-160">Agent ID:</span>
+                <span class="secondary-text ml-8">{{
+                  systemInfoService.agentStatus?.status?.agentId
+                }}</span>
+              </div>
+              <div class="agent-status font-size-14">
+                <span class="text-inline w-160">Status:</span>
+                <span
+                  *ngIf="systemInfoService.agentStatus?.isAgentReachable"
+                  class="connected ml-8"
+                  >connected</span
+                >
+                <span
+                  *ngIf="!systemInfoService.agentStatus?.isAgentReachable"
+                  class="hint-text ml-8"
+                  >disconnected
+                  <span class="secondary-text">(showing last known configuration)</span></span
+                >
+              </div>
+              <div class="agent-status font-size-14">
+                <span class="text-inline w-160">Eclipse Version:</span>
+                <span
+                  *ngIf="systemInfoService.agentStatus?.isAgentReachable"
+                  class="connected ml-8"
+                  >{{ systemInfoService.agentStatus?.status?.eclipseVersion }}</span
+                >
+                <span
+                  *ngIf="!systemInfoService.agentStatus?.isAgentReachable"
+                  class="hint-text ml-8"
+                  >{{ systemInfoService.agentStatus?.status?.eclipseVersion }}
+                  <span class="secondary-text">(showing last known configuration)</span></span
+                >
+              </div>
+              <div class="agent-status font-size-14">
+                <span class="text-inline w-160">Agent URL:</span>
+                <a
+                  *ngIf="systemInfoService.agentStatus?.isAgentReachable"
+                  [href]="systemInfoService.agentStatus?.agentUrl"
+                  class="connected ml-8"
+                  target="_blank"
+                  >{{ systemInfoService.agentStatus?.agentUrl }}</a
+                >
+                <a
+                  *ngIf="!systemInfoService.agentStatus?.isAgentReachable"
+                  [href]="systemInfoService.agentStatus?.agentUrl"
+                  class="secondary-text ml-8"
+                  target="_blank"
+                  >{{ systemInfoService.agentStatus?.agentUrl }}</a
+                >
+              </div>
+              <div class="agent-id font-size-14">
+                <span class="text-inline w-160">Eclipse Directory:</span>
+                <span class="ml-8">{{
+                  systemInfoService.agentStatus?.status?.eclipseDirectory
+                }}</span>
+              </div>
+              <div class="agent-status font-size-14">
+                <span class="text-inline w-160">Eclipse Pro Server URL:</span>
+                <span class="ml-8">{{
+                  systemInfoService.agentStatus?.status?.eclipseProServerUrl
+                }}</span>
+              </div>
+              <div class="agent-status font-size-14">
+                <span class="text-inline w-160">Record Queue:</span>
+                <span class="ml-8">{{
+                  systemInfoService.agentStatus?.status?.eclipseLegacyQueueName
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <pending-actions-to-agent-grid
+            [pendingAgentActions]="pendingAgentActions"
+          ></pending-actions-to-agent-grid>
+          <sync-state-grid [syncState]="syncState"></sync-state-grid>
+          <div class="simple-table-container mat-elevation-z2 mb-24">
+            <div
+              fxLayout="row"
+              class="table-title black-text"
+              fxLayoutAlign="start center"
+            >
+              Actions
+            </div>
+            <div>
+              <button
+                class="broom-btn"
+                (click)="synchronizeOrdersWithAgent()"
+                matTooltip="Synchronize Orders With Agent"
+              >
+                <i class="icon icon-broom"></i>
+                Cleanup Orders
+              </button>
+            </div>
+          </div>
+          <div class="simple-table-container mat-elevation-z2 mb-24">
+            <div
+              fxLayout="row"
+              class="table-title black-text"
+              fxLayoutAlign="start center"
+            >
+              In Pro but not in Classic
+            </div>
+            <div class="ms-responsive-table-wrapper">
+              <table class="simple hover dataTable">
+                <thead>
+                  <tr>
+                    <th>Collection</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let collection of inRavenButNotDbfs">
+                    <td>{{ collection.collection }}</td>
+                    <td>{{ collection.count }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Express">
+        <express-view></express-view>
+      </mat-tab>
+      <mat-tab label="Client Status">
+        <div fxLayout="column">
+          <div class="simple-table-container mat-elevation-z2 mb-24">
+            <div
+              class="form-title"
+              fxLayout="column"
+              fxLayoutFill
+            >
+              <div class="agent-id font-size-14">
+                <span class="text-inline w-160">Connected:</span>
+                <span class="secondary-text ml-8">{{ systemInfo.isSignalRConnected }}</span>
+              </div>
+              <div class="agent-id font-size-14">
+                <span class="text-inline w-160">Client ID:</span>
+                <span class="secondary-text ml-8">{{ systemInfo.signalRConnectionId }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

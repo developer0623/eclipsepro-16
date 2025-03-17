@@ -1,0 +1,83 @@
+<div class="settings-users">
+  <div
+    class="content"
+    [ngClass]="userIsAdmin ? '' : 'disabled'"
+  >
+    <mat-checkbox
+      class="pref-checkbox"
+      [(ngModel)]="systemPreferences.allowGuestUser"
+      (change)="setAllowGuestUser()"
+      [matTooltip]="'AdministratorRequiredToAllowGuestUser' | translate"
+      position="top"
+      [matTooltipDisabled]="userIsAdmin"
+    ></mat-checkbox>
+    <span
+      class="allow-guest-user"
+      translate="AllowGuestUser"
+    >
+    </span>
+  </div>
+  <table class="simple hover dataTable users-table">
+    <thead>
+      <tr>
+        <th>User Name</th>
+        <th>Roles</th>
+        <th class="users-table-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>
+          <a
+            class="td-link ml-5"
+            uiSref="app.user"
+            [uiParams]="{ userName: user.userName }"
+          >
+            {{ user.userName }}
+          </a>
+        </td>
+        <td>
+          <span *ngFor="let role of user.roles"> {{ role }} <br /> </span>
+        </td>
+        <td>
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="customMenu"
+            (click)="onUserMenuOpen()"
+            (menuClosed)="onUserMenuClose()"
+            *ifRole="'administrator'"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu
+            #customMenu="matMenu"
+            class="main-menu elipse-user-menu"
+            xPosition="before"
+          >
+            <button
+              mat-menu-item
+              class="main-menu-item"
+              (click)="onOpenResetModal(user)"
+              aria-label="Reset Password"
+            >
+              Reset Password
+            </button>
+            <mat-divider></mat-divider>
+            <div
+              *ngFor="let role of user.rolesModel"
+              mat-menu-item
+            >
+              <mat-checkbox
+                class="yellow-checkbox"
+                [checked]="role.enabled"
+                (click)="toggleRole(user, role)"
+              >
+                {{ role.roleName }}
+              </mat-checkbox>
+            </div>
+          </mat-menu>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

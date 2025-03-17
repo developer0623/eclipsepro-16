@@ -1,0 +1,115 @@
+<div mat-dialog-content>
+  <mat-form-field class="add-bundle-input yellow-input">
+    <mat-label>Code</mat-label>
+    <input
+      type="text"
+      placeholder="Code"
+      matInput
+      [(ngModel)]="result.code"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of avaCodes"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field class="add-bundle-input yellow-input">
+    <mat-label>Description</mat-label>
+    <input
+      matInput
+      [(ngModel)]="result.description"
+    />
+  </mat-form-field>
+  <mat-form-field class="add-bundle-input yellow-input">
+    <mat-label>Group</mat-label>
+    <input
+      type="text"
+      placeholder="Group"
+      matInput
+      [(ngModel)]="result.group"
+      [matAutocomplete]="auto1"
+    />
+    <mat-autocomplete #auto1="matAutocomplete">
+      <mat-option
+        *ngFor="let option of groups"
+        [value]="option.groupName"
+      >
+        {{ option.groupName }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field class="yellow-input add-bundle-input">
+    <mat-label>Responsibility</mat-label>
+    <mat-select
+      [(ngModel)]="result.responsibility"
+      panelClass="yellow-select-panel"
+    >
+      <mat-option
+        *ngFor="let res of respTypes"
+        [value]="res"
+      >
+        {{ res }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="add-bundle-input yellow-input">
+    <mat-label>Machine Group</mat-label>
+    <mat-select
+      [(ngModel)]="result.workGroup"
+      panelClass="yellow-select-panel"
+    >
+      <mat-option>None</mat-option>
+      <mat-option
+        *ngFor="let item of workGroups"
+        [value]="item.code"
+      >
+        {{ item.description }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="yellow-input add-bundle-input">
+    <mat-label>Category</mat-label>
+    <mat-select
+      [(ngModel)]="result.category"
+      panelClass="yellow-select-panel"
+    >
+      <mat-option
+        *ngFor="let category of categories"
+        [value]="category.value"
+      >
+        {{ category.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-checkbox
+    class="yellow-checkbox"
+    aria-label="Exempt"
+    [(ngModel)]="result.exempt"
+  >
+    Exempt
+  </mat-checkbox>
+</div>
+<div
+  mat-dialog-actions
+  [align]="'center'"
+>
+  <button
+    mat-button
+    (click)="onDismiss()"
+    class="cancel-btn"
+  >
+    Cancel
+  </button>
+  <button
+    mat-button
+    (click)="update()"
+    class="add-btn"
+    color="success"
+  >
+    {{ editBtnText }}
+  </button>
+</div>

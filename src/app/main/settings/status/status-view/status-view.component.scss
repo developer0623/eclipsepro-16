@@ -1,0 +1,36 @@
+#settings {
+  .simple-table-container {
+    //max-width: 1200px;
+
+    .table-title {
+      padding: 0;
+      margin: 24px;
+      display: inline-block;
+    }
+  }
+
+  table.dataTable {
+    //max-width: 1200px;
+
+    td {
+      position: relative;
+      padding: 0px 10px;
+
+      &:not(:last-child) {
+        width: 100px;
+      }
+    }
+
+    th {
+      min-width: 0;
+    }
+  }
+}
+
+.broom-btn {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  border-radius: 3px;
+  margin: 6px 8px;
+}

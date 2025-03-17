@@ -1,0 +1,298 @@
+// @import './detail/detail.scss';
+@use 'sass:math';
+
+@mixin maintain-aspect-ratio($widthRatio, $heightRatio, $padding, $contentClass) {
+  position: relative;
+
+  &:before {
+    display: block;
+    content: '';
+    width: 100%;
+    padding-top: math.div($heightRatio, $widthRatio) * 100%;
+  }
+
+  > .#{$contentClass} {
+    position: absolute;
+    top: $padding;
+    left: $padding;
+    right: $padding;
+    bottom: $padding;
+  }
+}
+
+#wallboard-view {
+  font-size: 13px;
+  .header {
+    height: 76px;
+    line-height: 76px;
+    padding: 0 24px;
+    min-height: 76px !important;
+    .h2 {
+      margin: 0;
+      line-height: 76px;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  > .content {
+    padding: 0;
+  }
+
+  .task-content {
+    padding: 24px;
+
+    .detail-td {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .edit-btn {
+      text-decoration: underline;
+      border-right: solid 1px rgb(0, 0, 238);
+      padding-right: 5px;
+      margin-right: 4px;
+      color: rgb(0, 0, 238);
+      cursor: pointer;
+    }
+    .delete-btn {
+      text-decoration: underline;
+      padding-left: 3px;
+      color: rgb(0, 0, 238);
+      cursor: pointer;
+    }
+  }
+
+  .wallboard-device-table {
+    th,
+    td {
+      border-right: 1px solid rgba(0, 0, 0, 0.12);
+      text-align: center;
+    }
+  }
+}
+
+$andonGreen: #0cf611;
+$andonYellow: #ffe500;
+$andonRed: #f10400;
+$layout-breakpoint-xs: 599px;
+$layout-breakpoint-sm: 600px;
+
+.add-sequence-btn {
+  display: flex;
+  align-items: center;
+  background-color: rgb(84, 84, 84);
+  color: rgba(255, 255, 255, 0.87);
+  box-shadow: 0 2px 5px #00000042;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  i {
+    color: rgba(255, 255, 255, 0.87) !important;
+  }
+}
+
+.md-hue-1 {
+  background-color: rgb(255, 255, 255);
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.andon-frame {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.sequence-title {
+  display: flex;
+  app-edit-input {
+    width: auto !important;
+  }
+  .sequence-del-btn {
+    color: rgba(0, 0, 0, 0.54);
+    display: none;
+  }
+  &:hover {
+    .sequence-del-btn {
+      display: block;
+    }
+  }
+  // .editable-wrap {
+  //   padding-right: 53px;
+  // }
+  // .disable-delete {
+  //   pointer-events: none;
+  //   color: rgba(0, 0, 0, 0.87);
+  // }
+
+  // .disable-badge {
+  //   border: 1px solid #f44336;
+  //   width: 15px;
+  //   height: 15px;
+  //   border-radius: 10px;
+  //   display: inline-block;
+  //   position: absolute;
+  //   align-items: center;
+  //   justify-content: center;
+  //   text-align: center;
+  //   font-size: 10px;
+  //   line-height: 15px;
+  //   right: -11px;
+  //   top: -6px;
+  //   color: rgba(0, 0, 0, 0.87);
+  // }
+
+  // .delete-andon {
+  //   font-size: 15px;
+  //   position: relative;
+  //   top: -6px;
+  //   left: -50px;
+  //   color: #f44336;
+  // }
+}
+
+.andon-cards {
+  padding: 24px !important;
+}
+
+.andon-card {
+  width: 100px;
+  min-width: 80px;
+  height: 80px;
+  margin: 12px;
+  padding: 8px 0 0;
+  line-height: 1;
+  background-color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow ease-in 100ms;
+
+  &.current-panel {
+    box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  }
+
+  @media only screen and (max-width: $layout-breakpoint-xs) {
+    width: 100%;
+    height: 80px;
+    padding: 8px;
+    margin: 12px 0;
+  }
+
+  &.add-andon-panel {
+    padding: 0;
+    text-align: center;
+    box-shadow: none;
+    background: none;
+    border: 2px dashed rgba(0, 0, 0, 0.12);
+    md-icon {
+      color: rgba(0, 0, 0, 0.35);
+    }
+  }
+  &:hover {
+    .remove-andon-panel,
+    .andon-panel-option {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.andon-card-controls {
+  height: 24px;
+  line-height: 24px;
+  .andon-panel-duration {
+    font-weight: 500;
+    font-size: 14px;
+    height: 24px;
+    position: absolute;
+    bottom: 2px;
+    transform: translateX(-50%);
+    left: 50%;
+  }
+  .editable-wrap .editable-controls .editable-input {
+    width: 30px;
+    height: 20px;
+    padding: 0;
+    text-align: center;
+    font-size: 14px;
+  }
+  .editable-empty {
+    color: material-color('red', '500') !important;
+    font-style: normal !important;
+  }
+  .remove-andon-panel,
+  .andon-panel-option {
+    line-height: 16px;
+    width: 20px;
+    min-width: 20px;
+    height: 16px;
+    min-height: 16px;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    bottom: 8px;
+    right: 4px;
+    transition: all ease 400ms;
+    opacity: 0;
+    transform: scale(0);
+  }
+  .andon-panel-option {
+    left: 6px;
+    right: auto;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#andon-preview {
+  position: relative;
+  overflow: hidden;
+  z-index: 9;
+
+  .andon-frame {
+    @include maintain-aspect-ratio(16, 9, 0, andon-display);
+    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+    font-size: 100%;
+  }
+
+  .md-icon-button {
+    line-height: 24px;
+    md-icon {
+      color: rgba(0, 0, 0, 0.35);
+    }
+  }
+}
+
+.sequence-title {
+  font-weight: 500;
+  font-size: 1.6rem !important;
+}
+
+.dndDraggingSource {
+  display: none !important;
+}
+
+.dndPlaceholder {
+  width: 100px;
+  min-width: 80px;
+  height: 80px;
+  margin: 12px;
+  padding: 8px 0 0;
+  line-height: 1;
+  background-color: #fff;
+  text-align: center;
+  border-radius: 2px;
+}

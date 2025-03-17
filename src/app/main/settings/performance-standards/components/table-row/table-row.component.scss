@@ -1,0 +1,61 @@
+:host {
+  height: 60px;
+  display: block;
+}
+
+app-table-cell {
+  height: 100%;
+}
+
+.table-item-row {
+  height: 100%;
+  .col-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .tool-count {
+      font-size: 1.5rem;
+
+      text-align: right;
+      color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .item-his-color {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.tool-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.sub-item-first {
+  position: relative;
+  display: block;
+  .sub-item-first-checkbox {
+    position: absolute;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 40%;
+    right: 0px;
+
+    md-checkbox {
+      width: 20px;
+      margin-bottom: 0px;
+    }
+
+    .md-checked .md-icon {
+      background-color: rgb(71, 144, 218);
+    }
+  }
+}

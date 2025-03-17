@@ -1,0 +1,17 @@
+.add-bundle-input {
+  width: 100%;
+}
+
+.add-btn {
+  width: 48%;
+}
+
+.cancel-btn {
+  width: 48%;
+}
+
+::ng-deep .yellow-checkbox {
+  .mdc-label {
+    margin-bottom: 0 !important;
+  }
+}

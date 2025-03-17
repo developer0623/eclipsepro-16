@@ -1,0 +1,155 @@
+.header {
+  height: 76px !important;
+  line-height: 76px !important;
+  padding: 0 24px !important;
+  min-height: 76px !important;
+  .h2 {
+    margin: 0;
+    line-height: 76px;
+  }
+}
+
+.printing-item-header {
+  font-weight: bold;
+  text-transform: capitalize;
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.printing-item-row {
+  display: flex;
+  border-bottom: 1px solid #d4d4d4;
+  min-height: 40px;
+  padding-left: 12px;
+  align-items: center;
+  font-size: 13px;
+  // md-checkbox {
+  //   margin-bottom: 0 !important;
+  // }
+  .icon-menu-down {
+    position: relative;
+    top: -1px;
+  }
+  .title-col {
+    width: 25%;
+  }
+  .main-col {
+    flex: 1;
+  }
+
+  &:hover {
+    background-color: whitesmoke;
+  }
+
+  // .md-datepicker-input-container {
+  //   border-bottom-color: rgba(0, 0, 0, 0);
+  //   margin-left: 0 !important;
+  // }
+  // .md-datepicker-input {
+  //   display: none;
+  // }
+  // .md-datepicker-input-mask {
+  //   display: none;
+  // }
+}
+
+.source-col {
+  display: flex;
+  align-items: center;
+}
+
+.property-table {
+  border-left: 1px solid #d4d4d4;
+  border-right: 1px solid #d4d4d4;
+  min-height: 40px;
+}
+
+.property-table-header {
+  font-weight: bold;
+}
+
+.print-property-item-row {
+  display: flex;
+  border-bottom: 1px solid #d4d4d4;
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .key-col {
+    width: 35%;
+    border-right: 1px solid #d4d4d4;
+    padding-left: 6px;
+  }
+
+  .value-col {
+    flex: 1;
+    padding-left: 6px;
+  }
+}
+
+.empty-row {
+  justify-content: center;
+}
+
+.hide-date-picker {
+  width: 0px !important;
+  border: 0px !important;
+  padding: 0px !important;
+}
+.template-selector {
+  width: 190px;
+}
+
+.file-input {
+  display: none;
+}
+
+.bundle-table th {
+  min-width: 0;
+}
+
+.file-upload-btn {
+  cursor: pointer;
+  padding: 0 3px;
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+  color: #000000b3;
+  margin-left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+::ng-deep .s-40-btn {
+  button {
+    width: 40px !important;
+    height: 40px !important;
+    // margin: auto 0 !important;
+    padding: 8px !important;
+    .mat-mdc-button-touch-target {
+      width: 40px !important;
+      height: 40px !important;
+    }
+  }
+}
+
+::ng-deep {
+  .print-count-input {
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none !important;
+    }
+  }
+
+  .yellow-select-panel {
+    .mat-mdc-option .mat-pseudo-checkbox {
+      display: none;
+    }
+  }
+}
+
+a:hover {
+  text-decoration: none;
+}
