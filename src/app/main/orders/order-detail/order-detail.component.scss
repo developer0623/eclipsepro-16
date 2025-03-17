@@ -2,7 +2,7 @@
   overflow: auto;
   padding-top: 50px;
   padding-bottom: 20px;
-  height: calc(100vh - 114px);
+  height: calc(100vh - 134px);
   position: relative;
 }
 
@@ -318,4 +318,8 @@
 
 ::ng-deep .w-400 {
   max-width: none !important;
+}
+
+.order-detail-accordion {
+  width: 100%;
 }

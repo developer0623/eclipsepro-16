@@ -72,7 +72,7 @@ export class ApiService {
     CoilValidationEvents: `${this.jobsUrl}integration/coilValidationEvents`,
     WebhookConfigs: `${this.jobsUrl}integration/webhookConfigs`,
     WebhookEvents: `${this.jobsUrl}integration/webhookEvents`,
-    ExternalConnections: `${this.jobsUrl}integration/externalConnections`,
+    ExternalConnections: `${this.jobsUrl}integration/externalConnectionConfigs`,
     SystemInfo: `${this.baseUrl}systemInfo`,
     UpdateInfo: `${this.baseUrl}checkUpdate`,
     SystemAgent: `${this.baseUrl}agentStatus`,
